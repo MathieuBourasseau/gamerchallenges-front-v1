@@ -13,20 +13,19 @@ export default function Contact() {
     const [formData, setFormData] = useState<ContactData>({
         name: '',
         email: '',
-        message:'',
+        message: '',
     });
-
-
 
     return (
 
         <section>
 
-            <form>
-
-                <legend>Contact</legend>
+            <h1>Contact</h1>
+            <form
+                className="bg-green-dark"
+            >
                 <fieldset>
-                    
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusantium autem veniam asperiores neque ipsum cumque, in ducimus id earum veritatis eos hic quod deleniti, maiores odio voluptatum, sequi minima temporibus.
                 </fieldset>
 
             </form>
