@@ -25,7 +25,14 @@ export default function Contact() {
                 className="bg-green-dark"
             >
                 <fieldset>
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusantium autem veniam asperiores neque ipsum cumque, in ducimus id earum veritatis eos hic quod deleniti, maiores odio voluptatum, sequi minima temporibus.
+                    <div>
+                        <input 
+                            type="text" 
+                            placeholder="Nom"
+                            value={formData.name}
+                            onChange={handleChange} 
+                        />
+                    </div>
                 </fieldset>
 
             </form>
