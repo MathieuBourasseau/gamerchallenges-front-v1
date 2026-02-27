@@ -4,10 +4,7 @@ import { Link } from "react-router-dom";
 type Game = {
 	id: number;
 	title: string;
-	genre: string;
-	release_year: string;
 	cover: string;
-	description: string;
 };
 
 const Games = () => {
