@@ -84,6 +84,16 @@ export default function Contact() {
             return;
         };
 
+        // Empty form after form submit
+        setFormData({
+            name: '',
+            email: '',
+            message: ''
+        });
+
+        // Put isChecked to its initial state
+        setIsChecked(false);
+
     };
 
     // --- HANDLE CHECKED ---
