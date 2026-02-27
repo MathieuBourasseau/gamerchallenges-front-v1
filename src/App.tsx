@@ -1,11 +1,8 @@
-import React from 'react'
-import Contact from "./Contact/Contact"
+import Home from "./Home/Home";
 
 export default function App() {
-
   return (
     <div>
-      <Contact />
+      <Home />
     </div>
-  );
-}
+  

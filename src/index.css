@@ -1,13 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-
-    --color-green-dark: #449F05;
-    --color-green-medium: #55CB04;
-    --color-green-light: #6BFF05;
-    --color-blue-dark: #043640;
-    --color-blue-medium: #034B57;
-    --color-white: #FFFFFF;
-    --color-black-dark: #091E0A 
-
+  --color-green-dark: #449f05;
+  --color-green-medium: #55cb04;
+  --color-green-light: #6bff05;
+  --color-blue-dark: #043640;
+  --color-blue-medium: #034b57;
+  --color-white: #ffffff;
+  --color-black-dark: #091e0a;
+}
+body {
+  background-image: url(".//assets/images/background-gamers.png");
+  background-size: cover;
+  background-attachment: fixed;
+  margin: 0;
 }
