@@ -6,4 +6,12 @@
   --color-green-light: #6bff05;
   --color-blue-dark: #043640;
   --color-blue-medium: #034b57;
+  --color-white: #ffffff;
+  --color-black-dark: #091e0a;
+}
+body {
+  background-image: url(".//assets/images/background-gamers.png");
+  background-size: cover;
+  background-attachment: fixed;
+  margin: 0;
 }

@@ -5,5 +5,4 @@ export default function App() {
     <div>
       <Home />
     </div>
-  );
-}
+  
