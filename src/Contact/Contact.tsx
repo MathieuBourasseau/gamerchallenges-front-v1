@@ -78,8 +78,10 @@ export default function Contact() {
         }
 
         // Update the state of error only if there is an error
+        // Stop the code 
         if (Object.keys(errorMessage).length > 0) {
             setErrors(errorMessage)
+            return;
         };
 
     };
