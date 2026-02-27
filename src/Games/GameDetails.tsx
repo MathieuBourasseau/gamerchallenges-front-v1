@@ -47,7 +47,9 @@ const GameDetails = () => {
 			<div className="flex flex-col gap-2">
 				<h2 className="text-2xl font-semibold text-white">{game.title}</h2>
 				<p className="text-white">Genre: {game.genre}</p>
-				<p className="text-white">Année: {game.release_year}</p>
+				<p className="text-white">
+					Année: {new Date(game.release_year).getFullYear()}
+				</p>
 				<p className="text-white">{game.description}</p>
 			</div>
 		</div>

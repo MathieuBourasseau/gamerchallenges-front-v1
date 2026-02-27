@@ -42,7 +42,6 @@ const Games = () => {
 		<div>
 			<h1 className="text-2xl font-semibold mb-4">Liste des jeux</h1>
 
-			{/* Grille 3x2 avec Tailwind */}
 			<div className="grid grid-cols-3 gap-5">
 				{games.map((game) => (
 					<Link
@@ -50,7 +49,6 @@ const Games = () => {
 						to={`/games/${game.slug}`}
 						className="flex flex-col items-center"
 					>
-						{/* Classe CSS pour l'image */}
 						<img src={game.cover} alt={game.title} className="game-cover" />
 						<h3 className="mt-2 text-lg font-semibold text-white">
 							{game.title}
@@ -59,7 +57,6 @@ const Games = () => {
 				))}
 			</div>
 
-			{/* Pagination */}
 			<div className="flex justify-center gap-4 mt-4">
 				{page > 1 && (
 					<button
