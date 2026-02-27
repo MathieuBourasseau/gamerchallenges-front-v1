@@ -23,7 +23,7 @@ export default function Contact() {
     const [errors, setErrors] = useState<Partial<ContactData>>({});
 
     // --- UPDATE VALUES IN FORM ---
-    const handleChange = (e) => {
+    const handleChange = (e : any) => {
 
         // Get the value and the input name from event
         const { name, value } = e.target;
@@ -36,7 +36,7 @@ export default function Contact() {
     };
 
     // --- HANDLE FORM SUBMIT --- 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e : any) => {
 
         // Stop the default settings of form
         e.preventDefault();
