@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { BiSolidMessageAltError } from "react-icons/bi";
+
 
 // Data required in form 
 type ContactData = {
@@ -29,7 +31,7 @@ export default function Contact() {
         // Update formData with the new value in the input targeted 
         setFormData(formData => ({
             ...formData, // previous data in form data
-            [name] : value
+            [name]: value
         }));
     };
 
@@ -44,7 +46,7 @@ export default function Contact() {
 
         // Empty object to handle error message 
         // Partial makes optional the types required in ContactData
-        let errorMessage  : Partial<ContactData> = {};
+        let errorMessage: Partial<ContactData> = {};
 
         // Clean data from form
         const name = formData.name.trim();
@@ -52,27 +54,39 @@ export default function Contact() {
         const message = formData.message.trim();
 
         // Checking if the name field is valid 
-        if ( name.length === 0 ) {
-            errorMessage.name = "Erreur : le champ nom est vide."
+        if (name.length === 0) {
+            errorMessage.name = "Le champ nom est vide."
         };
 
         // Checking if the email is valid 
-        if ( email.length === 0 ) {
-            errorMessage.email = "Erreur : le champ email est vide."
+        if (email.length === 0) {
+            errorMessage.email = "Le champ email est vide."
         };
 
         // Checking if the field message is valid
-        if ( message.length === 0 ) {
-            errorMessage.message = "Erreur : le champ message est vide."
+        if (message.length === 0) {
+            errorMessage.message = "Le champ message est vide."
         };
 
         // Update the state of error only if there is an error
-        if ( Object.keys(errorMessage).length > 0 ) {
+        if (Object.keys(errorMessage).length > 0) {
             setErrors(errorMessage)
         };
 
     }
 
+    // --- SHOW ERROR MESSAGES --- 
+    const showErrors = () => {
+        return Object.values(errors).map((msg, i) => (
+            <div
+                key={i}
+                className="flex justify-between items-center gap-2 border rounded-full py-2 px-4"
+            >
+                <span>{msg}</span>
+                <BiSolidMessageAltError />
+            </div>
+        ))
+    };
 
     return (
 
@@ -95,42 +109,24 @@ export default function Contact() {
                     >
 
                         {/* Name field */}
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             placeholder="Nom"
                             value={formData.name}
-                            onChange={handleChange} 
+                            onChange={handleChange}
                             name="name"
                             className="bg-black-dark py-2 px-4 rounded-full"
                         />
 
-                        {/* Show error message for name if error.name exists  */}
-                        {errors.name && (
-                            <span
-                                className="text-sm py-2 px-4 bg-green-light rounded-full"
-                            >
-                                {errors.name}
-                            </span>
-                        )}
-
                         {/* Mail field */}
-                        <input 
-                            type="email" 
+                        <input
+                            type="email"
                             placeholder="mail@mail.com"
                             value={formData.email}
-                            onChange={handleChange} 
+                            onChange={handleChange}
                             name="email"
                             className="bg-black-dark py-2 px-4 rounded-full"
                         />
-
-                        {/* Show error message for email if error.email exists  */}
-                        {errors.email && (
-                            <span
-                                className=" flex justify-center items-center text-sm py-2 rounded-full"
-                            >
-                                {errors.email}
-                            </span>
-                        )}
 
                         {/* Message field */}
                         <textarea
@@ -141,20 +137,11 @@ export default function Contact() {
                             className="bg-black-dark py-2 px-4 rounded-lg h-[150px]"
                         />
 
-                         {/* Show error message for message if error.message exists  */}
-                        {errors.message && (
-                            <span
-                                className="text-sm py-2 px-4 rounded-full"
-                            >
-                                {errors.message}
-                            </span>
-                        )}
-
                         {/* Data management policy */}
                         <div
                             className="flex items-center justify-center gap-6"
                         >
-                            <input 
+                            <input
                                 type="checkbox"
                             />
                             <span>
@@ -174,6 +161,15 @@ export default function Contact() {
                 </fieldset>
 
             </form>
+
+            {/* Error messages if existing */}
+            {Object.keys(errors).length > 0 && (
+                <div
+                    className="flex flex-col gap-2"
+                >
+                    {showErrors()}
+                </div>
+            )}
 
         </section>
     )
