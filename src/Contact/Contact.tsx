@@ -6,7 +6,7 @@ type ContactData = {
     name: string;
     email: string;
     message: string;
-    isChecked: boolean | string;
+    isChecked?: boolean | string;
 }
 
 export default function Contact() {
@@ -17,7 +17,6 @@ export default function Contact() {
         name: '',
         email: '',
         message: '',
-        isChecked: false
     });
 
     // Errors messages
