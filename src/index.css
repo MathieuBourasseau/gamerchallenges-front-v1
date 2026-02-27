@@ -1,6 +1,8 @@
 @import "tailwindcss";
 
 @theme {
+  
+  /* Colors settings */
   --color-green-dark: #449f05;
   --color-green-medium: #55cb04;
   --color-green-light: #6bff05;
@@ -8,10 +10,35 @@
   --color-blue-medium: #034b57;
   --color-white: #ffffff;
   --color-black-dark: #091e0a;
+  
+  /* Titles settings */
+  --text-h1-mobile: 1.125rem;
+  --text-h1-tablet: 1.25rem;
+  --text-h1-desktop: 1.5rem;
+
+  /* Glow effect on titles */
+  --drop-shadow-title-glow : 0 0 10px rgba(255, 255, 255, 0.9);
+
+  /* Paragraphs settings */
+  --text-p-mobile: 0.75rem;
+  --text-p-tablet: 1rem;
+
+
 }
+
 body {
-  background-image: url(".//assets/images/background-gamers.png");
-  background-size: cover;
-  background-attachment: fixed;
+  height: 100%;
+  width: 100%;
   margin: 0;
+  padding: 0;
+  color: #fff !important;
+  background: radial-gradient(
+      circle at 50% 20%,
+      rgba(0, 100, 0, 0.4) 0%,
+      rgba(0, 40, 0, 0.2) 40%,
+      #001c22 100%
+    ),
+    linear-gradient(to bottom, #1a4c0e, #001c22);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }

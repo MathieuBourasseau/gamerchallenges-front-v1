@@ -1,8 +1,10 @@
-import Home from "./Home/Home";
+import Contact from "./Contact/Contact";
+
 
 export default function App() {
   return (
     <div>
-      <Home />
+      <Contact />
     </div>
-  
+  )
+}
