@@ -22,6 +22,10 @@ export default function Contact() {
     // Errors messages
     const [errors, setErrors] = useState<Partial<ContactData>>({});
 
+    // Accept or not data management policy 
+    // By default data policy is not accepted
+    const [isChecked, setIsChecked] = useState(false);
+
     // --- UPDATE VALUES IN FORM ---
     const handleChange = (e : any) => {
 
