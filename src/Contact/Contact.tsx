@@ -93,6 +93,8 @@ export default function Contact() {
 
                         <button
                             className="text-sm bg-green-light py-2 px-10 rounded-full uppercase font-bold max-w-2/3 mx-auto"
+                            type="submit"
+                            onClick={handleSubmit}
                         >
                             Valider
                         </button>
