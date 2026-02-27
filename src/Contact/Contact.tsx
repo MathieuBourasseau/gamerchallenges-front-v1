@@ -38,7 +38,7 @@ export default function Contact() {
         >
 
             <h1
-                className="text-lg"
+                className="text-lg italic uppercase font-bold text-white drop-shadow-title-glow"
             >
                 Contact
             </h1>
@@ -92,8 +92,7 @@ export default function Contact() {
                         </div>
 
                         <button
-                            className="
-                            text-sm bg-green-light py-2 px-10 rounded-full uppercase font-bold max-w-2/3 mx-auto"
+                            className="text-sm bg-green-light py-2 px-10 rounded-full uppercase font-bold max-w-2/3 mx-auto"
                         >
                             Valider
                         </button>
