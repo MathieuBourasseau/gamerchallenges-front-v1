@@ -17,6 +17,9 @@ export default function Contact() {
         message: '',
     });
 
+    // Errors messages
+    const [errors, setErrors] = useState<Partial<ContactData>>({});
+
     // --- UPDATE VALUES IN FORM ---
     const handleChange = (e) => {
 
@@ -28,8 +31,48 @@ export default function Contact() {
             ...formData, // previous data in form data
             [name] : value
         }));
+    };
+
+    // --- HANDLE FORM SUBMIT --- 
+    const handleSubmit = (e) => {
+
+        // Stop the default settings of form
+        e.preventDefault();
+
+        // Clear errors state with empty object
+        setErrors({});
+
+        // Empty object to handle error message 
+        // Partial makes optional the types required in ContactData
+        let errorMessage  : Partial<ContactData> = {};
+
+        // Clean data from form
+        const name = formData.name.trim();
+        const email = formData.email.trim();
+        const message = formData.message.trim();
+
+        // Checking if the name field is valid 
+        if ( name.length === 0 ) {
+            errorMessage.name = "Erreur : le champ nom est vide."
+        };
+
+        // Checking if the email is valid 
+        if ( email.length === 0 ) {
+            errorMessage.email = "Erreur : le champ email est vide."
+        };
+
+        // Checking if the field message is valid
+        if ( message.length === 0 ) {
+            errorMessage.message = "Erreur : le champ message est vide."
+        };
+
+        // Update the state of error only if there is an error
+        if ( Object.keys(errorMessage).length > 0 ) {
+            setErrors(errorMessage)
+        };
 
     }
+
 
     return (
 
@@ -61,9 +104,18 @@ export default function Contact() {
                             className="bg-black-dark py-2 px-4 rounded-full"
                         />
 
+                        {/* Show error message for name if error.name exists  */}
+                        {errors.name && (
+                            <span
+                                className="text-sm py-2 px-4 bg-green-light rounded-full"
+                            >
+                                {errors.name}
+                            </span>
+                        )}
+
                         {/* Mail field */}
                         <input 
-                            type="text" 
+                            type="email" 
                             placeholder="mail@mail.com"
                             value={formData.email}
                             onChange={handleChange} 
@@ -71,13 +123,32 @@ export default function Contact() {
                             className="bg-black-dark py-2 px-4 rounded-full"
                         />
 
+                        {/* Show error message for email if error.email exists  */}
+                        {errors.email && (
+                            <span
+                                className=" flex justify-center items-center text-sm py-2 rounded-full"
+                            >
+                                {errors.email}
+                            </span>
+                        )}
+
                         {/* Message field */}
                         <textarea
                             placeholder="Votre message"
                             value={formData.message}
+                            onChange={handleChange}
                             name="message"
                             className="bg-black-dark py-2 px-4 rounded-lg h-[150px]"
                         />
+
+                         {/* Show error message for message if error.message exists  */}
+                        {errors.message && (
+                            <span
+                                className="text-sm py-2 px-4 rounded-full"
+                            >
+                                {errors.message}
+                            </span>
+                        )}
 
                         {/* Data management policy */}
                         <div
