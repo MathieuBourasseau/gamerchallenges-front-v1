@@ -15,7 +15,7 @@
 
 - ## **Difficultés rencontrées :**
 
-* Apprentissage des différentes stacks propres au projet
+* Apprentissage des différentes stacks propres au projet pendant sa réalisation.
 
 - ## **Solutions / Compréhensions :**
 - ## **Docs et divers outils :**
@@ -24,35 +24,16 @@
 * [Documentation Tailwind CSS avec Flobite](https://flowbite.com/docs/)
 * [Documentation React](https://react.dev/)
 
-- ## **Décisions prises :**
-- ## **À faire demain :**
-- **Note : mettre à jour le Trello**
-
----
-
-## Problèmes rencontrés & solutions
-
-### Problème
-
-- **Description :**
-- **Cause :**
-- **Solution :**
-- **Ce qu'on a appris :**
-
----
-
-## Décisions techniques (et pourquoi)
-
-- **Décision :**  
-  **Pourquoi :**
-
-- **Décision :**  
-  **Pourquoi :**
-
----
-
 ## Notes diverses
 
 - Demander à Maickaël l'image de la page d'accueil pour intégration dans la page "Home".
--
--
+
+### 01/03/2026
+
+- ## **Tâches réalisées :**
+
+Simplement mise en place du fetch pour récupérer les données du back et les afficher dans le navigateur.
+
+- ## **Docs et divers outils :**
+
+* Vidéos Grafikart sur sa formation React.js
