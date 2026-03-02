@@ -1,7 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
 @theme {
   
+  --font-sans: "Poppins", sans-serif;
+
   /* Colors settings */
   --color-green-dark: #449f05;
   --color-green-medium: #55cb04;
@@ -27,6 +30,7 @@
 }
 
 body {
+  font-family: var(--font-sans);
   height: 100%;
   width: 100%;
   margin: 0;
@@ -41,33 +45,4 @@ body {
     linear-gradient(to bottom, #1a4c0e, #001c22);
   background-repeat: no-repeat;
   background-attachment: fixed;
-}
-
-.game-cover {
-  width: 200px;       
-  height: 120px;     
-  object-fit:cover;  
-  border-radius: 8px; 
-  border: 2px solid var(--color-green-medium); 
-}
-
-.pagination {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.pagination button {
-  padding: 6px 12px;
-  border: 2px solid #6bff05;
-  background: transparent;
-  border-radius: 6px;
-  cursor: pointer;
-  color: #ffffff;
-}
-
-.pagination button:hover {
-  background-color: #6bff05;
-  color: #001c22;
 }

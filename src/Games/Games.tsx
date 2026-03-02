@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import GameImage from "../ui/GameCover";
 import { Link } from "react-router-dom";
+import GameImage from "../ui/GameCover";
+import Pagination from "../ui/Pagination";
 
 type Game = {
 	id: number;
@@ -34,8 +35,8 @@ const Games = () => {
 	};
 
 	useEffect(() => {
-		fetchGames();
-	}, []);
+		fetchGames(page);
+	}, [page]);
 
 	if (error) return <p>{error}</p>;
 
@@ -57,34 +58,13 @@ const Games = () => {
 					</Link>
 				))}
 			</div>
-
-			<div className="flex justify-center gap-4 mt-4">
-				{page > 1 && (
-					<button
-						type="button"
-						onClick={() => fetchGames(page - 1)}
-						className="px-3 py-1 border-2 border-green-400 rounded hover:bg-green-400 hover:text-black"
-					>
-						Précédent
-					</button>
-				)}
-				<span className="text-white">
-					Page {page} / {totalPages}
-				</span>
-				{page < totalPages && (
-					<button
-						type="button"
-						onClick={() => fetchGames(page + 1)}
-						className="px-3 py-1 border-2 border-green-400 rounded hover:bg-green-400 hover:text-black"
-					>
-						Suivant
-					</button>
-				)}
-			</div>
+			<Pagination
+				currentPage={page}
+				totalPages={totalPages}
+				onPageChange={setPage}
+			/>
 		</div>
 	);
 };
 
 export default Games;
-
-// pagination en 1,2,3
