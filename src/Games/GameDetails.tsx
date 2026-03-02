@@ -32,31 +32,33 @@ const GameDetails = () => {
 			}
 		};
 
-		if (id) {
-			fetchGame();
-		}
+		if (id) fetchGame();
 	}, [id, API_URL]);
 
 	if (error) return <p>{error}</p>;
-	if (!game) {
-		return <p>Chargement...</p>;
-	}
+	if (!game) return <p>Chargement...</p>;
 
 	return (
-		<div className="flex gap-5 mt-5">
-			<GameImage src={game.cover} alt={game.title} />
-			<div className="flex flex-col gap-2">
-				<h2 className="text-2xl font-semibold text-white">{game.title}</h2>
-				<p className="text-white">Genre: {game.genre}</p>
-				<p className="text-white">
-					Année: {new Date(game.release_year).getFullYear()}
-				</p>
-				<p className="text-white">{game.description}</p>
+		<div className="mx-3 md:mx-0 mt-5">
+			<div className="bg-[var(--color-blue-dark)] border border-[var(--color-green-light)] rounded-lg p-5 flex flex-col md:flex-row md:items-center gap-5">
+				<div className="flex-shrink-0 flex justify-center">
+					<GameImage src={game.cover} alt={game.title} />
+				</div>
+				<div className="flex flex-col gap-3 items-center md:items-start text-center md:text-left">
+					<h2 className="text-2xl md:text-3xl font-semibold text-white">
+						{game.title}
+					</h2>
+					<p className="text-white text-justify">{game.description}</p>
+					<div className="flex gap-3">
+						<p className="text-white font-bold">
+							{new Date(game.release_year).getFullYear()} -
+						</p>
+						<p className="text-white font-bold">{game.genre}</p>
+					</div>
+				</div>
 			</div>
 		</div>
 	);
 };
-
-// ajouter liste challenges liés + bouton "retour"
 
 export default GameDetails;

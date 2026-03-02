@@ -11,7 +11,7 @@ const H1Title = ({ children }: H1TitleProps) => {
 				{children}
 			</h1>
 			<div
-				className="mx-auto w-11/12" //liséré vert
+				className="mx-auto w-11/12" //green line under title
 				style={{
 					height: "4px",
 					background:
