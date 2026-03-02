@@ -42,10 +42,11 @@ const Games = () => {
 	if (error) return <p>{error}</p>;
 
 	return (
-		<div>
+		<div className="px-4 sm:px-6 lg:px-8">
+			{" "}
 			<H1Title>JEUX</H1Title>
-
-			<div className="grid grid-cols-3 gap-5">
+			<div className="grid grid-cols-2 sm:grid-cols-3 gap-5">
+				{" "}
 				{games.map((game) => (
 					<Link
 						key={game.id}
