@@ -103,13 +103,15 @@ export default function Contact() {
                 body: bodyContent,
             });
 
+            const data = await response.json();
+
             // Check the server response
             if (!response.ok) {
-                console.error("Erreur lors de l'envoie du message", response.status)
-                errorMessage.data = "Un problème est survenu lors de l'envoi de votre message au serveur."
+                console.error("Erreur lors de l'envoie du message", data.error)
+                errorMessage.data = data.error;
                 setErrors(errorMessage)
                 return
-            }
+            };
         
             // create error if connection to server is broken
         } catch (error) {
