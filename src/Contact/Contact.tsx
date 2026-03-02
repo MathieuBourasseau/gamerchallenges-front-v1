@@ -94,7 +94,10 @@ export default function Contact() {
         // --- FETCH DATA TO BACKEND --- 
         try {
 
-            const response = await fetch("monendpoint", {
+            // Api url 
+            const apiUrl = import.meta.env.VITE_API_URL;
+
+            const response = await fetch(`${apiUrl}/contact`, {
                 method: "POST",
                 headers: headersContent,
                 body: bodyContent,
