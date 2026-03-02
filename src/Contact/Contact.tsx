@@ -27,7 +27,7 @@ export default function Contact() {
     const [isChecked, setIsChecked] = useState<boolean>(false);
 
     // --- UPDATE VALUES IN FORM ---
-    const handleChange = (e : React.ChangeEvent<HTMLInputElement | HTMLInputElement>) => {
+    const handleChange = (e : React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 
         // Get the value and the input name from event
         const { name, value } = e.target;
@@ -40,7 +40,7 @@ export default function Contact() {
     };
 
     // --- HANDLE FORM SUBMIT --- 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
 
         // Stop the default settings of form
         e.preventDefault();
@@ -134,6 +134,7 @@ export default function Contact() {
                     text-p-mobile bg-green-dark text-white p-4 rounded-lg border-green-light border-3 border-green-light
                     md:text-p-tablet
                     "
+                 onSubmit={handleSubmit}
             >
                 <fieldset>
                     <div
@@ -186,7 +187,6 @@ export default function Contact() {
                         <button
                             className="text-sm bg-green-light py-2 px-10 rounded-full uppercase font-bold max-w-2/3 mx-auto"
                             type="submit"
-                            onClick={handleSubmit}
                         >
                             Valider
                         </button>
