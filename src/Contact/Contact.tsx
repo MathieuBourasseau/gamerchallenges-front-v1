@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { BiSolidMessageAltError } from "react-icons/bi";
+import { FaCircleCheck } from "react-icons/fa6";
 
 // Data required in form
 type ContactData = {
@@ -19,6 +20,9 @@ export default function Contact() {
         email: '',
         message: '',
     });
+
+    // Success message
+    const [success, setSuccessMessage] = useState<string>('');
 
     // Errors messages
     const [errors, setErrors] = useState<Partial<ContactData>>({});
@@ -103,33 +107,41 @@ export default function Contact() {
                 body: bodyContent,
             });
 
+            const data = await response.json();
+
             // Check the server response
             if (!response.ok) {
-                console.error("Erreur lors de l'envoie du message", response.status)
-                errorMessage.data = "Un problème est survenu lors de l'envoi de votre message au serveur."
+                console.error("Erreur lors de l'envoie du message", data.error)
+                errorMessage.data = data.error;
                 setErrors(errorMessage)
                 return
-            }
-        
+            };
+
+            // Show success message 
+            setSuccessMessage(data.message);
+
+            // Hide success message after few seconds 
+            setTimeout(() => {
+                setSuccessMessage('');
+            }, 3000);
+
+            // Empty form after form submit
+            setFormData({
+                name: '',
+                email: '',
+                message: ''
+            });
+
+            // Put isChecked to its initial state
+            setIsChecked(false);
+
+
             // create error if connection to server is broken
         } catch (error) {
             errorMessage.data = "Impossible de se connecter au serveur."
             setErrors(errorMessage)
             return
         };
-    
-        // Empty form after form submit
-        setFormData({
-            name: '',
-            email: '',
-            message: ''
-        });
-
-        // Put isChecked to its initial state
-        setIsChecked(false);
-
-
-
     };
 
     // --- HANDLE CHECKED ---
@@ -238,6 +250,14 @@ export default function Contact() {
                     className="flex flex-col gap-2"
                 >
                     {showErrors()}
+                </div>
+            )}
+
+            {/* Success message if existing */}
+            {success && (
+                <div>
+                    <p>{success}</p>
+                    <FaCircleCheck />
                 </div>
             )}
 
