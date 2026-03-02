@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import GameImage from "../ui/GameCover";
 
 type Game = {
 	id: number;
@@ -43,7 +44,7 @@ const GameDetails = () => {
 
 	return (
 		<div className="flex gap-5 mt-5">
-			<img src={game.cover} alt={game.title} className="game-cover" />
+			<GameImage src={game.cover} alt={game.title} />
 			<div className="flex flex-col gap-2">
 				<h2 className="text-2xl font-semibold text-white">{game.title}</h2>
 				<p className="text-white">Genre: {game.genre}</p>

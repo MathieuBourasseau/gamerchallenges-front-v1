@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import GameImage from "../ui/GameCover";
 import { Link } from "react-router-dom";
 
 type Game = {
@@ -46,10 +47,10 @@ const Games = () => {
 				{games.map((game) => (
 					<Link
 						key={game.id}
-						to={`/games/${game.slug}`}
+						to={`/games/${game.id}`}
 						className="flex flex-col items-center"
 					>
-						<img src={game.cover} alt={game.title} className="game-cover" />
+						<GameImage src={game.cover} alt={game.title} />
 						<h3 className="mt-2 text-lg font-semibold text-white">
 							{game.title}
 						</h3>

@@ -51,14 +51,6 @@ body {
   border: 2px solid var(--color-green-medium); 
 }
 
-.game-title {
-  font-size: 18px;
-  font-weight: bold;
-  font-weight: 600; 
-  margin-top: 8px;
-  color: #ffffff;
-}
-
 .pagination {
   display: flex;
   justify-content: center;
