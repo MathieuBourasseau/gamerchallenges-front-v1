@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import GameImage from "../ui/GameCover";
 import Pagination from "../ui/Pagination";
+import H1Title from "../ui/H1Title";
 
 type Game = {
 	id: number;
@@ -28,8 +29,8 @@ const Games = () => {
 			setGames(data.games);
 			setPage(data.page);
 			setTotalPages(data.totalPages);
-		} catch (err) {
-			console.error(err);
+		} catch (error) {
+			console.error(error);
 			setError("Impossible de charger les jeux.");
 		}
 	};
@@ -42,7 +43,7 @@ const Games = () => {
 
 	return (
 		<div>
-			<h1 className="text-2xl font-semibold mb-4">Liste des jeux</h1>
+			<H1Title>JEUX</H1Title>
 
 			<div className="grid grid-cols-3 gap-5">
 				{games.map((game) => (

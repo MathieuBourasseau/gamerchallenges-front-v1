@@ -22,7 +22,7 @@ export default function Pagination({
             ${
 							page === currentPage
 								? "bg-green-medium border-green-medium text-black-dark"
-								: "border-green-light text-white hover:bg-green-light hover:text-black-dark"
+								: "bg-blue-dark border-green-light text-white hover:bg-green-light hover:text-black-dark"
 						}
             transition
           `}
