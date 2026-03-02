@@ -108,12 +108,13 @@ export default function Contact() {
                 return
             }
         
-            // create error is connection to server is broken
+            // create error if connection to server is broken
         } catch (error) {
             errorMessage.data = "Impossible de se connecter au serveur."
             setErrors(errorMessage)
             return
         };
+    
         // Empty form after form submit
         setFormData({
             name: '',
