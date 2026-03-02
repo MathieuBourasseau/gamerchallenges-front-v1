@@ -6,6 +6,7 @@ type ContactData = {
     name: string;
     email: string;
     message: string;
+    data?: string;
     isChecked?: boolean | string;
 }
 
@@ -27,7 +28,7 @@ export default function Contact() {
     const [isChecked, setIsChecked] = useState<boolean>(false);
 
     // --- UPDATE VALUES IN FORM ---
-    const handleChange = (e : any) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 
         // Get the value and the input name from event
         const { name, value } = e.target;
@@ -40,7 +41,7 @@ export default function Contact() {
     };
 
     // --- HANDLE FORM SUBMIT --- 
-    const handleSubmit = (e : any) => {
+    const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
 
         // Stop the default settings of form
         e.preventDefault();
@@ -84,6 +85,39 @@ export default function Contact() {
             return;
         };
 
+        // Data from form
+        const bodyContent = JSON.stringify(formData);
+
+        // Headers data for fetch
+        const headersContent = { "Content-Type": "application/json" }
+
+        // --- FETCH DATA TO BACKEND --- 
+        try {
+
+            // Api url 
+            const apiUrl = import.meta.env.VITE_API_URL;
+
+            const response = await fetch(`${apiUrl}/contact`, {
+                method: "POST",
+                headers: headersContent,
+                body: bodyContent,
+            });
+
+            // Check the server response
+            if (!response.ok) {
+                console.error("Erreur lors de l'envoie du message", response.status)
+                errorMessage.data = "Un problème est survenu lors de l'envoi de votre message au serveur."
+                setErrors(errorMessage)
+                return
+            }
+        
+            // create error if connection to server is broken
+        } catch (error) {
+            errorMessage.data = "Impossible de se connecter au serveur."
+            setErrors(errorMessage)
+            return
+        };
+    
         // Empty form after form submit
         setFormData({
             name: '',
@@ -94,12 +128,14 @@ export default function Contact() {
         // Put isChecked to its initial state
         setIsChecked(false);
 
+
+
     };
 
     // --- HANDLE CHECKED ---
-    const handleChecked = (e : any) => {
+    const handleChecked = (e: React.ChangeEvent<HTMLInputElement>) => {
         setIsChecked(e.target.checked)
-    }
+    };
 
     // --- SHOW ERROR MESSAGES --- 
     const showErrors = () => {
@@ -134,6 +170,7 @@ export default function Contact() {
                     text-p-mobile bg-green-dark text-white p-4 rounded-lg border-green-light border-3 border-green-light
                     md:text-p-tablet
                     "
+                onSubmit={handleSubmit}
             >
                 <fieldset>
                     <div
@@ -186,7 +223,6 @@ export default function Contact() {
                         <button
                             className="text-sm bg-green-light py-2 px-10 rounded-full uppercase font-bold max-w-2/3 mx-auto"
                             type="submit"
-                            onClick={handleSubmit}
                         >
                             Valider
                         </button>
