@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { BiSolidMessageAltError } from "react-icons/bi";
 import { FaCircleCheck } from "react-icons/fa6";
+import Button from "../ui/Button";
+import { useNavigate } from "react-router-dom";
+
 
 // Data required in form
 type ContactData = {
@@ -20,6 +23,9 @@ export default function Contact() {
         email: '',
         message: '',
     });
+
+    // Handle navigation
+    const navigate = useNavigate();
 
     // Success message
     const [success, setSuccessMessage] = useState<string>('');
@@ -123,6 +129,7 @@ export default function Contact() {
             // Hide success message after few seconds 
             setTimeout(() => {
                 setSuccessMessage('');
+                navigate("/")
             }, 3000);
 
             // Empty form after form submit
@@ -165,7 +172,7 @@ export default function Contact() {
     return (
 
         <section
-            className="flex flex-col gap-2 items-center justify-center max-w-2/3 mx-auto"
+            className="flex flex-col py-2 gap-2 items-center justify-center mx-auto"
         >
 
             <h1
@@ -174,12 +181,12 @@ export default function Contact() {
                     md:text-h1-tablet
                     lg:text-h1-desktop
                 "
-			>
-				Contact
-			</h1>
-			<form
-				className="
-                    text-p-mobile bg-green-dark text-white p-4 rounded-lg border-green-light border-3 border-green-light
+            >
+                Contact
+            </h1>
+            <form
+                className="
+                    text-p-mobile bg-green-dark text-white p-4 my-2 rounded-2xl border-green-light border-2 border-green-light
                     md:text-p-tablet
                     "
                 onSubmit={handleSubmit}
@@ -232,17 +239,21 @@ export default function Contact() {
                             </span>
                         </div>
 
-                        <button
-                            className="text-sm bg-green-light py-2 px-10 rounded-full uppercase font-bold max-w-2/3 mx-auto"
+                        <Button
+                            label="Valider"
                             type="submit"
-                        >
-                            Valider
-                        </button>
+                        />
 
                     </div>
                 </fieldset>
-
             </form>
+
+            <Button
+                label="Retour à l'accueil"
+                type="button"
+                onClick={() => navigate("/")}
+            />
+
 
             {/* Error messages if existing */}
             {Object.keys(errors).length > 0 && (
