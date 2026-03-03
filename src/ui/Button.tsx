@@ -20,7 +20,7 @@ export default function Button({
     padding = "py-2 px-10",
     margin = "",
     onClick
-}: ButtonProps) {
+} : ButtonProps) {
 
     return (
         <button
