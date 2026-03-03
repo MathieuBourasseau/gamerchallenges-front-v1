@@ -79,6 +79,7 @@ const GameDetails = () => {
 							key={challenge.id}
 							className="flex items-center justify-between
                        border-2 border-[var(--color-green-light)]
+											 bg-[var(--color-blue-dark)]
                        rounded-md px-6 py-3"
 						>
 							<span className="text-white">{challenge.name}</span>
@@ -92,6 +93,11 @@ const GameDetails = () => {
 				</div>
 			</div>
 		</div>
+		//   <div className="flex justify-center mt-10">
+		//   <Link to="/games">
+		//     <BackButton /> {/* ton futur composant */}
+		//   </Link>
+		// </div>
 	);
 };
 
