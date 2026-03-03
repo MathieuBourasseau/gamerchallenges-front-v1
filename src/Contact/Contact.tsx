@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { BiSolidMessageAltError } from "react-icons/bi";
 import { FaCircleCheck } from "react-icons/fa6";
 import Button from "../ui/Button";
+import { useNavigate } from "react-router-dom";
+
 
 // Data required in form
 type ContactData = {
@@ -21,6 +23,9 @@ export default function Contact() {
         email: '',
         message: '',
     });
+
+    // Handle navigation
+    const navigate = useNavigate();
 
     // Success message
     const [success, setSuccessMessage] = useState<string>('');
@@ -124,6 +129,7 @@ export default function Contact() {
             // Hide success message after few seconds 
             setTimeout(() => {
                 setSuccessMessage('');
+                navigate("/")
             }, 3000);
 
             // Empty form after form submit
@@ -238,12 +244,24 @@ export default function Contact() {
                             type="submit"
                             bgColor="bg-green-medium"
                             rounded="rounded-full"
+                            padding="py-2"
+                            margin="px-10"
                         />
 
                     </div>
                 </fieldset>
-
             </form>
+
+            <Button
+                label="Retour à l'accueil"
+                type="button"
+                bgColor="bg-green-medium"
+                rounded="rounded-full"
+                padding="py-2"
+                margin="px-10"
+                onClick={() => navigate("/")}
+            />
+
 
             {/* Error messages if existing */}
             {Object.keys(errors).length > 0 && (

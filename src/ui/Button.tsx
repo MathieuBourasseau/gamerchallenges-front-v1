@@ -5,15 +5,18 @@ type ButtonProps = {
     type: "button" | "submit"
     bgColor?: string;
     rounded: string;
+    padding: string;
+    margin?: string;
+
     onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-export default function Button({ label, type, bgColor, rounded, onClick } : ButtonProps) {
+export default function Button({ label, type, bgColor, rounded, padding, margin, onClick } : ButtonProps) {
 
     return (
         <button
             className={`
-                text-sm ${bgColor} py-2 px-10 ${rounded} uppercase font-bold max-w-2/3 mx-auto
+                text-sm ${bgColor} ${padding} ${margin} ${rounded} uppercase font-bold max-w-2/3 mx-auto
                 md:text-base
                 `}
             type={type}
