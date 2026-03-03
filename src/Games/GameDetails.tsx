@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import GameImage from "../ui/GameCover";
+import { FaHeart } from "react-icons/fa";
 
 type Game = {
 	id: number;
@@ -9,6 +10,14 @@ type Game = {
 	release_year: string;
 	cover: string;
 	description: string;
+	challenges: Challenge[];
+};
+
+type Challenge = {
+	id: number;
+	name: string;
+	description: string;
+	votes: number;
 };
 
 const GameDetails = () => {
@@ -40,21 +49,46 @@ const GameDetails = () => {
 
 	return (
 		<div className="mx-3 md:mx-0 mt-5">
-			<div className="bg-[var(--color-blue-dark)] border border-[var(--color-green-light)] rounded-lg p-5 flex flex-col md:flex-row md:items-center gap-5">
-				<div className="flex-shrink-0 flex justify-center">
+			{/* Grande carte principale */}
+			<div className="border-2 border-[var(--color-green-light)] rounded-2xl p-8">
+				{/* Bloc jeu */}
+				<div className="flex flex-col md:flex-row gap-6">
 					<GameImage src={game.cover} alt={game.title} />
-				</div>
-				<div className="flex flex-col gap-3 items-center md:items-start text-center md:text-left">
-					<h2 className="text-2xl md:text-3xl font-semibold text-white">
-						{game.title}
-					</h2>
-					<p className="text-white text-justify">{game.description}</p>
-					<div className="flex gap-3">
-						<p className="text-white font-bold">
-							{new Date(game.release_year).getFullYear()} -
-						</p>
-						<p className="text-white font-bold">{game.genre}</p>
+
+					<div className="flex flex-col gap-3">
+						<h2 className="text-2xl font-semibold text-white">{game.title}</h2>
+
+						<p className="text-white">{game.description}</p>
+
+						<div className="flex gap-3 text-white font-bold">
+							<span>{new Date(game.release_year).getFullYear()} </span>
+							<span>{game.genre}</span>
+						</div>
 					</div>
+				</div>
+
+				<div className="my-8 h-[3px] bg-white" />
+
+				<div className="flex flex-col gap-6">
+					<h3 className="text-center text-xl font-semibold text-white tracking-wider">
+						CHALLENGES
+					</h3>
+
+					{game.challenges.map((challenge) => (
+						<div
+							key={challenge.id}
+							className="flex items-center justify-between
+                       border-2 border-[var(--color-green-light)]
+                       rounded-md px-6 py-3"
+						>
+							<span className="text-white">{challenge.name}</span>
+
+							<div className="flex items-center gap-2 text-white font-bold">
+								<span>{challenge.votes ?? 0}</span>
+								<FaHeart className="text-white" />
+							</div>
+						</div>
+					))}
 				</div>
 			</div>
 		</div>
