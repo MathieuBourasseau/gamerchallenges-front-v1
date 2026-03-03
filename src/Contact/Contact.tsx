@@ -236,7 +236,7 @@ export default function Contact() {
                         <Button
                             label="Valider"
                             type="submit"
-                            bgColor="bg-green-dark"
+                            bgColor="bg-green-medium"
                             rounded="rounded-full"
                         />
 
