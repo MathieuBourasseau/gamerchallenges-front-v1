@@ -172,7 +172,7 @@ export default function Contact() {
     return (
 
         <section
-            className="flex flex-col gap-2 items-center justify-center py-[2%] px-[2%] mx-auto"
+            className="flex flex-col py-2 gap-2 items-center justify-center mx-auto"
         >
 
             <h1
