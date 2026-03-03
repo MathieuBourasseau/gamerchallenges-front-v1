@@ -172,28 +172,33 @@ export default function Contact() {
     return (
 
         <section
-            className="flex flex-col py-2 gap-2 items-center justify-center mx-auto"
+            className="flex flex-col py-2 gap-2 items-center justify-center mx-auto min-h-screen w-full"
         >
 
-            <h1
+            <form
                 className="
-                    text-h1-mobile italic uppercase font-bold text-white drop-shadow-title-glow 
+                    flex flex-col gap-6 text-p-mobile bg-green-dark text-white p-4 my-2 rounded-2xl border-green-light border-2 border-green-light
+                    md:text-p-tablet
+                    lg:w-full lg:max-w-[600px]
+                    "
+                onSubmit={handleSubmit}
+            >
+                <h1
+                className="
+                    text-h1-mobile italic uppercase font-bold text-white drop-shadow-title-glow text-center
                     md:text-h1-tablet
                     lg:text-h1-desktop
                 "
             >
-                Contact
+                Contactez-nous
             </h1>
-            <form
-                className="
-                    text-p-mobile bg-green-dark text-white p-4 my-2 rounded-2xl border-green-light border-2 border-green-light
-                    md:text-p-tablet
+                <fieldset
+                    className="w-full
+                        lg:max-w-[80%] lg:mx-auto
                     "
-                onSubmit={handleSubmit}
-            >
-                <fieldset>
+                >
                     <div
-                        className="flex flex-col gap-4 "
+                        className="flex flex-col gap-4 w-full"
                     >
 
                         {/* Name field */}
@@ -203,7 +208,7 @@ export default function Contact() {
                             value={formData.name}
                             onChange={handleChange}
                             name="name"
-                            className="bg-black-dark py-2 px-4 rounded-full"
+                            className="bg-black-dark py-2 px-4 rounded-full w-full"
                         />
 
                         {/* Mail field */}
@@ -213,7 +218,7 @@ export default function Contact() {
                             value={formData.email}
                             onChange={handleChange}
                             name="email"
-                            className="bg-black-dark py-2 px-4 rounded-full"
+                            className="bg-black-dark py-2 px-4 rounded-full w-full"
                         />
 
                         {/* Message field */}
@@ -222,12 +227,12 @@ export default function Contact() {
                             value={formData.message}
                             onChange={handleChange}
                             name="message"
-                            className="bg-black-dark py-2 px-4 rounded-lg h-[150px]"
+                            className="bg-black-dark py-2 px-4 rounded-lg h-[150px] w-full"
                         />
 
                         {/* Data management policy */}
                         <div
-                            className="flex items-center justify-center gap-6"
+                            className="flex items-center justify-center gap-6 w-full"
                         >
                             <input
                                 type="checkbox"
@@ -268,7 +273,9 @@ export default function Contact() {
 
             {/* Success message if existing */}
             {success && (
-                <div>
+                <div
+                    className="flex gap-2 border rounded-full py-2 px-4 text-xs"
+                >
                     <p>{success}</p>
                     <FaCircleCheck />
                 </div>
