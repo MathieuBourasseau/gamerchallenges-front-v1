@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import H1Title from "../ui/H1Title";
 import { FaHeart, FaTrophy } from "react-icons/fa";
 import Image from "../ui/Image";
+import { Link } from "react-router-dom";
+import Button from "../ui/Button";
 
 type RankingUser = {
 	id: number;
@@ -103,6 +105,11 @@ export default function Ranking() {
 			<ul className="flex flex-col md:flex-row justify-center items-center gap-6 md:gap-10">
 				{topVotes.map((user, index) => userCard(user, index, true))}
 			</ul>
+			<div className="flex justify-center mt-10 w-full">
+				<Link to="/">
+					<Button label="Retour à l'accueil" type="button" />
+				</Link>
+			</div>
 		</div>
 	);
 }
