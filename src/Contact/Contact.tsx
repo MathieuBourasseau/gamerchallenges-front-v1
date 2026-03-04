@@ -4,7 +4,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import Button from "../ui/Button";
 import { useNavigate } from "react-router-dom";
 import type { ContactFormData, FormErrors } from "../types/forms";
-import type { FormErrors } from "../types/forms";
+import { validateContactForm } from "../utils/validation";
 
 export default function Contact() {
 
@@ -51,39 +51,13 @@ export default function Contact() {
         // Clear errors state with empty object
         setErrors({});
 
-        // Empty object to handle error message 
-        // Partial makes optional the types required in ContactData
-        let errorMessage: Partial<ContactData> = {};
-
-        // Clean data from form
-        const name = formData.name.trim();
-        const email = formData.email.trim();
-        const message = formData.message.trim();
-
-        // Checking if the name field is valid 
-        if (name.length === 0) {
-            errorMessage.name = "Le champ nom est vide."
-        };
-
-        // Checking if the email is valid 
-        if (email.length === 0) {
-            errorMessage.email = "Le champ email est vide."
-        };
-
-        // Checking if the field message is valid
-        if (message.length === 0) {
-            errorMessage.message = "Le champ message est vide."
-        };
-
-        // Checking that data management policy is accepted 
-        if (!isChecked) {
-            errorMessage.isChecked = "Vous devez accepter la politique."
-        }
+       // Check if data are valid
+       const result = validateContactForm(formData, isChecked)
 
         // Update the state of error only if there is an error
         // Stop the code 
-        if (Object.keys(errorMessage).length > 0) {
-            setErrors(errorMessage)
+        if (Object.keys(result).length > 0) {
+            setErrors(result)
             return;
         };
 
@@ -110,8 +84,7 @@ export default function Contact() {
             // Check the server response
             if (!response.ok) {
                 console.error("Erreur lors de l'envoie du message", data.error)
-                errorMessage.data = data.error;
-                setErrors(errorMessage)
+                setErrors({ server: data.error})
                 return
             };
 
@@ -137,8 +110,7 @@ export default function Contact() {
 
             // create error if connection to server is broken
         } catch (error) {
-            errorMessage.data = "Impossible de se connecter au serveur."
-            setErrors(errorMessage)
+            setErrors({ server: "Impossible de se connecter au serveur."})
             return
         };
     };
