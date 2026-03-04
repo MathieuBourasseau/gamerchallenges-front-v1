@@ -94,7 +94,6 @@ export default function Ranking() {
 			<h2 className="flex items-center justify-center gap-2 mb-2">
 				<FaTrophy className="text-yellow-500" /> Top participations
 			</h2>
-			{/* affichage en colonne sur mobile, en ligne sur desktop */}
 			<ul className="flex flex-col md:flex-row justify-center items-center gap-6 md:gap-10">
 				{topParticipations.map((user, index) => userCard(user, index))}
 			</ul>
