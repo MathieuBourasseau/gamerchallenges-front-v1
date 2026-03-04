@@ -52,3 +52,12 @@ Simplement mise en place du fetch pour récupérer les données du back et les a
 ## **Tâches réalisées :**
 
 ## **Docs et divers outils :**
+
+### 02/03/2026
+
+## **Ce qui est prévu ce jour :**
+
+- Toujours continuer de styliser les pages de MyChallenges, Challenges et Home avec les nouvelles variables css
+  1. OK pour la page d'accueil, il faut que le header soit fait pour que ça match avec la maquette ensuite
+  2. OK pour la page des Challenges, pour la pagination, ai fait le chois de mettre par 8 pour le desktop
+  3. Pour les images etc reprendre le composant de Ludivine

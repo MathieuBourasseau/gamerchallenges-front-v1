@@ -29,8 +29,7 @@ type Participation = {
 };
 
 import { useState, useEffect } from "react";
-import titleImage from "../assets/images/Title.png";
-import temporaryImage from "../assets/images/dofuscover.jpg";
+import H1Title from "../ui/H1Title";
 export default function Home() {
   const [bestParticipations, setBestParticipations] = useState<Participation[]>(
     [],
@@ -44,25 +43,8 @@ export default function Home() {
 
   return (
     <>
-      <article className="flex justify-center items-center gap-60 px-6 py-10">
-        <div className="flex flex-col items-center">
-          <img src={titleImage} alt="titre" className="w-150" />
-          <p className="uppercase font-bold text-white text-lg text-center mt-4">
-            Vous êtes prêts ? À vous de jouer !
-          </p>
-        </div>
-
-        <img
-          src={temporaryImage}
-          alt="image temporaire pour la page d'accueil"
-          className="w-72 rounded-lg shadow-xl"
-        />
-      </article>
-
       <section className="text-center px-6 py-12">
-        <h2 className="text-3xl font-bold mb-10 text-white">
-          Les vidéos les plus likées
-        </h2>
+        <H1Title>Les vidéos les plus likées</H1Title>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 justify-items-center max-w-6xl mx-auto">
           {bestParticipations.map((p) => (
@@ -78,8 +60,6 @@ export default function Home() {
               <p className="text-white font-medium text-center">
                 {p.challenge.name}
               </p>
-
-              <p className="text-green-light text-sm">{p.title}</p>
             </article>
           ))}
         </div>
