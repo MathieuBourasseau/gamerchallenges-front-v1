@@ -171,7 +171,9 @@ export default function Contact() {
 
                         {/* Data management policy */}
                         <div
-                            className="flex items-center text-xs"
+                            className="
+                                flex items-center gap-4 text-xs
+                                md:text-sm md:justify-center"
                         >
                             <Input
                                 type="checkbox"
