@@ -50,39 +50,50 @@ export default function Ranking() {
 	if (loading) return <p>Chargement...</p>;
 	if (error) return <p>{error}</p>;
 
+	//même type de carte pour chaque joueur - peut-être à isoler en composant ?
+	const userCard = (user: RankingUser, index: number, isVote?: boolean) => {
+		const widthClass = index === 0 ? "w-80" : "w-64"; // 1er joueur a une carte plus large que les autres
+		return (
+			<li
+				key={user.id}
+				className={`${widthClass} border-3 border-green-medium rounded-3xl overflow-hidden p-4 mb-4 flex flex-col items-center gap-2 text-center shadow-md hover:shadow-lg transition-shadow`}
+			>
+				<Image
+					src={user.avatar}
+					alt={user.username}
+					className="w-16 h-16 rounded-full"
+				/>
+				<span className="font-semibold">{user.username}</span>
+				{isVote ? (
+					<span className="flex items-center gap-2">
+						<span className="font-semibold">{user.username}</span>
+						<span className="flex items-center gap-1">
+							{user.voteCount} <FaHeart className="text-red-500" />
+						</span>
+					</span>
+				) : (
+					<span>{user.participationCount} participation(s)</span>
+				)}
+			</li>
+		);
+	};
+
 	return (
-		<div>
-			<H1Title>CLASSEMENT</H1Title>
-			<h2>
-				<FaTrophy style={{ marginRight: "8px" }} />
-				Top participations
-			</h2>{" "}
-			<ul>
-				{topParticipations.map((user, index) => (
-					<li
-						key={user.id}
-						className="border border-green-medium rounded-md p-2 mb-2 flex items-center gap-2"
-					>
-						{index + 1}. <Image src={user.avatar} alt={user.username} />{" "}
-						{user.username} — {user.participationCount} participation(s) aux
-						challenges
-					</li>
-				))}
+		<div className="max-w-md mx-auto">
+			<H1Title>CLASSEMENTS</H1Title>
+
+			<h2 className="flex items-center justify-center gap-2 mb-2">
+				<FaTrophy className="text-yellow-500" /> Top participations
+			</h2>
+			<ul className="flex flex-col items-center">
+				{topParticipations.map((user, index) => userCard(user, index))}
 			</ul>
-			<h2>
-				<FaTrophy style={{ marginRight: "8px" }} />
-				Top votes reçus
-			</h2>{" "}
-			<ul>
-				{topVotes.map((user, index) => (
-					<li
-						key={user.id}
-						className="border border-green-medium rounded-md p-2 mb-2 flex items-center gap-2"
-					>
-						{index + 1}. <Image src={user.avatar} alt={user.username} />{" "}
-						{user.username} — {user.voteCount} <FaHeart className="text-red" />
-					</li>
-				))}
+
+			<h2 className="flex items-center justify-center gap-2 mt-6 mb-2">
+				<FaTrophy className="text-yellow-500" /> Top votes reçus
+			</h2>
+			<ul className="flex flex-col items-center">
+				{topVotes.map((user, index) => userCard(user, index, true))}
 			</ul>
 		</div>
 	);
