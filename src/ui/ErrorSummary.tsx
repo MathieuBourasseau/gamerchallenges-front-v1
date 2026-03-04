@@ -1,9 +1,6 @@
 import React from 'react'
 import { BiSolidMessageAltError } from "react-icons/bi";
-
-type ErrorSummaryProps = {
-    errors: Record<string, string>;
-}
+import type { ErrorSummaryProps } from "../types/messages";
 
 export default function ErrorSummary({errors} : ErrorSummaryProps) {
 
