@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { BiSolidMessageAltError } from "react-icons/bi";
 import { FaCircleCheck } from "react-icons/fa6";
 import Button from "../ui/Button";
 import { useNavigate } from "react-router-dom";
