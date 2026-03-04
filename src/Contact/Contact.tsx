@@ -3,22 +3,13 @@ import { BiSolidMessageAltError } from "react-icons/bi";
 import { FaCircleCheck } from "react-icons/fa6";
 import Button from "../ui/Button";
 import { useNavigate } from "react-router-dom";
-
-
-// Data required in form
-type ContactData = {
-    name: string;
-    email: string;
-    message: string;
-    data?: string;
-    isChecked?: boolean | string;
-}
+import type { ContactFormData } from "../types/forms";
 
 export default function Contact() {
 
     // Form data secured with ContactData type
     // Form data is empty by default 
-    const [formData, setFormData] = useState<ContactData>({
+    const [formData, setFormData] = useState<ContactFormData>({
         name: '',
         email: '',
         message: '',

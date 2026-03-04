@@ -14,3 +14,6 @@ export type ContactUserInputs = {
 export type LoginUserInputs = {
     password: string;
 }
+
+// Merged BaseUserInputs with ContactUserInputs to export only one type
+export type ContactFormData = BaseUserInputs & ContactUserInputs;
