@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-
 import Button from "../ui/Button";
 import { useNavigate } from "react-router-dom";
 import type { ContactFormData, FormErrors } from "../types/forms";
 import { validateContactForm } from "../utils/validation";
 import Input from "../ui/Input";
 import ErrorSummary from "../ui/ErrorSummary";
-import type { SuccessMessageProps } from "../types/messages";
 import SuccessMessage from "../ui/SuccessMessage";
 import { sendContactMessage } from "../Services/contactService";
 
@@ -116,8 +114,6 @@ export default function Contact() {
             className="flex flex-col py-2 gap-2 items-center justify-center mx-auto min-h-screen w-full"
         >
 
-
-
             <form
                 className="
                     flex flex-col gap-6 text-p-mobile bg-green-dark text-white p-4 my-2 rounded-2xl border-green-light border-2 border-green-light
@@ -175,11 +171,12 @@ export default function Contact() {
 
                         {/* Data management policy */}
                         <div
-                            className="flex items-center justify-center gap-6 w-full"
+                            className="flex items-center text-xs"
                         >
                             <Input
                                 type="checkbox"
                                 onChange={handleChecked}
+                                width="w-auto"
                             />
 
                             <span>

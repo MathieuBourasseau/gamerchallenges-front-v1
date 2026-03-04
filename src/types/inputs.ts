@@ -7,4 +7,5 @@ export type InputProps = {
     checked? : boolean;
     value?: string;
     name?: string;
+    width?: string;
 }
