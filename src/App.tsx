@@ -9,7 +9,7 @@ import Contact from "./Contact/Contact";
 // import APropos from "./APropos/APropos";
 // import MentionsLegales from "./MentionsLegales/MentionsLegales";
 import { Footer } from "./ui/Footer";
-import Ranking from "./Ranking/ranking";
+import Ranking from "./Ranking/Ranking";
 
 export default function App() {
 	return (

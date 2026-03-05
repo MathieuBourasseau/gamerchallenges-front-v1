@@ -51,9 +51,7 @@ export default function Ranking() {
 	if (loading) return <p>Chargement...</p>;
 	if (error) return <p>{error}</p>;
 
-	// même type de carte pour chaque joueur - peut-être à isoler en composant ?
 	const userCard = (user: RankingUser, index: number, isVote?: boolean) => {
-		// Largeur plus grande pour joueur numéro 1
 		const isFirst = index === 0;
 
 		return (
@@ -63,8 +61,8 @@ export default function Ranking() {
   				w-full border-3 border-green-medium rounded-3xl
   				flex flex-col items-center gap-2 text-center
   				shadow-md hover:shadow-lg transition-shadow
-  				${isFirst ? "max-w-[28rem] p-6 scale-105 md:scale-110" : "max-w-[20rem] p-4"}
-`}
+  				${isFirst ? "max-w-[28rem] p-6 scale-105 md:scale-110" : "max-w-[20rem] p-4"} 
+`} // last line : if n°1 player -> bigger card
 			>
 				<div className="relative">
 					<div className="absolute inset-0 top-0 bottom-0 left-1/2 transform -translate-x-1/2 bg-green-light opacity-20 rounded-full blur-3xl"></div>
