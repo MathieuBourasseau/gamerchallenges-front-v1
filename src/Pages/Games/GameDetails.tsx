@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Image from "../ui/Image";
+import Image from "../../ui/Image";
 import { FaHeart } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import Button from "../ui/Button";
+import Button from "../../ui/Button";
 
 type Game = {
 	id: number;
