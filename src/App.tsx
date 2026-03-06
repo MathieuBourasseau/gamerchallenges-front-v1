@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Home from "./Home/Home";
-import Games from "./Games/Games";
-import GameDetails from "./Games/GameDetails";
+import Home from "./Pages/Home/Home";
+import Games from "./Pages/Games/Games";
+import GameDetails from "./Pages/Games/GameDetails";
 import Challenges from "./Pages/Challenges/Challenges";
 import MyChallenges from "./Pages/Challenges/MyChallenges";
 import About from "./Pages/About/About";
