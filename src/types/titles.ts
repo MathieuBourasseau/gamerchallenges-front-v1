@@ -1,3 +1,3 @@
-export type Titles = {
+export type TitlesProps = {
     label: string;
 }

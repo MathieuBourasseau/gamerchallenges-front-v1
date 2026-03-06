@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Image from "../../ui/Image";
 import Pagination from "../../ui/Pagination";
 import H1Title from "../../ui/H1Title";
+import H2 from "../../ui/H2";
 
 type Game = {
 	id: number;
@@ -54,9 +55,9 @@ const Games = () => {
 						className="flex flex-col items-center"
 					>
 						<Image src={game.cover} alt={game.title} />
-						<h3 className="mt-2 text-lg font-semibold text-white">
-							{game.title}
-						</h3>
+						<H2
+							label={game.title}
+						/>
 					</Link>
 				))}
 			</div>
