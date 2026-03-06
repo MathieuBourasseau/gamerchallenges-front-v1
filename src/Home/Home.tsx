@@ -29,8 +29,11 @@ type Participation = {
 };
 
 import { useState, useEffect } from "react";
-import titleImage from "../assets/images/Title.png";
-import temporaryImage from "../assets/images/dofuscover.jpg";
+import H1Title from "../ui/H1Title";
+import TitleImage from "../assets/images/Title.png";
+import backgroundImage from "../assets/images/draw_team.png";
+import { FaHamburger } from "react-icons/fa";
+import Button from "../ui/Button";
 export default function Home() {
   const [bestParticipations, setBestParticipations] = useState<Participation[]>(
     [],
@@ -44,55 +47,75 @@ export default function Home() {
 
   return (
     <>
-      <article className="flex justify-center items-center gap-60 px-6 py-10">
-        <div className="flex flex-col items-center">
-          <img src={titleImage} alt="titre" className="w-150" />
-          <p className="uppercase font-bold text-white text-lg text-center mt-4">
-            Vous êtes prêts ? À vous de jouer !
-          </p>
-        </div>
+      <div
+        className="
+    flex flex-row items-center justify-center gap-4 mx-auto
+    md:grid md:grid-cols-2 md:gap-6
+  ">
+        <img
+          src={TitleImage}
+          alt="Title"
+          className="w-80 md:w-72 lg:w-96 h-auto"
+        />
+
+        <FaHamburger
+          className="
+      w-10 h-10 sm:w-12 sm:h-12 
+      text-green-light
+      md:hidden
+    "
+        />
 
         <img
-          src={temporaryImage}
-          alt="image temporaire pour la page d'accueil"
-          className="w-72 rounded-lg shadow-xl"
+          src={backgroundImage}
+          alt=""
+          className="
+      hidden md:block
+      w-40 sm:w-56 md:w-72 lg:w-96 h-auto
+    "
         />
-      </article>
-
+      </div>
       <section className="text-center px-6 py-12">
-        <h2 className="text-3xl font-bold mb-10 text-white">
-          Les vidéos les plus likées
-        </h2>
+        <H1Title>Les vidéos les plus likées</H1Title>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 justify-items-center max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-10 justify-items-center max-w-6xl mx-auto">
           {bestParticipations.map((p) => (
-            <article key={p.id} className="flex flex-col items-center">
+            <article
+              key={p.id}
+              className="
+    flex flex-col items-center 
+    bg-green-light/20 
+    rounded-lg p-2 
+    w-48 sm:w-56 lg:w-64
+  ">
               <a href={p.url} target="_blank" rel="noopener noreferrer">
                 <img
                   src={p.challenge.game.cover}
                   alt={p.challenge.game.title}
-                  className="w-60 h-60 rounded-lg mb-4 border-4 border-green-light object-cover transition-transform duration-300 ease-out hover:scale-105 hover:shadow-xl"
+                  className="
+        w-48 h-48 
+        sm:w-56 sm:h-56 
+        lg:w-64 lg:h-64
+        rounded-lg mb-3 border-4 border-green-light 
+        object-cover transition-transform duration-300 ease-out 
+        hover:scale-105 hover:shadow-xl
+      "
                 />
               </a>
 
               <p className="text-white font-medium text-center">
                 {p.challenge.name}
               </p>
-
-              <p className="text-green-light text-sm">{p.title}</p>
             </article>
           ))}
         </div>
-
-        <button
-          type="button"
-          className="text-white font-bold bg-green-dark hover:bg-green-light px-8 py-3 rounded-full mt-10 transition active:bg-blue-medium"
-          onClick={() => (window.location.href = "/challenges")}>
-          {" "}
-          {/* pour le moment c'est une redirection vers la page des challenges, à
-          changer plus tard  */}
-          Voir plus
-        </button>
+        <div className="flex justify-center mt-10">
+          <Button
+            label="Voir plus"
+            type="button"
+            onClick={() => (window.location.href = "/challenges")}
+          />
+        </div>
       </section>
     </>
   );

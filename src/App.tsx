@@ -10,6 +10,7 @@ import Contact from "./Contact/Contact";
 import Legal from "./Legal/Legal";
 
 import { Footer } from "./ui/Footer";
+import Ranking from "./Ranking/Ranking";
 
 export default function App() {
 	return (
@@ -26,7 +27,7 @@ export default function App() {
 					<Route path="/mentions-legales" element={<Legal />} />
 				</Routes>
 				<Footer />
-			</div>	
+			</div>
 		</BrowserRouter>
 	);
 }

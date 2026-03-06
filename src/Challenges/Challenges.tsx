@@ -7,32 +7,49 @@ type Challenge = {
     title: string;
     cover: string;
   };
-}; // on reprend les types qui ont été définis dans la méthode getAllCHallenges du back et on applique la couche de sécurité comme Mathieu nous a appris ! → Typescript
+};
+
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import H1Title from "../ui/H1Title";
+import Pagination from "../ui/Pagination";
 
 export default function Challenges() {
   const [challenges, setChallenges] = useState<Challenge[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 8;
+
+  const navigate = useNavigate();
+
+  const handleChallengeClick = (challengeId: number) => {
+    navigate(`/challenges/${challengeId}`); //
+  };
+
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    fetch("http://localhost:3000/challenges") // ← ça c'est le req pour récupérer les challenges par la méthode fetch
-      .then((res) => res.json()) // on instancie la réponse format json
-      .then((data) => setChallenges(data)) // on met à jour avec state 'les changement ne se font qu'avec "set..." les challenges
-      .catch((err) => console.error("Erreur fetch challenges :", err)); // ← petite gestion d'erreur si le fetch ne fonctionne pas....
-  }, []); //← le tableau ici est vide ça veut dire que useEffect ne charge qu'une fois les données au montage du composant
+    fetch(`${API_URL}/challenges`)
+      .then((res) => res.json())
+      .then((data) => setChallenges(data))
+      .catch((err) => console.error("Erreur fetch challenges :", err));
+  }, []);
+
+  const totalPages = Math.ceil(challenges.length / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const currentChallenges = challenges.slice(startIndex, startIndex + pageSize);
 
   return (
     <section className="px-10 py-10">
-      <h2 className="text-3xl font-bold text-white text-center mb-10">
-        Tous les challenges
-      </h2>
+      <H1Title>Tous les challenges</H1Title>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 justify-items-center">
-        {challenges.map((challenge) => (
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-10 justify-items-center">
+        {currentChallenges.map((challenge) => (
           <article key={challenge.id} className="flex flex-col items-center">
             <img
               src={challenge.game.cover}
               alt={challenge.game.title}
-              className="w-68 h-60 rounded-lg border-4 border-green-light object-cover
+              onClick={() => handleChallengeClick(challenge.id)} // ← CORRECTION : on passe une fonction, pas le résultat
+              className="w-45 h-40 rounded-lg border-4 border-green-light object-cover cursor-pointer
               transition-transform duration-300 ease-out hover:scale-105 hover:shadow-xl"
             />
             <p className="text-white font-medium text-center mt-3">
@@ -41,6 +58,12 @@ export default function Challenges() {
           </article>
         ))}
       </div>
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </section>
   );
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import GameImage from "../ui/GameCover";
+import Image from "../ui/Image";
 import Pagination from "../ui/Pagination";
 import H1Title from "../ui/H1Title";
 
@@ -53,7 +53,7 @@ const Games = () => {
 						to={`/games/${game.id}`}
 						className="flex flex-col items-center"
 					>
-						<GameImage src={game.cover} alt={game.title} />
+						<Image src={game.cover} alt={game.title} />
 						<h3 className="mt-2 text-lg font-semibold text-white">
 							{game.title}
 						</h3>

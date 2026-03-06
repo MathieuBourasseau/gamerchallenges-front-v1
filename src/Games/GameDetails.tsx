@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import GameImage from "../ui/GameCover";
+import Image from "../ui/Image";
 import { FaHeart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Button from "../ui/Button";
@@ -53,7 +53,7 @@ const GameDetails = () => {
 		<div className="mx-3 md:mx-0 mt-5">
 			<div className="border-2 border-[var(--color-green-light)] rounded-2xl p-8">
 				<div className="flex flex-col md:flex-row gap-6">
-					<GameImage src={game.cover} alt={game.title} />
+					<Image src={game.cover} alt={game.title} />
 
 					<div className="flex flex-col gap-3">
 						<h2 className="text-2xl font-semibold text-white">{game.title}</h2>

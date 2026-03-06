@@ -1,24 +1,18 @@
 import React, { useState } from "react";
-import { BiSolidMessageAltError } from "react-icons/bi";
-import { FaCircleCheck } from "react-icons/fa6";
 import Button from "../ui/Button";
 import { useNavigate } from "react-router-dom";
-
-
-// Data required in form
-type ContactData = {
-    name: string;
-    email: string;
-    message: string;
-    data?: string;
-    isChecked?: boolean | string;
-}
+import type { ContactFormData, FormErrors } from "../types/forms";
+import { validateContactForm } from "../utils/validation";
+import Input from "../ui/Input";
+import ErrorSummary from "../ui/ErrorSummary";
+import SuccessMessage from "../ui/SuccessMessage";
+import { sendContactMessage } from "../Services/contactService";
 
 export default function Contact() {
 
-    // Form data secured with ContactData type
+    // Form data secured with ContactFormData type
     // Form data is empty by default 
-    const [formData, setFormData] = useState<ContactData>({
+    const [formData, setFormData] = useState<ContactFormData>({
         name: '',
         email: '',
         message: '',
@@ -31,7 +25,7 @@ export default function Contact() {
     const [success, setSuccessMessage] = useState<string>('');
 
     // Errors messages
-    const [errors, setErrors] = useState<Partial<ContactData>>({});
+    const [errors, setErrors] = useState<FormErrors<ContactFormData>>({});
 
     // Accept or not data management policy 
     // By default data policy is not accepted
@@ -59,69 +53,20 @@ export default function Contact() {
         // Clear errors state with empty object
         setErrors({});
 
-        // Empty object to handle error message 
-        // Partial makes optional the types required in ContactData
-        let errorMessage: Partial<ContactData> = {};
-
-        // Clean data from form
-        const name = formData.name.trim();
-        const email = formData.email.trim();
-        const message = formData.message.trim();
-
-        // Checking if the name field is valid 
-        if (name.length === 0) {
-            errorMessage.name = "Le champ nom est vide."
-        };
-
-        // Checking if the email is valid 
-        if (email.length === 0) {
-            errorMessage.email = "Le champ email est vide."
-        };
-
-        // Checking if the field message is valid
-        if (message.length === 0) {
-            errorMessage.message = "Le champ message est vide."
-        };
-
-        // Checking that data management policy is accepted 
-        if (!isChecked) {
-            errorMessage.isChecked = "Vous devez accepter la politique."
-        }
+        // Check if data are valid
+        const result = validateContactForm(formData, isChecked)
 
         // Update the state of error only if there is an error
         // Stop the code 
-        if (Object.keys(errorMessage).length > 0) {
-            setErrors(errorMessage)
+        if (Object.keys(result).length > 0) {
+            setErrors(result)
             return;
         };
-
-        // Data from form
-        const bodyContent = JSON.stringify(formData);
-
-        // Headers data for fetch
-        const headersContent = { "Content-Type": "application/json" }
 
         // --- FETCH DATA TO BACKEND --- 
         try {
 
-            // Api url 
-            const apiUrl = import.meta.env.VITE_API_URL;
-
-            const response = await fetch(`${apiUrl}/contact`, {
-                method: "POST",
-                headers: headersContent,
-                body: bodyContent,
-            });
-
-            const data = await response.json();
-
-            // Check the server response
-            if (!response.ok) {
-                console.error("Erreur lors de l'envoie du message", data.error)
-                errorMessage.data = data.error;
-                setErrors(errorMessage)
-                return
-            };
+            const data = await sendContactMessage(formData);
 
             // Show success message 
             setSuccessMessage(data.message);
@@ -142,31 +87,25 @@ export default function Contact() {
             // Put isChecked to its initial state
             setIsChecked(false);
 
-
             // create error if connection to server is broken
         } catch (error) {
-            errorMessage.data = "Impossible de se connecter au serveur."
-            setErrors(errorMessage)
-            return
+
+            // Checking if the error is from instance Errror
+            if (error instanceof Error) {
+                setErrors({ server: error.message });
+
+            } else {
+                // If the error does not come from Error Instance
+                setErrors({ server: "Une erreur de serveur est survenue." });
+            }
+            return;
         };
     };
 
     // --- HANDLE CHECKED ---
-    const handleChecked = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setIsChecked(e.target.checked)
-    };
-
-    // --- SHOW ERROR MESSAGES --- 
-    const showErrors = () => {
-        return Object.values(errors).map((msg, i) => (
-            <div
-                key={i}
-                className="flex justify-between items-center gap-2 border-2 border-red-dark bg-red-medium rounded-r-full py-2 px-4 text-xs"
-            >
-                <span>{msg}</span>
-                <BiSolidMessageAltError />
-            </div>
-        ))
+    const handleChecked = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const target = e.target as HTMLInputElement
+        setIsChecked(target.checked)
     };
 
     return (
@@ -174,8 +113,6 @@ export default function Contact() {
         <section
             className="flex flex-col py-2 gap-2 items-center justify-center mx-auto min-h-screen w-full"
         >
-
-
 
             <form
                 className="
@@ -203,44 +140,47 @@ export default function Contact() {
                         className="flex flex-col gap-4 w-full"
                     >
 
-                        {/* Name field */}
-                        <input
+                        {/* Name input */}
+                        <Input
                             type="text"
                             placeholder="Nom"
                             value={formData.name}
                             onChange={handleChange}
                             name="name"
-                            className="bg-black-dark py-2 px-4 rounded-full w-full"
                         />
 
-                        {/* Mail field */}
-                        <input
+                        {/* Mail input */}
+
+                        <Input
                             type="email"
                             placeholder="mail@mail.com"
                             value={formData.email}
                             onChange={handleChange}
                             name="email"
-                            className="bg-black-dark py-2 px-4 rounded-full w-full"
                         />
 
-                        {/* Message field */}
-                        <textarea
-                            placeholder="Votre message"
+                        {/* Message input */}
+                        <Input
+                            placeholder="Mon message"
                             value={formData.message}
                             onChange={handleChange}
                             name="message"
-                            className="bg-black-dark py-2 px-4 rounded-lg h-[150px] w-full"
+                            isTextArea
                         />
+
 
                         {/* Data management policy */}
                         <div
-                            className="flex items-center justify-center gap-6 w-full"
+                            className="
+                                flex items-center gap-4 text-xs
+                                md:text-sm md:justify-center"
                         >
-                            <input
+                            <Input
                                 type="checkbox"
-                                checked={isChecked}
                                 onChange={handleChecked}
+                                width="w-auto"
                             />
+
                             <span>
                                 J'accepte la politique de confidentialité.
                             </span>
@@ -262,24 +202,12 @@ export default function Contact() {
                 onClick={() => navigate("/")}
             />
 
-             {/* Success message if existing */}
-                {success && (
-                    <div
-                        className="fixed left-0 top-40 flex gap-2 border-2 border-green-light rounded-r-full py-2 px-4 text-xs bg-green-medium"
-                    >
-                        <p>{success}</p>
-                        <FaCircleCheck />
-                    </div>
-                )}
+            {/* Success message */}
 
-            {/* Error messages if existing */}
-            {Object.keys(errors).length > 0 && (
-                <div
-                    className="fixed left-0 top-10 flex flex-col gap-2"
-                >
-                    {showErrors()}
-                </div>
-            )}
+            <SuccessMessage success={success} />
+
+            {/* Error messages */}
+            <ErrorSummary errors={errors} />
 
         </section>
     )
