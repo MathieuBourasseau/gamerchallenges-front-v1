@@ -66,6 +66,14 @@ export default function ChallengeDetails() {
                     alt={challenge?.name}
                 />
                 <H1Title>{challenge.name}</H1Title>
+                <span>
+                    {challenge.createdAt}
+                </span>
+            </div>
+
+            {/* DESCRIPTION AND LIKES PART */}
+            <div>
+                <p>{challenge.description}</p>
             </div>
         </section>
     )
