@@ -5,10 +5,10 @@ import Games from "./Games/Games";
 import GameDetails from "./Games/GameDetails";
 import Challenges from "./Challenges/Challenges";
 import MyChallenges from "./Challenges/MyChallenges";
-import Challenge from "./Challenges/Challenge";
+import About from "./About/About";
 import Contact from "./Contact/Contact";
-// import APropos from "./APropos/APropos";
-// import MentionsLegales from "./MentionsLegales/MentionsLegales";
+import Legal from "./Legal/Legal";
+
 import { Footer } from "./ui/Footer";
 import Ranking from "./Ranking/Ranking";
 
@@ -21,12 +21,10 @@ export default function App() {
 					<Route path="/games" element={<Games />} />
 					<Route path="/games/:id" element={<GameDetails />} />
 					<Route path="/challenges" element={<Challenges />} />
-					<Route path="/challenges/:id" element={<Challenge />} />
 					<Route path="/my-challenges" element={<MyChallenges />} />
 					<Route path="/contact" element={<Contact />} />
-					<Route path="/ranking" element={<Ranking />} />
-					{/* <Route path="/a-propos" element={<APropos />} /> */}
-					{/* <Route path="/mentions-legales" element={<MentionsLegales />} />  */}
+					<Route path="/a-propos" element={<About />} />
+					<Route path="/mentions-legales" element={<Legal />} />
 				</Routes>
 				<Footer />
 			</div>
