@@ -37,10 +37,6 @@
   --text-h3-tablet: 1rem;
   --text-h3-desktop: 1.125rem;
 
-  /* Titles spacing settings */
-  --text-h2-spacing: 0.5rem;
-
-
   /* Glow effect on titles */
   --drop-shadow-title-glow: 0 0 10px rgba(255, 255, 255, 0.9);
 
