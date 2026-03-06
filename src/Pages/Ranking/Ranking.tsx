@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import H1Title from "../ui/H1Title";
+import H1Title from "../../ui/H1Title";
 import { FaHeart, FaTrophy } from "react-icons/fa";
-import Image from "../ui/Image";
+import Image from "../../ui/Image";
 import { Link } from "react-router-dom";
-import Button from "../ui/Button";
+import Button from "../../ui/Button";
 
 type RankingUser = {
 	id: number;
