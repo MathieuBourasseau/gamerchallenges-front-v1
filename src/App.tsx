@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Home from "./Home/Home";
-import Games from "./Games/Games";
-import GameDetails from "./Games/GameDetails";
+import Home from "./Pages/Home/Home";
+import Games from "./Pages/Games/Games";
+import GameDetails from "./Pages/Games/GameDetails";
 import Challenges from "./Pages/Challenges/Challenges";
 import MyChallenges from "./Pages/Challenges/MyChallenges";
 import About from "./Pages/About/About";
@@ -18,11 +18,11 @@ export default function App() {
 			<div className="min-h-screen flex flex-col">
 				<Routes>
 					<Route path="/" element={<Home />} />
-					<Route path="/games" element={<Games />} />
-					<Route path="/games/:id" element={<GameDetails />} />
+					<Route path="/jeux" element={<Games />} />
+					<Route path="/jeux/:id" element={<GameDetails />} />
 					<Route path="/challenges" element={<Challenges />} />
-					<Route path="/my-challenges" element={<MyChallenges />} />
-					<Route path="/ranking" element={<Ranking />} />
+					<Route path="/mes-challenges" element={<MyChallenges />} />
+					<Route path="/classement" element={<Ranking />} />
 					<Route path="/contact" element={<Contact />} />
 					<Route path="/a-propos" element={<About />} />
 					<Route path="/mentions-legales" element={<Legal />} />

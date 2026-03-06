@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Image from "../ui/Image";
-import Pagination from "../ui/Pagination";
-import H1Title from "../ui/H1Title";
+import Image from "../../ui/Image";
+import Pagination from "../../ui/Pagination";
+import H1Title from "../../ui/H1Title";
 
 type Game = {
 	id: number;
