@@ -1,7 +1,7 @@
 import { ReactNode } from "react"; //nécessaire pour afficher ce qu'on indique entre les balises H1, sinon reste invisible
 
 type H1TitleProps = {
-	children: ReactNode;
+	children?: ReactNode;
 };
 
 const H1Title = ({ children }: H1TitleProps) => {

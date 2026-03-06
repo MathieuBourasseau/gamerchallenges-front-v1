@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import type { Game, Challenge, User, Participation } from "../../types/models"
 import { useParams } from "react-router-dom"
+import Image from "../../ui/Image";
+import H1Title from "../../ui/H1Title";
 
 type ApiResponse = Challenge & { error?: string };
 
@@ -45,15 +47,26 @@ export default function ChallengeDetails() {
                 }
             }
         };
-        
+
         if (id) fetchChallenge();
-        
+
     }, [id])
 
-
+    if (!challenge) {
+        return (
+            <p>Chargement en cours</p>
+        )
+    }
     return (
-        <div>
+        <section>
 
-        </div>
+            <div>
+                <Image
+                    src={challenge.game?.cover || ""}
+                    alt={challenge?.name}
+                />
+                <H1Title>{challenge.name}</H1Title>
+            </div>
+        </section>
     )
 }

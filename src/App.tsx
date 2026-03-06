@@ -8,6 +8,7 @@ import MyChallenges from "./Pages/Challenges/MyChallenges";
 import About from "./Pages/About/About";
 import Contact from "./Pages/Contact/Contact";
 import Legal from "./Pages/Legal/Legal";
+import ChallengeDetails from "./Pages/Challenges/ChallengeDetails";
 
 import { Footer } from "./components/Footer/Footer";
 import Ranking from "./Pages/Ranking/Ranking";
@@ -21,6 +22,7 @@ export default function App() {
 					<Route path="/jeux" element={<Games />} />
 					<Route path="/jeux/:id" element={<GameDetails />} />
 					<Route path="/challenges" element={<Challenges />} />
+					<Route path="/challenges/:id" element={<ChallengeDetails />} />
 					<Route path="/mes-challenges" element={<MyChallenges />} />
 					<Route path="/classement" element={<Ranking />} />
 					<Route path="/contact" element={<Contact />} />
