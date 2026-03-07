@@ -8,14 +8,15 @@ import MyChallenges from "./Pages/Challenges/MyChallenges";
 import About from "./Pages/About/About";
 import Contact from "./Pages/Contact/Contact";
 import Legal from "./Pages/Legal/Legal";
-
 import { Footer } from "./components/Footer/Footer";
 import Ranking from "./Pages/Ranking/Ranking";
+import BurgerMenu from "./components/MenuBurger/MenuBurger";
 
 export default function App() {
 	return (
 		<BrowserRouter>
 			<div className="min-h-screen flex flex-col">
+				 <BurgerMenu />
 				<Routes>
 					<Route path="/" element={<Home />} />
 					<Route path="/jeux" element={<Games />} />

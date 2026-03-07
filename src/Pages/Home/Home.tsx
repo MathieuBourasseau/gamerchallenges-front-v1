@@ -32,7 +32,6 @@ import { useState, useEffect } from "react";
 import H1Title from "../../ui/H1Title";
 import TitleImage from "../../assets/images/Title.png";
 import backgroundImage from "../../assets/images/draw_team.png";
-import { FaHamburger } from "react-icons/fa";
 import Button from "../../ui/Button";
 export default function Home() {
 	const [bestParticipations, setBestParticipations] = useState<Participation[]>(
@@ -57,14 +56,6 @@ export default function Home() {
 					src={TitleImage}
 					alt="Title"
 					className="w-80 md:w-72 lg:w-96 h-auto"
-				/>
-
-				<FaHamburger
-					className="
-      w-10 h-10 sm:w-12 sm:h-12 
-      text-green-light
-      md:hidden
-    "
 				/>
 
 				<img
