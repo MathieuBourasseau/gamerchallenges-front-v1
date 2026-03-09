@@ -1,15 +1,17 @@
 import { Icon } from "@iconify/react";
+import { Link, useNavigate } from "react-router-dom";
 import manette from "../../assets/images/manetteGC.png";
 import { useState } from "react";
 
 function Header() {
   const [search, setSearch] = useState("");
+  const navigate = useNavigate();
 
   const handleSearch = () => {
     console.log("Recherche :", search);
 
     if (search.trim() !== "") {
-      window.location.href = `/search?q=${search}`;
+      navigate(`/search?q=${search}`);
     }
   };
 
@@ -25,27 +27,27 @@ function Header() {
             className="w-12 h-12 lg:w-16 lg:h-16 object-contain"
           />
 
-          <a
-            href="/login"
+          <Link
+            to="/login"
             className="hidden lg:block text-white font-semibold hover:text-green-light transition"
           >
             INSCRIPTION / CONNEXION
-          </a>
+          </Link>
         </div>
 
         {/* Links */}
         <nav className="hidden lg:flex gap-6 xl:gap-8 text-white font-semibold text-center">
-          <a href="/games" className="hover:text-green-light">
+          <Link to="/games" className="hover:text-green-light">
             JEUX
-          </a>
+          </Link>
 
-          <a href="/challenges" className="hover:text-green-light">
+          <Link to="/challenges" className="hover:text-green-light">
             CHALLENGES
-          </a>
+          </Link>
 
-          <a href="/ranking" className="hover:text-green-light">
+          <Link to="/ranking" className="hover:text-green-light">
             CLASSEMENT
-          </a>
+          </Link>
         </nav>
 
         {/* Searchbar */}
@@ -72,7 +74,7 @@ function Header() {
             onClick={handleSearch}
             className="bg-green-light w-9 h-9 lg:w-10 lg:h-10 flex items-center justify-center rounded-full"
           >
-            <Icon icon="mdi:magnify" width="24" color="black" />
+            <Icon icon="mdi:magnify" className=" hover:text-green-dark transition-colors" width="24" />
           </button>
 
         </div>
