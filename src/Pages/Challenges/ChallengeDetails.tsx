@@ -75,7 +75,9 @@ export default function ChallengeDetails() {
                     src={challenge.game?.cover || ""}
                     alt={challenge?.name}
                 />
-                <H1Title>{challenge.name}</H1Title>
+                <H1Title
+                    size={"h1-mobile"}
+                >{challenge.name}</H1Title>
                 <span>
                     {challenge.created_at}
                 </span>
