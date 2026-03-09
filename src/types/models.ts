@@ -20,7 +20,7 @@ export type Challenge = {
   description: string;
   user_id: number;
   game_id: number;
-  createdAt: string;
+  created_at: string;
   updatedAt: string;
   creator?: User;
   game?: Game;

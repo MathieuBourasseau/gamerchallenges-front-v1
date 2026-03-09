@@ -30,11 +30,21 @@ export default function ChallengeDetails() {
 
                 const response = await fetch(`${API_URL}/challenges/${id}`);
                 const data: ApiResponse = await response.json();
+                console.log("données reçues:", data)
 
                 // Checking the server answer
                 if (!response.ok) {
                     throw new Error(data.error || "Impossible d'afficher ce challenge.")
                 };
+
+                // Get the raw data date from sequelize and transform it in Date object
+                const rawDate = new Date(data.created_at);
+
+                // Format the date in french 
+                const formattedDate = new Intl.DateTimeFormat('fr-FR').format(rawDate).replaceAll('/', '.');
+
+                // Assign this new value to the key 
+                data.created_at = formattedDate;
 
                 setChallenge(data);
 
@@ -67,7 +77,7 @@ export default function ChallengeDetails() {
                 />
                 <H1Title>{challenge.name}</H1Title>
                 <span>
-                    {challenge.createdAt}
+                    {challenge.created_at}
                 </span>
             </div>
 
