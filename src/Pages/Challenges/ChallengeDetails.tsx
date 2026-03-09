@@ -68,24 +68,44 @@ export default function ChallengeDetails() {
         )
     }
     return (
-        <section>
+        <section
+            className="py-2 px-2"
+        >
+            {/* Container div */}
+            <div
+                className="
+                     border-1 border-green-light rounded-xl text-p-mobile p-2
+                "
 
-            <div>
-                <Image
-                    src={challenge.game?.cover || ""}
-                    alt={challenge?.name}
-                />
-                <H1Title
-                    size={"h1-mobile"}
-                >{challenge.name}</H1Title>
-                <span>
-                    {challenge.created_at}
-                </span>
-            </div>
+            >
 
-            {/* DESCRIPTION AND LIKES PART */}
-            <div>
-                <p>{challenge.description}</p>
+                <div
+                    className="flex flex-col gap-3"
+                >
+                    <Image
+                        src={challenge.game?.cover || ""}
+                        alt={challenge?.name}
+                    />
+                    <H1Title
+                        size={"h1-mobile"}
+                        flex="flex flex-col"
+                    >
+                        {challenge.name}
+                        <span
+                            className="
+                                text-sm font-normal
+                                md:text-p-tablet
+                                lg:text"
+                        >
+                            {challenge.created_at}
+                        </span>
+                    </H1Title>
+
+                </div>
+                {/* DESCRIPTION AND LIKES PART */}
+                <div>
+                    <p>{challenge.description}</p>
+                </div>
             </div>
         </section>
     )

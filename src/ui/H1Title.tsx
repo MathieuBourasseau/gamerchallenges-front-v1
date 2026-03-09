@@ -1,10 +1,13 @@
 import type { H1TitleProps } from "../types/titles";
 
-
-const H1Title = ({ children, size = "h1-desktop" }: H1TitleProps) => {
+const H1Title = ({ children, flex,  size = "h1-desktop" }: H1TitleProps) => {
 	return (
 		<div className="w-full max-w-5xl mx-auto mb-6 text-center">
-			<h1 className={`text-white text-${size} sm:text-3xl md:text-4xl font-bold mb-2`}>
+			<h1 className={`
+				${flex} text-white text-h1-mobile
+				md:text-h1-tablet
+				lg:text-h1-desktop
+				font-bold mb-2`}>
 				{children}
 			</h1>
 			<div
