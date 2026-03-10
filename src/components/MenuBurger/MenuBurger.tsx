@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Icon } from "@iconify/react";
+// import { Icon } from "@iconify/react";
 import { useLocation } from "react-router-dom";
 import MenuItem from "./MenuItem";
 
@@ -51,7 +51,7 @@ function MenuBurger() {
             onClick={closeMenu}
             className="bg-green-light p-2 rounded-md hover:bg-green-medium"
           >
-            <Icon icon="mdi:close" width="24" className="text-white" />
+            {/* <Icon icon="mdi:close" width="24" className="text-white" /> */}
           </button>
         </div>
 
