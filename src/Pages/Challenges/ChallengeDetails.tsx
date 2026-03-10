@@ -3,6 +3,9 @@ import type { Game, Challenge, User, Participation } from "../../types/models"
 import { useParams } from "react-router-dom"
 import Image from "../../ui/Image";
 import H1Title from "../../ui/H1Title";
+import { FaHeart } from "react-icons/fa";
+import Button from "../../ui/Button";
+
 
 type ApiResponse = Challenge & { error?: string };
 
@@ -69,12 +72,12 @@ export default function ChallengeDetails() {
     }
     return (
         <section
-            className="py-2 px-2"
+            className="p-2"
         >
             {/* Container */}
             <article
                 className="
-                     border-1 border-green-light rounded-xl text-p-mobile p-2
+                     border-1 border-green-light rounded-xl text-p-mobile p-4
                 "
 
             >
@@ -104,8 +107,35 @@ export default function ChallengeDetails() {
                 </div>
 
                 {/* DESCRIPTION AND LIKES PART */}
-                <div>
+                <div
+                    className="flex flex-col items-center gap-4"
+                >
                     <p>{challenge.description}</p>
+                    <div
+                        className="
+                            flex items-center gap-2
+                            "
+                    >
+                        <span>{challenge.voteCounted}</span>
+                        <FaHeart className="text-white" />
+                    </div>
+                    <Button
+                        label="uploader une vidéo"
+                        type="button"
+
+                    />
+                </div>
+
+                {/* PARTICIPATIONS */}
+                <div>
+
+                    {challenge.participations?.map((part) => (
+                        <div
+                            key={part.id}
+                        >   
+                            <video src={part.url}></video>
+                        </div>
+                    ))}
                 </div>
             </article>
 
