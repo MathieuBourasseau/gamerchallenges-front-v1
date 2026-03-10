@@ -6,6 +6,7 @@ import H1Title from "../../ui/H1Title";
 import { FaHeart } from "react-icons/fa";
 import Button from "../../ui/Button";
 import ReactPlayer from 'react-player'
+import H2 from "../../ui/H2";
 
 
 type ApiResponse = Challenge & { error?: string };
@@ -78,7 +79,7 @@ export default function ChallengeDetails() {
         >
             {/* Container */}
             <article
-                className="flex flex-col gap-4 border-1 border-green-light rounded-xl text-p-mobile p-4"
+                className="flex flex-col gap-6 border-1 border-green-light rounded-xl text-p-mobile p-4"
 
             >
                 {/* Titles, date and image */}
@@ -127,21 +128,34 @@ export default function ChallengeDetails() {
                 </div>
 
                 {/* PARTICIPATIONS */}
-                <div>
+                <div
+                    className="flex flex-col gap-6 items-center"
+                >
+                    <H2 label="Participations des autres joueurs" />
+                    <div
+                        className="grid grid-cols-2 gap-6"
+                    >
+                        {challenge.participations?.map((part) => (
+                            <div
+                                key={part.id}
+                                className="
+                                    border border-green-light rounded-lg overflow-hidden flex items-center justify-center h-[80px]"
+                            >
+                                {/* ReactPlayer component used to show videom from youtube */}
+                                <ReactPlayer
+                                    src={part.url}
+                                    controls={true}
+                                    width="100%"
+                                    height="100%"
+                                />
+                            </div>
+                        ))}
+                    </div>
+                     <Button
+                        label="voir plus"
+                        type="button"
 
-                    {challenge.participations?.map((part) => (
-                        <div
-                            key={part.id}
-                        >   
-                            {/* ReactPlayer component used to show videom from youtube */}
-                            <ReactPlayer
-                                src={part.url}
-                                controls={true}
-                                width="100%"
-                                height="100%"
-                            />
-                        </div>
-                    ))}
+                    />
                 </div>
             </article>
 
