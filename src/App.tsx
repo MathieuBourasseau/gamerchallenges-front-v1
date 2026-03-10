@@ -10,7 +10,7 @@ import Contact from "./Pages/Contact/Contact";
 import Legal from "./Pages/Legal/Legal";
 import { Footer } from "./components/Footer/Footer";
 import Ranking from "./Pages/Ranking/Ranking";
-import BurgerMenu from "./components/MenuBurger/MenuBurger";
+import Header from "./components/Header/Header";
 
 export default function App() {
 	return (
