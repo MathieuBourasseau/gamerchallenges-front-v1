@@ -71,14 +71,14 @@ export default function ChallengeDetails() {
         <section
             className="py-2 px-2"
         >
-            {/* Container div */}
-            <div
+            {/* Container */}
+            <article
                 className="
                      border-1 border-green-light rounded-xl text-p-mobile p-2
                 "
 
             >
-
+                {/* Titles, date and image */}
                 <div
                     className="flex flex-col gap-3"
                 >
@@ -102,11 +102,13 @@ export default function ChallengeDetails() {
                     </H1Title>
 
                 </div>
+
                 {/* DESCRIPTION AND LIKES PART */}
                 <div>
                     <p>{challenge.description}</p>
                 </div>
-            </div>
+            </article>
+
         </section>
     )
 }
