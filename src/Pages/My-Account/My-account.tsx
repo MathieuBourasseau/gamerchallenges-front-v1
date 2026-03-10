@@ -1,5 +1,10 @@
-import { useState, useEffect, ChangeEvent } from "react";
-import { FaEdit, FaCheck } from "react-icons/fa";
+import { useState, useEffect, ChangeEvent, useRef } from "react";
+import { FaEdit } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import Input from "../../ui/Input";
+import Button from "../../ui/Button";
+import SuccessMessage from "../../ui/SuccessMessage";
+import H1Title from "../../ui/H1Title";
 
 type User = {
 	id: number;
@@ -28,6 +33,9 @@ type MonCompteProps = {
 
 export default function MonCompte({ userId }: MonCompteProps) {
 	const [user, setUser] = useState<User | null>(null);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState("");
+
 	const [form, setForm] = useState<UserForm>({
 		username: "",
 		email: "",
@@ -39,18 +47,22 @@ export default function MonCompte({ userId }: MonCompteProps) {
 	});
 
 	const [editingField, setEditingField] = useState<string | null>(null);
-	const [toast, setToast] = useState(false);
-	const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+	const [successMessage, setSuccessMessage] = useState("");
+
+	const fileInputRef = useRef<HTMLInputElement | null>(null);
 
 	useEffect(() => {
 		const fetchUser = async () => {
+			setLoading(true);
 			try {
 				const response = await fetch(
 					`${import.meta.env.VITE_API_URL}/users/${userId}`,
 				);
+				if (!response.ok) throw new Error(`HTTP error ${response.status}`);
 				const data: User = await response.json();
 
 				setUser(data);
+
 				setForm({
 					username: data.username || "",
 					email: data.email || "",
@@ -60,162 +72,151 @@ export default function MonCompte({ userId }: MonCompteProps) {
 					discord: data.discord || "",
 					avatar: null,
 				});
-				setAvatarPreview(
-					data.avatar
-						? `${import.meta.env.VITE_API_URL}/uploads/avatars/${data.avatar}`
-						: null,
-				);
-			} catch (error) {
-				console.error("Erreur récupération user :", error);
+			} catch (err) {
+				console.error("Erreur récupération utilisateur :", err);
+				setError("Impossible de récupérer les infos utilisateur.");
+			} finally {
+				setLoading(false);
 			}
 		};
 
 		fetchUser();
 	}, [userId]);
 
-	// Handle input change
 	const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = event.target;
-		setForm((prev) => ({
-			...prev,
-			[name]: value,
-		}));
+		setForm((prev) => ({ ...prev, [name]: value }));
 	};
 
-	// Handle file change with preview
 	const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0];
-		if (file) {
-			setForm((prev) => ({ ...prev, avatar: file }));
-			setAvatarPreview(URL.createObjectURL(file));
-		}
+		if (file) setForm((prev) => ({ ...prev, avatar: file }));
 	};
 
-	// Submit
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-
 		const formData = new FormData();
+
 		formData.append("username", form.username);
 		formData.append("email", form.email);
 		formData.append("favouriteGame", form.favouriteGame);
 		formData.append("twitch", form.twitch);
 		formData.append("youtube", form.youtube);
 		formData.append("discord", form.discord);
+
 		if (form.avatar) formData.append("avatar", form.avatar);
 
 		try {
 			const response = await fetch(
 				`${import.meta.env.VITE_API_URL}/users/${userId}`,
-				{ method: "PATCH", body: formData },
+				{
+					method: "PATCH",
+					body: formData,
+				},
 			);
-			const updatedUser = await response.json();
-			setUser(updatedUser.user);
 
-			// Toast
-			setToast(true);
-			setTimeout(() => setToast(false), 3000);
+			if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+			const updatedUser: User = await response.json();
 
-			// Stop editing field
+			setUser(updatedUser);
+			setSuccessMessage("Profil mis à jour");
+			setTimeout(() => setSuccessMessage(""), 3000);
 			setEditingField(null);
-		} catch (error) {
-			console.error("Erreur mise à jour :", error);
-			alert("Erreur lors de la mise à jour du compte");
+		} catch (err) {
+			console.error("Erreur mise à jour :", err);
+			setError("Impossible de mettre à jour le profil.");
 		}
 	};
 
-	if (!user) return <p className="text-center mt-10">Chargement...</p>;
+	if (loading) return <p className="text-center mt-10">Chargement...</p>;
+	if (error) return <p className="text-center mt-10 text-red-500">{error}</p>;
+
+	const renderField = (
+		label: string,
+		name: keyof UserForm,
+		type: string = "text",
+	) => {
+		const isEditing = editingField === name;
+		return (
+			<div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start sm:items-center w-full">
+				<label className="sm:w-40 text-sm">{label}</label>
+				<Input
+					type={type}
+					name={name}
+					value={form[name]}
+					onChange={handleChange}
+					width="flex-1 w-full"
+					disabled={!isEditing}
+				/>
+				<button
+					type="button"
+					onClick={() => setEditingField(isEditing ? null : name)}
+					className={`p-2 w-12 h-12 rounded-lg flex items-center justify-center
+            ${isEditing ? "bg-green-700" : "bg-[#55CC03]"} 
+            text-white hover:bg-green-800 transition-colors`}
+				>
+					<FaEdit />
+				</button>
+			</div>
+		);
+	};
 
 	return (
-		<div className="flex justify-center items-center min-h-screen px-4">
-			<div className="w-full max-w-2xl bg-green-800/60 border-4 border-green-400 rounded-3xl p-6 md:p-10">
-				<h1 className="text-center text-3xl font-bold text-white mb-10">
-					MON COMPTE
-				</h1>
+		<div className="flex justify-center px-4 py-10">
+			<SuccessMessage success={successMessage} />
 
-				{/* Avatar */}
-				<div className="flex flex-col items-center mb-6">
-					{avatarPreview && (
-						<img
-							src={avatarPreview}
-							alt="Avatar"
-							className="w-24 h-24 rounded-full object-cover border-2 border-green-400 mb-4"
+			<div className="w-full max-w-2xl border-4 border-[#55CC03] rounded-3xl p-6 md:p-10 bg-[radial-gradient(ellipse_at_center,_rgba(40,80,50,0.8)_0%,_rgba(0,0,0,0.9)_100%)]">
+				<H1Title>Mon compte</H1Title>
+
+				<form onSubmit={handleSubmit} className="flex flex-col gap-4">
+					{/* Avatar */}
+					<div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start sm:items-center w-full">
+						<label className="sm:w-40 text-sm">Avatar</label>
+						<Input
+							type="text"
+							value={form.avatar ? form.avatar.name : "Aucun fichier choisi"}
+							readOnly
+							width="flex-1 w-full"
 						/>
-					)}
-					<div className="flex flex-col sm:flex-row gap-3 items-center w-full">
-						<label className="sm:w-40 text-white text-sm">Avatar</label>
-						<input
-							type="file"
-							onChange={handleFileChange}
-							className="flex-1 bg-black/40 text-white rounded-full px-6 py-2"
-						/>
-					</div>
-				</div>
-
-				<form onSubmit={handleSubmit} className="flex flex-col gap-5">
-					{/* Fields */}
-					{[
-						{ name: "username", label: "Pseudo", type: "text" },
-						{ name: "email", label: "Email", type: "email" },
-						{ name: "favouriteGame", label: "Jeu favori", type: "text" },
-						{ name: "twitch", label: "Twitch", type: "text" },
-						{ name: "youtube", label: "Youtube", type: "text" },
-						{ name: "discord", label: "Discord", type: "text" },
-					].map((field) => (
-						<div
-							key={field.name}
-							className="flex flex-col sm:flex-row gap-3 items-center"
-						>
-							<label className="sm:w-40 text-white text-sm">
-								{field.label}
-							</label>
-							<input
-								type={field.type}
-								name={field.name}
-								value={form[field.name as keyof UserForm] as string}
-								onChange={handleChange}
-								disabled={editingField !== field.name}
-								className="flex-1 bg-black/40 text-white rounded-full px-6 py-2 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-green-400"
-							/>
-							<button
-								type="button"
-								onClick={() =>
-									setEditingField(
-										editingField === field.name ? null : field.name,
-									)
-								}
-								className="bg-green-400 rounded-md px-3 py-2 hover:bg-green-500 text-black"
-							>
-								{editingField === field.name ? <FaCheck /> : <FaEdit />}
-							</button>
-						</div>
-					))}
-
-					{/* Buttons */}
-					<div className="flex flex-col sm:flex-row gap-4 justify-between mt-6">
-						<button
-							type="submit"
-							className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-full font-semibold transition"
-						>
-							Enregistrer mes infos
-						</button>
-
 						<button
 							type="button"
-							className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-full font-semibold transition"
+							onClick={() => fileInputRef.current?.click()}
+							className="p-2 w-12 h-12 rounded-lg flex items-center justify-center bg-[#55CC03] text-white hover:bg-green-700 transition-colors"
 						>
-							Supprimer mon compte
+							<FaEdit />
 						</button>
+						<input
+							type="file"
+							ref={fileInputRef}
+							onChange={handleFileChange}
+							className="hidden"
+						/>
+					</div>
+
+					{renderField("Pseudo", "username")}
+					{renderField("Email", "email", "email")}
+					{renderField("Jeu préféré", "favouriteGame")}
+					{renderField("Twitch", "twitch")}
+					{renderField("YouTube", "youtube")}
+					{renderField("Discord", "discord")}
+
+					<div className="flex flex-col sm:flex-row gap-4 justify-between mt-6">
+						<Button type="submit" label="Enregistrer mes infos" />
+						<Button
+							type="button"
+							label="Supprimer mon compte"
+							bgColor="bg-red-500"
+							borderColor="border-red-500"
+						/>
 					</div>
 				</form>
-			</div>
 
-			{/* Toast */}
-			{toast && (
-				<div className="fixed bottom-6 right-6 bg-green-500 text-white px-6 py-3 rounded-xl shadow-lg animate-fade-in">
-					Profil mis à jour ✅
+				<div className="mt-6">
+					<Link to="/games">
+						<Button label="Retour" type="button" />
+					</Link>
 				</div>
-			)}
+			</div>
 		</div>
 	);
 }
