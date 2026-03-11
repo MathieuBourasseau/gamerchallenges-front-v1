@@ -79,7 +79,8 @@ export default function ChallengeDetails() {
         >
             {/* Container */}
             <article
-                className="flex flex-col gap-6 border-3 border-green-light rounded-xl text-p-mobile items-center p-4"
+                className="flex flex-col gap-6 border-3 border-green-light rounded-xl text-p-mobile items-center p-4
+                lg:max-w-[1200px] lg:mx-auto lg:border-4 lg:rounded-3xl"
 
             >
                 {/* Titles, date and image */}
@@ -133,7 +134,9 @@ export default function ChallengeDetails() {
 
                 {/* PARTICIPATIONS */}
                 <div
-                    className="flex flex-col gap-6 items-center max-w-[350px]"
+                    className="
+                        flex flex-col gap-6 items-center max-w-[380px]
+                        md:max-w-[600px]"
                 >
                     <H2 label="Participations des autres joueurs" />
                     <div
@@ -143,7 +146,8 @@ export default function ChallengeDetails() {
                             <div
                                 key={part.id}
                                 className="
-                                    border border-green-light rounded-lg overflow-hidden flex items-center justify-center h-[80px]"
+                                    border border-green-light rounded-lg overflow-hidden flex items-center justify-center h-[90px]
+                                    md:h-[180px]"
                             >
                                 {/* ReactPlayer component used to show video from youtube */}
                                 <ReactPlayer
