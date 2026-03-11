@@ -27,11 +27,11 @@ type UserForm = {
 	avatar: File | null;
 };
 
-type MonCompteProps = {
+type MonCompte = {
 	userId: number;
 };
 
-export default function MonCompte({ userId }: MonCompteProps) {
+export default function MonCompte({ userId }: MonCompte) {
 	const [user, setUser] = useState<User | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
@@ -155,21 +155,20 @@ export default function MonCompte({ userId }: MonCompteProps) {
             ${isEditing ? "bg-green-700" : "bg-[#55CC03]"} 
             text-white hover:bg-green-800 transition-colors`}
 				>
-					<FaEdit />
+					<FaEdit className="text-black" />
 				</button>
 			</div>
 		);
 	};
 
 	return (
-		<div className="flex justify-center px-4 py-10">
+		<div className="flex flex-col items-center px-4 py-10">
 			<SuccessMessage success={successMessage} />
 
-			<div className="w-full max-w-2xl border-4 border-[#55CC03] rounded-3xl p-6 md:p-10 bg-[radial-gradient(ellipse_at_center,_rgba(40,80,50,0.8)_0%,_rgba(0,0,0,0.9)_100%)]">
+			<div className="w-full max-w-2xl mx-auto border-4 border-[#55CC03] rounded-3xl p-6 md:p-10 bg-[radial-gradient(ellipse_at_center,_rgba(40,80,50,0.8)_0%,_rgba(0,0,0,0.9)_100%)]">
 				<H1Title>Mon compte</H1Title>
 
 				<form onSubmit={handleSubmit} className="flex flex-col gap-4">
-					{/* Avatar */}
 					<div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start sm:items-center w-full">
 						<label className="sm:w-40 text-sm">Avatar</label>
 						<Input
@@ -183,7 +182,7 @@ export default function MonCompte({ userId }: MonCompteProps) {
 							onClick={() => fileInputRef.current?.click()}
 							className="p-2 w-12 h-12 rounded-lg flex items-center justify-center bg-[#55CC03] text-white hover:bg-green-700 transition-colors"
 						>
-							<FaEdit />
+							<FaEdit className="text-black" />
 						</button>
 						<input
 							type="file"
@@ -210,12 +209,11 @@ export default function MonCompte({ userId }: MonCompteProps) {
 						/>
 					</div>
 				</form>
-
-				<div className="mt-6">
-					<Link to="/games">
-						<Button label="Retour" type="button" />
-					</Link>
-				</div>
+			</div>
+			<div className="mt-8 flex justify-center">
+				<Link to="/">
+					<Button label="Retour" type="button" />
+				</Link>
 			</div>
 		</div>
 	);
