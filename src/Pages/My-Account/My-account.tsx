@@ -1,6 +1,6 @@
 import { useState, useEffect, ChangeEvent, useRef } from "react";
 import { FaEdit } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Input from "../../ui/Input";
 import Button from "../../ui/Button";
 import SuccessMessage from "../../ui/SuccessMessage";
@@ -27,15 +27,15 @@ type UserForm = {
 	avatar: File | null;
 };
 
-type MonCompte = {
+type MonCompteProps = {
 	userId: number;
 };
 
-export default function MonCompte({ userId }: MonCompte) {
+export default function MonCompte({ userId }: MonCompteProps) {
+	const navigate = useNavigate();
 	const [user, setUser] = useState<User | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
-
 	const [form, setForm] = useState<UserForm>({
 		username: "",
 		email: "",
@@ -45,12 +45,14 @@ export default function MonCompte({ userId }: MonCompte) {
 		discord: "",
 		avatar: null,
 	});
-
 	const [editingField, setEditingField] = useState<string | null>(null);
 	const [successMessage, setSuccessMessage] = useState("");
+	const [isDeleting, setIsDeleting] = useState(false);
+	const [showConfirmDelete, setShowConfirmDelete] = useState(false); // delete confirmation
 
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+	// Fetch user data
 	useEffect(() => {
 		const fetchUser = async () => {
 			setLoading(true);
@@ -62,7 +64,6 @@ export default function MonCompte({ userId }: MonCompte) {
 				const data: User = await response.json();
 
 				setUser(data);
-
 				setForm({
 					username: data.username || "",
 					email: data.email || "",
@@ -73,8 +74,8 @@ export default function MonCompte({ userId }: MonCompte) {
 					avatar: null,
 				});
 			} catch (err) {
-				console.error("Erreur récupération utilisateur :", err);
-				setError("Impossible de récupérer les infos utilisateur.");
+				console.error("Error fetching user:", err);
+				setError("Impossible de récupérer les informations du compte.");
 			} finally {
 				setLoading(false);
 			}
@@ -83,27 +84,28 @@ export default function MonCompte({ userId }: MonCompte) {
 		fetchUser();
 	}, [userId]);
 
+	// Handle input changes
 	const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = event.target;
 		setForm((prev) => ({ ...prev, [name]: value }));
 	};
 
+	//  Handle file input changes (avatar)
 	const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0];
 		if (file) setForm((prev) => ({ ...prev, avatar: file }));
 	};
 
+	// Submit updated user data
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		const formData = new FormData();
-
 		formData.append("username", form.username);
 		formData.append("email", form.email);
 		formData.append("favouriteGame", form.favouriteGame);
 		formData.append("twitch", form.twitch);
 		formData.append("youtube", form.youtube);
 		formData.append("discord", form.discord);
-
 		if (form.avatar) formData.append("avatar", form.avatar);
 
 		try {
@@ -119,18 +121,45 @@ export default function MonCompte({ userId }: MonCompte) {
 			const updatedUser: User = await response.json();
 
 			setUser(updatedUser);
-			setSuccessMessage("Profil mis à jour");
+			setSuccessMessage("Profil mis à jour avec succès !");
 			setTimeout(() => setSuccessMessage(""), 3000);
 			setEditingField(null);
 		} catch (err) {
-			console.error("Erreur mise à jour :", err);
+			console.error("Error updating user:", err);
 			setError("Impossible de mettre à jour le profil.");
 		}
 	};
 
-	if (loading) return <p className="text-center mt-10">Chargement...</p>;
-	if (error) return <p className="text-center mt-10 text-red-500">{error}</p>;
+	// Delete user account
+	const handleDeleteAccount = async () => {
+		try {
+			setIsDeleting(true);
+			const response = await fetch(
+				`${import.meta.env.VITE_API_URL}/users/${userId}`,
+				{
+					method: "DELETE",
+				},
+			);
 
+			if (!response.ok) {
+				const errorData = await response.json();
+				throw new Error(errorData.error || `HTTP error ${response.status}`);
+			}
+
+			setSuccessMessage("Votre compte a été supprimé avec succès !");
+			setTimeout(() => {
+				navigate("/"); // redirection to home page after showing confirmation message
+			}, 2000);
+		} catch (err) {
+			console.error("Erreur lors de la suppression du compte:", err);
+			setError("Impossible de supprimer le compte.");
+		} finally {
+			setIsDeleting(false);
+			setShowConfirmDelete(false);
+		}
+	};
+
+	// Helper to render each form field with edit button
 	const renderField = (
 		label: string,
 		name: keyof UserForm,
@@ -140,26 +169,31 @@ export default function MonCompte({ userId }: MonCompte) {
 		return (
 			<div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start sm:items-center w-full">
 				<label className="sm:w-40 text-sm">{label}</label>
-				<Input
-					type={type}
-					name={name}
-					value={form[name]}
-					onChange={handleChange}
-					width="flex-1 w-full"
-					disabled={!isEditing}
-				/>
-				<button
-					type="button"
-					onClick={() => setEditingField(isEditing ? null : name)}
-					className={`p-2 w-12 h-12 rounded-lg flex items-center justify-center
+				<div className="flex w-full gap-2">
+					<Input
+						type={type}
+						name={name}
+						value={form[name]}
+						onChange={handleChange}
+						width="flex-1"
+						disabled={!isEditing}
+					/>
+					<button
+						type="button"
+						onClick={() => setEditingField(isEditing ? null : name)}
+						className={`p-2 w-12 h-12 rounded-lg flex items-center justify-center
             ${isEditing ? "bg-green-700" : "bg-[#55CC03]"} 
             text-white hover:bg-green-800 transition-colors`}
-				>
-					<FaEdit className="text-black" />
-				</button>
+					>
+						<FaEdit className="text-black" />
+					</button>
+				</div>
 			</div>
 		);
 	};
+
+	if (loading) return <p className="text-center mt-10">Loading...</p>;
+	if (error) return <p className="text-center mt-10 text-red-500">{error}</p>;
 
 	return (
 		<div className="flex flex-col items-center px-4 py-10">
@@ -169,21 +203,24 @@ export default function MonCompte({ userId }: MonCompte) {
 				<H1Title>Mon compte</H1Title>
 
 				<form onSubmit={handleSubmit} className="flex flex-col gap-4">
+					{/* Avatar field */}
 					<div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start sm:items-center w-full">
 						<label className="sm:w-40 text-sm">Avatar</label>
-						<Input
-							type="text"
-							value={form.avatar ? form.avatar.name : "Aucun fichier choisi"}
-							readOnly
-							width="flex-1 w-full"
-						/>
-						<button
-							type="button"
-							onClick={() => fileInputRef.current?.click()}
-							className="p-2 w-12 h-12 rounded-lg flex items-center justify-center bg-[#55CC03] text-white hover:bg-green-700 transition-colors"
-						>
-							<FaEdit className="text-black" />
-						</button>
+						<div className="flex w-full gap-2">
+							<Input
+								type="text"
+								value={form.avatar ? form.avatar.name : "Aucun fichier choisi"}
+								readOnly
+								width="flex-1"
+							/>
+							<button
+								type="button"
+								onClick={() => fileInputRef.current?.click()}
+								className="p-2 w-12 h-12 rounded-lg flex items-center justify-center bg-[#55CC03] text-white hover:bg-green-700 transition-colors"
+							>
+								<FaEdit className="text-black" />
+							</button>
+						</div>
 						<input
 							type="file"
 							ref={fileInputRef}
@@ -192,6 +229,7 @@ export default function MonCompte({ userId }: MonCompte) {
 						/>
 					</div>
 
+					{/* Other editable fields */}
 					{renderField("Pseudo", "username")}
 					{renderField("Email", "email", "email")}
 					{renderField("Jeu préféré", "favouriteGame")}
@@ -201,15 +239,45 @@ export default function MonCompte({ userId }: MonCompte) {
 
 					<div className="flex flex-col sm:flex-row gap-4 justify-between mt-6">
 						<Button type="submit" label="Enregistrer mes infos" />
+
 						<Button
 							type="button"
 							label="Supprimer mon compte"
 							bgColor="bg-red-500"
 							borderColor="border-red-500"
+							onClick={() => setShowConfirmDelete(true)}
 						/>
 					</div>
+
+					{/* Delete confirmation panel */}
+					{showConfirmDelete && (
+						<div className="bg-red-100 border border-red-500 p-4 rounded-lg mt-4 flex flex-col gap-2">
+							<p>
+								Êtes-vous sûr de vouloir supprimer votre compte ? Cette action
+								est irréversible.
+							</p>
+							<div className="flex gap-2">
+								<Button
+									type="button"
+									label="Annuler"
+									onClick={() => setShowConfirmDelete(false)}
+									bgColor="bg-gray-300"
+									borderColor="border-gray-400"
+								/>
+								<Button
+									type="button"
+									label={isDeleting ? "Suppression..." : "Confirmer"}
+									onClick={handleDeleteAccount}
+									bgColor="bg-red-500"
+									borderColor="border-red-500"
+									disabled={isDeleting}
+								/>
+							</div>
+						</div>
+					)}
 				</form>
 			</div>
+
 			<div className="mt-8 flex justify-center">
 				<Link to="/">
 					<Button label="Retour" type="button" />
