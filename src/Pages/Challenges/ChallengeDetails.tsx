@@ -79,7 +79,7 @@ export default function ChallengeDetails() {
         >
             {/* Container */}
             <article
-                className="flex flex-col gap-6 border-3 border-green-light rounded-xl text-p-mobile p-4"
+                className="flex flex-col gap-6 border-3 border-green-light rounded-xl text-p-mobile items-center p-4"
 
             >
                 {/* Titles, date and image */}
@@ -122,7 +122,7 @@ export default function ChallengeDetails() {
                             "
                     >
                         <span>{challenge.voteCounted}</span>
-                        <FaHeart className="cursor-pointer text-white" />
+                        <FaHeart className="cursor-pointer text-white text-[18px]" />
                     </div>
                     <Button
                         label="uploader une vidéo"
@@ -133,7 +133,7 @@ export default function ChallengeDetails() {
 
                 {/* PARTICIPATIONS */}
                 <div
-                    className="flex flex-col gap-6 items-center"
+                    className="flex flex-col gap-6 items-center max-w-[350px]"
                 >
                     <H2 label="Participations des autres joueurs" />
                     <div
