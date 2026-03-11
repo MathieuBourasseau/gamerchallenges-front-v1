@@ -252,9 +252,8 @@ export default function MonCompte({ userId }: MonCompteProps) {
 					{/* Delete confirmation panel */}
 					{showConfirmDelete && (
 						<div className="bg-red-100 border border-red-500 p-4 rounded-lg mt-4 flex flex-col gap-2">
-							<p>
-								Êtes-vous sûr de vouloir supprimer votre compte ? Cette action
-								est irréversible.
+							<p className="text-black">
+								Êtes-vous sûr(e) de vouloir supprimer votre compte ?
 							</p>
 							<div className="flex gap-2">
 								<Button
