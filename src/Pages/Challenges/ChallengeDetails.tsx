@@ -111,7 +111,11 @@ export default function ChallengeDetails() {
                 <div
                     className="flex flex-col items-center gap-4"
                 >
-                    <p>{challenge.description}</p>
+                    <p
+                        className="
+                            text-p-mobile
+                            md:text-p-tablet"
+                    >{challenge.description}</p>
                     <div
                         className="
                             flex items-center gap-2
