@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import type { Game, Challenge, User, Participation } from "../../types/models"
-import { useParams } from "react-router-dom"
+import type { Challenge } from "../../types/models"
+import { Link, useParams } from "react-router-dom"
 import Image from "../../ui/Image";
 import H1Title from "../../ui/H1Title";
 import { FaHeart } from "react-icons/fa";
 import Button from "../../ui/Button";
 import ReactPlayer from 'react-player'
 import H2 from "../../ui/H2";
-
 
 type ApiResponse = Challenge & { error?: string };
 
@@ -159,11 +158,17 @@ export default function ChallengeDetails() {
                             </div>
                         ))}
                     </div>
-                     <Button
-                        label="voir plus"
-                        type="button"
+                    <Link
+                        to={`/challenges/${challenge.id}/participations`}
+                        className={`
+                            text-sm bg-green-medium py-2 px-6 rounded-full cursor-pointer uppercase font-bold w-auto mx-auto border-2 border-green-medium
+                            hover:bg-white hover:text-green-light hover:border-green-light
+                            md:text-base
+                        `}
+                    >
+                        Voir plus
+                    </Link>
 
-                    />
                 </div>
             </article>
 
