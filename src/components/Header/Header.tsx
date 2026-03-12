@@ -5,7 +5,10 @@ import { useState } from "react";
 
 function Header() {
 	const [search, setSearch] = useState("");
+<<<<<<< HEAD
 	const [category, setCategory] = useState("Jeux"); // new state for categories
+=======
+>>>>>>> dev
 	const navigate = useNavigate();
 
 	const handleSearch = () => {

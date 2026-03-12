@@ -10,6 +10,8 @@ import Contact from "./Pages/Contact/Contact";
 import Legal from "./Pages/Legal/Legal";
 import { Footer } from "./components/Footer/Footer";
 import Ranking from "./Pages/Ranking/Ranking";
+import MyAccount from "./Pages/My-Account/my-account";
+import BurgerMenu from "./components/MenuBurger/MenuBurger";
 import Header from "./components/Header/Header";
 import SearchPage from "./Pages/SearchPage/SearchPage";
 
@@ -23,6 +25,9 @@ export default function App() {
 					<Route path="/jeux" element={<Games />} />
 					<Route path="/jeux/:id" element={<GameDetails />} />
 					<Route path="/challenges" element={<Challenges />} />
+					<Route path="/mon-compte" element={<MyAccount userId={3} />} /> //
+					user id ne restera pas là, c'est en attendant d'avoir un système
+					d'auth
 					<Route path="/mes-challenges" element={<MyChallenges />} />
 					<Route path="/classement" element={<Ranking />} />
 					<Route path="/contact" element={<Contact />} />
