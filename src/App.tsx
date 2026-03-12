@@ -15,6 +15,7 @@ import MyAccount from "./Pages/My-Account/My-account";
 import BurgerMenu from "./components/MenuBurger/MenuBurger";
 import Header from "./components/Header/Header";
 import SearchPage from "./Pages/SearchPage/SearchPage";
+import ParticipationsByChallenge from "./Pages/Participations/ParticipationsByChallenge";
 
 export default function App() {
 	return (
@@ -27,6 +28,7 @@ export default function App() {
 					<Route path="/jeux/:id" element={<GameDetails />} />
 					<Route path="/challenges" element={<Challenges />} />
 					<Route path="/challenges/:id" element={<ChallengeDetails />} />
+					<Route path="/challenges/:id/participations" element={<ParticipationsByChallenge/>} />
 					<Route path="/mon-compte" element={<MyAccount userId={3} />} /> //
 					user id ne restera pas là, c'est en attendant d'avoir un système
 					d'auth
