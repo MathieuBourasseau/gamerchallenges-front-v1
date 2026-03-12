@@ -1,45 +1,55 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import FormAuth from "./FormAuth";
+import Button from "../../ui/Button";
 
 export default function Auth() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Active tab ("login" or "register")
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
 
-  return (
-    <section className="flex flex-col items-center justify-center mx-auto min-h-screen w-full gap-8">
-      {/* Onglets */}
-      <div className="flex w-full max-w-100">
-        <button
-          className={`flex-1 py-3 font-bold uppercase ${
-            activeTab === "login"
-              ? "bg-green-light text-black"
-              : "bg-green-dark text-white"
-          }`}
-          onClick={() => setActiveTab("login")}>
-          Connexion
-        </button>
+  // Sync the active tab with the URL (ex: /auth?mode=login)
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const modeFromUrl = params.get("mode");
 
-        <button
-          className={`flex-1 py-3 font-bold uppercase ${
-            activeTab === "register"
-              ? "bg-green-light text-black"
-              : "bg-green-dark text-white"
-          }`}
-          onClick={() => setActiveTab("register")}>
-          Inscription
-        </button>
+    if (modeFromUrl === "login" || modeFromUrl === "register") {
+      setActiveTab(modeFromUrl);
+    }
+  }, [location.search]);
+
+  return (
+    <section className="flex flex-col items-center justify-center mx-auto min-h-screen w-full px-4 sm:px-6 md:px-8 gap-6 sm:gap-8 py-8 sm:py-12">
+      {/* Tabs */}
+      <div className="flex flex-row w-full gap-2 sm:gap-3 max-w-sm sm:max-w-md">
+        <Button
+          label="Connexion"
+          type="button"
+          active={activeTab === "login"}
+          width="w-full"
+          padding="py-2 sm:py-3 px-3 sm:px-6"
+          onClick={() => {
+            navigate("/auth?mode=login");
+            setActiveTab("login");
+          }}
+        />
+
+        <Button
+          label="Inscription"
+          type="button"
+          active={activeTab === "register"}
+          width="w-full"
+          padding="py-2 sm:py-3 px-3 sm:px-6"
+          onClick={() => {
+            navigate("/auth?mode=register");
+            setActiveTab("register");
+          }}
+        />
       </div>
 
-      {/* Titre dynamique */}
-      <h1
-        className="
-          text-h1-mobile italic uppercase font-bold text-white drop-shadow-title-glow text-center
-          md:text-h1-tablet
-          lg:text-h1-desktop
-        ">
-        {activeTab === "login" ? "Connexion" : "Inscription"}
-      </h1>
-
-      {/* Formulaire dynamique */}
+      {/* Dynamic form */}
       <FormAuth mode={activeTab} />
     </section>
   );

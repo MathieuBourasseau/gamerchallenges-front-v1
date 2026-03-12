@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
+// Services
 import { loginUser, registerUser } from "../../Services/authService";
+
+// UI Components
 import SuccessMessage from "../../ui/SuccessMessage";
 import Input from "../../ui/Input";
 import ErrorSummary from "../../ui/ErrorSummary";
 import Button from "../../ui/Button";
+
 // Types
 import type {
   LoginFormData,
@@ -19,9 +24,7 @@ type FormAuthProps = {
 export default function FormAuth({ mode }: FormAuthProps) {
   const navigate = useNavigate();
 
-  // -----------------------------------------------------
-  // 1) State dynamique selon le mode (login ou register)
-  // -----------------------------------------------------
+  // Form state (dynamic depending on login/register)
   const [formData, setFormData] = useState<LoginFormData | RegisterFormData>(
     mode === "login"
       ? { email: "", password: "" }
@@ -34,35 +37,57 @@ export default function FormAuth({ mode }: FormAuthProps) {
         },
   );
 
-  // -----------------------------------------------------
-  // 2) State des erreurs (union propre)
-  // -----------------------------------------------------
+  // Avatar preview + filename
+  const [selectedFileName, setSelectedFileName] = useState<string>("");
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  // Error state
   const [errors, setErrors] = useState<
     FormErrors<LoginFormData> | FormErrors<RegisterFormData>
   >({});
 
+  // Success message (register only)
   const [success, setSuccessMessage] = useState<string>("");
 
-  // -----------------------------------------------------
-  // 3) Gestion des inputs texte
-  // -----------------------------------------------------
+  // Reset form when mode changes (login <-> register)
+  useEffect(() => {
+    if (mode === "login") {
+      setFormData({ email: "", password: "" });
+    } else {
+      setFormData({
+        email: "",
+        username: "",
+        password: "",
+        acceptPolicy: false,
+        avatar: undefined,
+      });
+    }
+
+    setErrors({});
+    setSelectedFileName("");
+    setPreviewUrl(null);
+  }, [mode]);
+
+  // Handle text inputs
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // -----------------------------------------------------
-  // 4) Gestion de l’avatar (register uniquement)
-  // -----------------------------------------------------
+  // Handle avatar upload + preview
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+
     setFormData({ ...formData, avatar: file });
+
+    if (file) {
+      setSelectedFileName(file.name);
+      setPreviewUrl(URL.createObjectURL(file)); // preview image
+    }
   };
 
-  // -----------------------------------------------------
-  // 5) Gestion de la checkbox (register uniquement)
-  // -----------------------------------------------------
+  // Handle checkbox (register only)
   const handleCheckbox = () => {
     if (mode === "register") {
       setFormData({
@@ -72,9 +97,7 @@ export default function FormAuth({ mode }: FormAuthProps) {
     }
   };
 
-  // -----------------------------------------------------
-  // 6) Validation front simple
-  // -----------------------------------------------------
+  // Basic validation
   const validate = () => {
     const newErrors: any = {};
 
@@ -93,40 +116,44 @@ export default function FormAuth({ mode }: FormAuthProps) {
     return Object.keys(newErrors).length === 0;
   };
 
-  // -----------------------------------------------------
-  // 7) Submit dynamique selon le mode
-  // -----------------------------------------------------
-  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+  // Submit handler (login or register)
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!validate()) return;
 
     try {
       if (mode === "login") {
+        // Login → store token + redirect
         const data = await loginUser(formData as LoginFormData);
         localStorage.setItem("token", data.token);
         navigate("/mon-compte");
       } else {
+        // Register → send form + success message + redirect to login tab
         await registerUser(formData as RegisterFormData);
 
         setSuccessMessage("Inscription réussie !");
         setTimeout(() => {
-          navigate("/login");
-        }, 3000);
+          navigate("/auth?mode=login");
+        }, 2000);
       }
     } catch (err: any) {
       setErrors({ server: err.message });
     }
   };
 
-  // -----------------------------------------------------
-  // 8) Rendu JSX
-  // -----------------------------------------------------
   return (
     <>
       <SuccessMessage success={success} />
 
-      <form onSubmit={handleSubmit} className="auth-form">
+      <form
+        onSubmit={handleSubmit}
+        className="
+          auth-form border-2 border-green-light rounded-2xl sm:rounded-3xl md:rounded-4xl
+          px-4 sm:px-6 md:px-8 pt-8 sm:pt-10 md:pt-12 pb-6 sm:pb-8
+          flex flex-col gap-4 sm:gap-5 md:gap-6
+          w-full max-w-sm sm:max-w-md bg-green-medium/25
+        ">
         {/* Email */}
         <Input
           type="email"
@@ -135,9 +162,11 @@ export default function FormAuth({ mode }: FormAuthProps) {
           value={formData.email}
           onChange={handleChange}
         />
-        {errors.email && <p className="error">{errors.email}</p>}
+        {errors.email && (
+          <p className="error text-xs sm:text-sm">{errors.email}</p>
+        )}
 
-        {/* Nickname (register only) */}
+        {/* Username (register only) */}
         {mode === "register" && (
           <>
             <Input
@@ -148,7 +177,7 @@ export default function FormAuth({ mode }: FormAuthProps) {
               onChange={handleChange}
             />
             {(errors as FormErrors<RegisterFormData>).username && (
-              <p className="error">
+              <p className="error text-xs sm:text-sm">
                 {(errors as FormErrors<RegisterFormData>).username}
               </p>
             )}
@@ -163,34 +192,77 @@ export default function FormAuth({ mode }: FormAuthProps) {
           value={formData.password}
           onChange={handleChange}
         />
-        {errors.password && <p className="error">{errors.password}</p>}
+        {errors.password && (
+          <p className="error text-xs sm:text-sm">{errors.password}</p>
+        )}
 
         {/* Avatar (register only) */}
         {mode === "register" && (
-          <input type="file" name="avatar" onChange={handleFileChange} />
+          <>
+            <label
+              htmlFor="avatar"
+              className="
+                bg-green-medium text-white px-4 sm:px-6 py-2 sm:py-2.5
+                rounded-full border-2 border-green-medium
+                uppercase font-bold text-xs sm:text-sm cursor-pointer text-center
+                transition-colors hover:bg-white hover:text-green-light hover:border-green-light
+              ">
+              Choisir un avatar
+            </label>
+
+            <input
+              id="avatar"
+              type="file"
+              name="avatar"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+
+            {selectedFileName && (
+              <p className="text-xs sm:text-sm text-white opacity-80 text-center">
+                Fichier sélectionné : {selectedFileName}
+              </p>
+            )}
+
+            {previewUrl && (
+              <img
+                src={previewUrl}
+                alt="Aperçu de l'avatar"
+                className="w-20 sm:w-24 h-20 sm:h-24 rounded-full object-cover mx-auto border-2 border-green-light"
+              />
+            )}
+          </>
         )}
 
-        {/* Accept policy (register only) */}
+        {/* Accept policy */}
         {mode === "register" && (
           <>
-            <label>
+            <label className="flex items-start sm:items-center gap-2 sm:gap-3 w-full cursor-pointer">
               <Input
                 type="checkbox"
                 name="acceptPolicy"
                 checked={(formData as RegisterFormData).acceptPolicy}
                 onChange={handleCheckbox}
+                width="w-auto mt-1 sm:mt-0"
               />
-              J’accepte la politique de confidentialité
+              <span className="text-white text-xs sm:text-sm leading-snug">
+                J'accepte la politique de confidentialité
+              </span>
             </label>
-            {errors.isChecked && <p className="error">{errors.isChecked}</p>}
+            {errors.isChecked && (
+              <p className="error text-xs sm:text-sm">{errors.isChecked}</p>
+            )}
           </>
         )}
 
-        {/* Erreur serveur */}
-        {errors.server && <p className="error">{errors.server}</p>}
+        {/* Server error */}
+        {errors.server && (
+          <p className="error text-xs sm:text-sm">{errors.server}</p>
+        )}
 
+        {/* Submit button */}
         <Button
-          label={mode === "login" ? "Se connecter" : "Créer un compte"}
+          label={mode === "login" ? "Se connecter" : "Valider l'inscription"}
           type="submit"
         />
       </form>
