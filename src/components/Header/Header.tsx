@@ -5,13 +5,15 @@ import { useState } from "react";
 
 function Header() {
 	const [search, setSearch] = useState("");
+	const [category, setCategory] = useState("Jeux"); // new state for categories
 	const navigate = useNavigate();
 
 	const handleSearch = () => {
 		console.log("Recherche :", search);
 
 		if (search.trim() !== "") {
-			navigate(`/search?q=${search}`);
+			navigate(`/recherche?category=${category}&q=${search}`);
+			setSearch(""); // clear the search input
 		}
 	};
 
@@ -20,12 +22,13 @@ function Header() {
 			<div className="w-full bg-linear-to-t from-green-dark to-green-medium px-4 py-2 flex items-center justify-between rounded-full">
 				{/* Logo + login */}
 				<div className="flex items-center gap-2 lg:gap-4">
-					<img
-						src={manette}
-						alt="manette"
-						className="w-12 h-12 lg:w-16 lg:h-16 object-contain"
-					/>
-
+					<Link to="/">
+						<img
+							src={manette}
+							alt="manette"
+							className="w-12 h-12 lg:w-16 lg:h-16 object-contain"
+						/>
+					</Link>
 					<Link
 						to="/login"
 						className="hidden lg:block text-white font-semibold hover:text-green-light transition"
@@ -62,7 +65,12 @@ function Header() {
 						className="hidden lg:block px-4 py-2 w-40 xl:w-60 rounded-full bg-gray-900 text-white placeholder-gray-400 outline-none"
 					/>
 
-					<select className="hidden lg:block px-3 py-2 rounded-full bg-gray-900 text-white">
+					<select
+						value={category} // categories added for search
+						onChange={(e) => setCategory(e.target.value)}
+						className="hidden lg:block px-3 py-2 rounded-full bg-gray-900 text-white"
+					>
+						{" "}
 						<option>Jeux</option>
 						<option>Challenges</option>
 						<option>Joueurs</option>
