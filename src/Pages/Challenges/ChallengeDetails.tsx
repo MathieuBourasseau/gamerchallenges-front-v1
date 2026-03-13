@@ -145,7 +145,7 @@ export default function ChallengeDetails() {
                             <div
                                 key={part.id}
                                 className="
-                                    border border-green-light rounded-lg overflow-hidden flex items-center justify-center h-[90px]
+                                    relative w-full border border-green-light rounded-lg overflow-hidden  h-[90px]
                                     md:h-[180px]"
                             >
                                 {/* ReactPlayer component used to show video from youtube */}
@@ -154,6 +154,7 @@ export default function ChallengeDetails() {
                                     controls={true}
                                     width="100%"
                                     height="100%"
+                                    className="absolute top-0 left-0"
                                 />
                             </div>
                         ))}

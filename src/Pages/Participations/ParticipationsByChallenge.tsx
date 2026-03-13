@@ -70,8 +70,8 @@ export default function ParticipationsByChallenge() {
 
             <div
                 className="
-                grid grid-cols-2 gap-6 max-w-[400px] mx-auto
-                md:max-w-[600px] md:gap-12
+                grid grid-cols-1 gap-6 w-[90%] max-w-[370px] mx-auto
+                md:grid-cols-2 md:max-w-[600px] md:gap-12
                 lg:grid-cols-3 lg:max-w-[1200px]"
             >
 
@@ -80,13 +80,12 @@ export default function ParticipationsByChallenge() {
                     challenge?.participations?.map((part) => (
 
                         <div
+                            key={part.id}
                             className="flex flex-col gap-2 "
                         >
                             <div
-                                key={part.id}
-                                className="
-                                        border border-green-light rounded-lg overflow-hidden 
-        relative aspect-video w-full"
+                               
+                                className="border border-green-light rounded-lg overflow-hidden relative aspect-video w-full"
                             >
                                 <ReactPlayer
                                     src={part.url}
