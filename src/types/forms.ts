@@ -1,19 +1,34 @@
 // Input required in all forms
 export type BaseUserInputs = {
-    email: string;
-    nickname?: string; // Only for login and register form
-}
+  email: string;
+  nickname?: string; // Only for login and register form
+};
 
 // Inputs required in Contact form
 export type ContactUserInputs = {
-    name: string;
-    message: string;
-}
+  name: string;
+  message: string;
+};
 
 // Inputs required in Login and register form
 export type LoginUserInputs = {
-    password: string;
-}
+  password: string;
+};
+
+// Type for Login form data more specific
+export type LoginFormData = {
+  email: string;
+  password: string;
+};
+
+// Type for Register form data with no need to put the avatar logic
+export type RegisterFormData = {
+  email: string;
+  username: string;
+  password: string;
+  acceptPolicy: boolean;
+  avatar?: File; // optional because the user can choose not to upload an avatar, its already handled in the service, also in the backend...
+};
 
 // Merged BaseUserInputs with ContactUserInputs to export only one type
 export type ContactFormData = BaseUserInputs & ContactUserInputs;
@@ -23,6 +38,6 @@ export type ContactFormData = BaseUserInputs & ContactUserInputs;
 // Partial make this type optional
 // keyof allows to create an object from the form put in parameter
 export type FormErrors<T> = Partial<Record<keyof T, string>> & {
-    isChecked?: string;
-    server?: string;
-}
+  isChecked?: string;
+  server?: string;
+};
