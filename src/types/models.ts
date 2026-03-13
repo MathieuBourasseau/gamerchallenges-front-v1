@@ -20,7 +20,7 @@ export type Challenge = {
   description: string;
   user_id: number;
   game_id: number;
-  createdAt: string;
+  created_at: string;
   updatedAt: string;
   creator?: User;
   game?: Game;
@@ -30,10 +30,12 @@ export type Challenge = {
 // Basic type for participations
 export type Participation = {
   id: number;
+  title: string;
   content?: string; 
   user_id: number;
   challenge_id: number;
   createdAt: string;
+  url: string;
   
   // Relations
   player?: User;
@@ -44,7 +46,7 @@ export type Participation = {
 // User type
 export type User = {
   id: number;
-  pseudo: string;
+  username: string;
   challenges?: Challenge[];
   participations?: Participation[];
   votedParticipations?: Participation[];

@@ -1,33 +1,3 @@
-type User = {
-	id: number;
-	username: string;
-	email: string;
-	avatar?: string;
-};
-
-type Game = {
-	id: number;
-	title: string;
-	cover: string;
-};
-
-type Challenge = {
-	id: number;
-	name: string;
-	game: Game;
-};
-
-type Participation = {
-	id: number;
-	title: string;
-	url: string;
-	user_id: number;
-	challenge_id: number;
-	voteCount: number;
-	player: User;
-	challenge: Challenge;
-};
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { SiTwitch, SiYoutube, SiDiscord } from "react-icons/si";
@@ -35,6 +5,8 @@ import H1Title from "../../ui/H1Title";
 import Button from "../../ui/Button";
 import Pagination from "../../ui/Pagination";
 import AvatarProfile from "../../assets/images/dofuscover.jpg"; // local image, waiting for multer to be implemented on the backend → avatars
+import type { Game, User, Challenge, Participation } from "../../types/models";
+
 
 export default function MyChallenges() {
 	const userId = 1; // we'll have to handle the authentication to get the real current id of the user

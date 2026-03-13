@@ -24,13 +24,13 @@
   /* Titles font size settings */
   /* H1 */
   --text-h1-mobile: 1.125rem;
-  --text-h1-tablet: 1.25rem;
-  --text-h1-desktop: 1.5rem;
+  --text-h1-tablet: 1.40rem;
+  --text-h1-desktop: 2.5rem;
 
   /* H2 */
   --text-h2-mobile: 1rem;
   --text-h2-tablet: 1.125rem;
-  --text-h2-desktop: 1.25rem;
+  --text-h2-desktop: 1.80rem;
 
   /* H3 */
   --text-h3-mobile: 0.875rem;
@@ -44,7 +44,7 @@
   --drop-shadow-title-glow: 0 0 10px rgba(255, 255, 255, 0.9);
 
   /* Paragraphs settings */
-  --text-p-mobile: 0.75rem;
+  --text-p-mobile: 0.88rem;
   --text-p-tablet: 1rem;
 
 

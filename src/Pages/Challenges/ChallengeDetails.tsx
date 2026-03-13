@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import type { Game, Challenge, User, Participation } from "../../types/models"
-import { useParams } from "react-router-dom"
+import type { Challenge } from "../../types/models"
+import { Link, useParams } from "react-router-dom"
+import Image from "../../ui/Image";
+import H1Title from "../../ui/H1Title";
+import { FaHeart } from "react-icons/fa";
+import Button from "../../ui/Button";
+import ReactPlayer from 'react-player'
+import H2 from "../../ui/H2";
 
 type ApiResponse = Challenge & { error?: string };
 
@@ -28,11 +34,21 @@ export default function ChallengeDetails() {
 
                 const response = await fetch(`${API_URL}/challenges/${id}`);
                 const data: ApiResponse = await response.json();
+                console.log("données reçues:", data)
 
                 // Checking the server answer
                 if (!response.ok) {
                     throw new Error(data.error || "Impossible d'afficher ce challenge.")
                 };
+
+                // Get the raw data date from sequelize and transform it in Date object
+                const rawDate = new Date(data.created_at);
+
+                // Format the date in french 
+                const formattedDate = new Intl.DateTimeFormat('fr-FR').format(rawDate).replaceAll('/', '.');
+
+                // Assign this new value to the key 
+                data.created_at = formattedDate;
 
                 setChallenge(data);
 
@@ -45,15 +61,125 @@ export default function ChallengeDetails() {
                 }
             }
         };
-        
+
         if (id) fetchChallenge();
-        
+
     }, [id])
 
-
+    if (!challenge) {
+        return (
+            <p>Chargement en cours</p>
+        )
+    }
     return (
-        <div>
 
-        </div>
+        <section
+            className="p-2 lg:p-8"
+        >
+            {/* Container */}
+            <article
+                className="flex flex-col gap-6 border-3 border-green-light rounded-xl text-p-mobile items-center p-4
+                md:max-w-[600px] md:mx-auto
+                lg:max-w-[1000px] lg:border-4 lg:rounded-3xl lg:w-[75%]"
+
+            >
+                {/* Titles, date and image */}
+                <div
+                    className="flex flex-col gap-3 items-center"
+                >
+                    <Image
+                        src={challenge.game?.cover || ""}
+                        alt={challenge?.name}
+                    />
+                    <H1Title
+                        size={"h1-mobile"}
+                        flex="flex flex-col"
+                    >
+                        {challenge.name}
+                        <span
+                            className="
+                                text-sm font-normal
+                                md:text-p-tablet
+                                lg:text"
+                        >
+                            {challenge.created_at}
+                        </span>
+                    </H1Title>
+
+                </div>
+
+                {/* DESCRIPTION AND LIKES PART */}
+                <div
+                    className="flex flex-col items-center gap-4"
+                >
+                    <p
+                        className="
+                            text-p-mobile
+                            md:text-p-tablet"
+                    >{challenge.description}</p>
+                    <div
+                        className="
+                            flex items-center gap-2
+                            "
+                    >
+                        <span>{challenge.voteCounted}</span>
+                        <FaHeart className="cursor-pointer text-white text-[18px]" />
+                    </div>
+                    <Button
+                        label="uploader une vidéo"
+                        type="button"
+
+                    />
+                </div>
+
+                {/* PARTICIPATIONS */}
+                <div
+                    className="
+                        flex flex-col gap-6 items-center w-[90%] max-w-[370px] mx-auto
+                        md:grid-cols-2 md:w-[70%] md:max-w-[600px]
+                        lg:max-w-[800px]"
+                >
+                    <H2 label="Participations des autres joueurs" />
+                    <div
+                        className="
+                            grid grid-cols-1 gap-6 w-full
+                            lg:grid-cols-2"
+                    >
+                        {challenge.participations?.slice(0, 4).map((part, index) => (
+                            <div
+                                key={part.id}
+                                className={`
+                                    relative w-full border border-green-light rounded-lg overflow-hidden aspect-video
+                                    ${index === 1 ? "hidden md:block" : ""} 
+                                    ${index === 2 ? "hidden lg:block" : ""} 
+                                    ${index === 3 ? "hidden lg:block" : ""}
+                                `}
+                            >
+                                {/* ReactPlayer component used to show video from youtube */}
+                                <ReactPlayer
+                                    src={part.url}
+                                    controls={true}
+                                    width="100%"
+                                    height="100%"
+                                    className="absolute top-0 left-0"
+                                />
+                            </div>
+                        ))}
+                    </div>
+                    <Link
+                        to={`/challenges/${challenge.id}/participations`}
+                        className={`
+                            text-sm bg-green-medium py-2 px-6 rounded-full cursor-pointer uppercase font-bold w-auto mx-auto border-2 border-green-medium
+                            hover:bg-white hover:text-green-light hover:border-green-light
+                            md:text-base
+                        `}
+                    >
+                        Voir plus
+                    </Link>
+
+                </div>
+            </article>
+
+        </section>
     )
 }

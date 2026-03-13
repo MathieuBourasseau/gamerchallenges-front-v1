@@ -5,14 +5,15 @@ type ImageProps = {
 
 const Image = ({ src, alt = "" }: ImageProps) => {
 	return (
-		<div className="relative flex justify-center items-center w-full max-w-[200px] aspect-[5/3] mx-auto">
-			<div className="absolute left-1/2 -translate-x-1/2 w-1/4 -top-3 -bottom-3 bg-green-medium opacity-100 blur-2xl rounded-2xl z-0" />
-			<img
-				src={src}
-				alt={alt}
-				className="relative z-10 w-full h-full object-cover rounded-xl border-2 border-green-medium"
-			/>
-		</div>
+		<img 
+			src={src} 
+			alt={alt} 
+			className="
+                border-3 border-green-light rounded-lg w-[120px] h-[100px] object-cover object-center shadow-[0_0_15px_-2px_#70e61d,0_0_25px_-4px_#70e61d]
+				md:w-[180px] md:h-[160px]
+				lg:w-[220px] lg:h-[200px]
+            "
+		/>
 	);
 };
 
