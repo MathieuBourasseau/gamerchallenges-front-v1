@@ -141,7 +141,9 @@ export default function ChallengeDetails() {
                 >
                     <H2 label="Participations des autres joueurs" />
                     <div
-                        className="grid grid-cols-1  gap-6 w-full"
+                        className="
+                            grid grid-cols-1 gap-6 w-full
+                            lg:grid-cols-2"
                     >
                         {challenge.participations?.slice(0, 4).map((part, index) => (
                             <div
