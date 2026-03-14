@@ -17,12 +17,12 @@ import Header from "./components/Header/Header";
 import SearchPage from "./Pages/SearchPage/SearchPage";
 import ParticipationsByChallenge from "./Pages/Participations/ParticipationsByChallenge";
 import Auth from "./Pages/Authentication/Auth";
-
 export default function App() {
 	return (
 		<BrowserRouter>
 			<div className="min-h-screen flex flex-col">
 				<Header />
+				<BurgerMenu />
 				<Routes>
 					<Route path="/" element={<Home />} />
 					<Route path="/jeux" element={<Games />} />
