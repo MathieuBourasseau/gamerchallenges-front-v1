@@ -148,7 +148,7 @@ export default function ChallengeDetails() {
 
                     ) : (
                         <Link
-                            to={`/participations/partage`}
+                            to={`/auth`}
                             className={`
                                     text-sm bg-green-medium py-2 px-6 rounded-full cursor-pointer uppercase font-bold w-auto mx-auto border-2 border-green-medium
                                     hover:bg-white hover:text-green-light hover:border-green-light
