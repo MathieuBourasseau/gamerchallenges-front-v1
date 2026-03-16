@@ -6,8 +6,11 @@ import Input from "../../ui/Input";
 import Button from "../../ui/Button";
 import SuccessMessage from "../../ui/SuccessMessage";
 import H1Title from "../../ui/H1Title";
+// AuthContext provides the JWT token for API requests
 import { AuthContext } from "../../Context/AuthContext";
+// useAuth hook manages user profile data and refresh logic
 import { useAuth } from "../../hooks/useAuth";
+import ChangePasswordModal from "./ChangePasswordModal.tsx";
 
 type UserForm = {
   username: string;
@@ -21,9 +24,10 @@ type UserForm = {
 
 export default function MyAccount() {
   const navigate = useNavigate();
+  // Get token from AuthContext to authenticate API calls
   const { token } = useContext(AuthContext);
 
-  // useAuth gives userInfo + refreshUser
+  // Get user profile data from useAuth hook (fetches from /me endpoint)
   const { userInfo, loadingUser, refreshUser } = useAuth();
 
   const [form, setForm] = useState<UserForm>({
@@ -41,10 +45,13 @@ export default function MyAccount() {
   const [error, setError] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+
+  const [avatarName, setAvatarName] = useState("Aucun fichier choisi");
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  // Fill form when userInfo loads
+  // Remplir le formulaire quand userInfo arrive
   useEffect(() => {
     if (userInfo) {
       setForm({
@@ -54,12 +61,17 @@ export default function MyAccount() {
         twitch: userInfo.twitch || "",
         youtube: userInfo.youtube || "",
         discord: userInfo.discord || "",
-        avatar: null, // avatar file is always null initially
+        avatar: null,
       });
+
+      if (userInfo.avatar) {
+        const parts = userInfo.avatar.split("/");
+        setAvatarName(parts[parts.length - 1]);
+      }
     }
   }, [userInfo]);
 
-  // Handle text inputs
+  // Gestion des champs texte
   const handleChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -67,10 +79,13 @@ export default function MyAccount() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle avatar file
+  // Gestion de l'avatar
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) setForm((prev) => ({ ...prev, avatar: file }));
+    if (file) {
+      setForm((prev) => ({ ...prev, avatar: file }));
+      setAvatarName(file.name);
+    }
   };
 
   // PATCH /me
@@ -86,7 +101,6 @@ export default function MyAccount() {
     formData.append("youtube", form.youtube);
     formData.append("discord", form.discord);
 
-    // Only append avatar if user selected a file
     if (form.avatar) {
       formData.append("avatar", form.avatar);
     }
@@ -100,7 +114,6 @@ export default function MyAccount() {
 
       if (!response.ok) throw new Error(`HTTP error ${response.status}`);
 
-      // Reload user profile from backend
       await refreshUser();
 
       setSuccessMessage("Profile updated successfully!");
@@ -137,7 +150,7 @@ export default function MyAccount() {
     }
   };
 
-  // Render a single editable field
+  // Champ éditable
   const renderField = (
     label: string,
     name: keyof UserForm,
@@ -179,6 +192,11 @@ export default function MyAccount() {
     <div className="flex flex-col items-center px-4 py-10">
       <SuccessMessage success={successMessage} />
 
+      {/* MODAL DE CHANGEMENT DE MOT DE PASSE */}
+      {showPasswordModal && (
+        <ChangePasswordModal onClose={() => setShowPasswordModal(false)} />
+      )}
+
       <div className="w-full max-w-2xl mx-auto border-4 border-[#55CC03] rounded-3xl p-6 md:p-10 bg-[radial-gradient(ellipse_at_center,_rgba(40,80,50,0.8)_0%,_rgba(0,0,0,0.9)_100%)]">
         <H1Title>Mon compte — {userInfo.username}</H1Title>
 
@@ -200,10 +218,11 @@ export default function MyAccount() {
             <div className="flex w-full gap-2">
               <Input
                 type="text"
-                value={form.avatar?.name ?? "Aucun fichier choisi"}
+                value={form.avatar?.name ?? avatarName}
                 readOnly
                 width="flex-1"
               />
+
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
@@ -221,7 +240,13 @@ export default function MyAccount() {
 
           {renderField("Pseudo", "username")}
           {renderField("Email", "email", "email")}
-          <Button label="Modifier mon mot de passe" type="button" />
+
+          <Button
+            label="Modifier mon mot de passe"
+            type="button"
+            onClick={() => setShowPasswordModal(true)}
+          />
+
           {renderField("Jeu préféré", "favouriteGame")}
           {renderField("Twitch", "twitch")}
           {renderField("YouTube", "youtube")}

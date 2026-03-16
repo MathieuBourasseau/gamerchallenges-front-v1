@@ -1,20 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
 @import "tailwindcss";
 
 @theme {
-
   --font-sans: "Poppins", sans-serif;
 
   /* Colors settings */
   --color-green-dark: #114015;
-  --color-green-medium: #449F05;
-  --color-green-light: #55CC03;
+  --color-green-medium: #449f05;
+  --color-green-light: #55cc03;
   --color-blue-dark: #043640;
   --color-blue-medium: #034b57;
   --color-white: #ffffff;
   --color-black-dark: #091e0a;
-  --color-red-medium: #E7000B;
-  --color-red-dark: #9F0712;
+  --color-red-medium: #e7000b;
+  --color-red-dark: #9f0712;
 
   /* Sections settings */
   --section-spacing-mobile: 1rem;
@@ -24,13 +23,13 @@
   /* Titles font size settings */
   /* H1 */
   --text-h1-mobile: 1.125rem;
-  --text-h1-tablet: 1.40rem;
+  --text-h1-tablet: 1.4rem;
   --text-h1-desktop: 2.5rem;
 
   /* H2 */
   --text-h2-mobile: 1rem;
   --text-h2-tablet: 1.125rem;
-  --text-h2-desktop: 1.80rem;
+  --text-h2-desktop: 1.8rem;
 
   /* H3 */
   --text-h3-mobile: 0.875rem;
@@ -46,8 +45,6 @@
   /* Paragraphs settings */
   --text-p-mobile: 0.88rem;
   --text-p-tablet: 1rem;
-
-
 }
 
 body {
@@ -57,10 +54,13 @@ body {
   margin: 0;
   padding: 0;
   color: #fff !important;
-  background: radial-gradient(circle at 50% 20%,
+  background:
+    radial-gradient(
+      circle at 50% 20%,
       rgba(0, 100, 0, 0.4) 0%,
       rgba(0, 40, 0, 0.2) 40%,
-      #001c22 100%),
+      #001c22 100%
+    ),
     linear-gradient(to bottom, #1a4c0e, #001c22);
   background-repeat: no-repeat;
   background-attachment: fixed;

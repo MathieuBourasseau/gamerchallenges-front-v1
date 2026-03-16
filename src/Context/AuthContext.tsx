@@ -21,10 +21,16 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
+  // Stores the current auth token
   const [token, setToken] = useState<string | null>(null);
+
+  // Stores the authenticated user's ID
   const [userId, setUserId] = useState<string | null>(null);
+
+  // Indicates whether the auth state is still loading (e.g., checking localStorage)
   const [loadingAuth, setLoadingAuth] = useState(true);
 
+  // Load token and userId from localStorage on first render
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     const storedId = localStorage.getItem("userId");
@@ -33,9 +39,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setToken(storedToken);
       setUserId(storedId);
     }
+
     setLoadingAuth(false);
   }, []);
 
+  // Save token and userId on login
   const login = ({ token, userId }: { token: string; userId: string }) => {
     localStorage.setItem("token", token);
     localStorage.setItem("userId", userId);
@@ -43,6 +51,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUserId(userId);
   };
 
+  // Clear auth data on logout
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
