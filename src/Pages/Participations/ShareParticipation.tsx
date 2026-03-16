@@ -1,6 +1,8 @@
 import React, { useState } from "react"
 import type { ParticipationInputs, FormErrors } from "../../types/forms"
 import { useNavigate } from "react-router-dom";
+import Input from "../../ui/Input";
+import Button from "../../ui/Button";
 
 export default function ShareParticipation() {
 
@@ -56,9 +58,9 @@ export default function ShareParticipation() {
                 <Input
                   type="text"
                   placeholder="Nom"
-                  value={formData.name}
+                  value={formData.title}
                   onChange={handleChange}
-                  name="name"
+                  name="title"
                 />
     
                 {/* Mail input */}
@@ -66,30 +68,11 @@ export default function ShareParticipation() {
                 <Input
                   type="email"
                   placeholder="mail@mail.com"
-                  value={formData.email}
+                  value={formData.url}
                   onChange={handleChange}
-                  name="email"
+                  name="url"
                 />
-    
-                {/* Message input */}
-                <Input
-                  placeholder="Mon message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  name="message"
-                  isTextArea
-                />
-    
-                {/* Data management policy */}
-                <div
-                  className="
-                                    flex items-center gap-4 text-xs
-                                    md:text-sm md:justify-center">
-                  <Input type="checkbox" onChange={handleChecked} width="w-auto" />
-    
-                  <span>J'accepte la politique de confidentialité.</span>
-                </div>
-    
+
                 <Button label="Valider" type="submit" />
               </div>
             </fieldset>
