@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-// import { Icon } from "@iconify/react";
+import { Icon } from "@iconify/react";
 import { useLocation } from "react-router-dom";
 import MenuItem from "./MenuItem";
 
@@ -20,6 +20,7 @@ function MenuBurger() {
 			<button
 				onClick={toggleMenu}
 				className="
+				lg:hidden
           fixed right-6 top-15 md:top-32
           z-50
           bg-green-light hover:bg-green-medium

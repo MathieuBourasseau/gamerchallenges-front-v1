@@ -13,6 +13,7 @@ import { Footer } from "./components/Footer/Footer";
 import Ranking from "./Pages/Ranking/Ranking";
 import MyAccount from "./Pages/My-Account/My-account";
 import Header from "./components/Header/Header";
+import MenuBurger from "./components/MenuBurger/MenuBurger";
 import SearchPage from "./Pages/SearchPage/SearchPage";
 import ParticipationsByChallenge from "./Pages/Participations/ParticipationsByChallenge";
 import Auth from "./Pages/Authentication/Auth";
@@ -24,6 +25,7 @@ export default function App() {
 			<BrowserRouter>
 				<div className="min-h-screen flex flex-col">
 					<Header />
+					<MenuBurger />
 					<Routes>
 						<Route path="/" element={<Home />} />
 						<Route path="/jeux" element={<Games />} />
