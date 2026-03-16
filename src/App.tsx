@@ -17,6 +17,7 @@ import Header from "./components/Header/Header";
 import SearchPage from "./Pages/SearchPage/SearchPage";
 import ParticipationsByChallenge from "./Pages/Participations/ParticipationsByChallenge";
 import Auth from "./Pages/Authentication/Auth";
+import ShareParticipation from "./Pages/Participations/ShareParticipation";
 
 export default function App() {
 	return (
@@ -33,6 +34,7 @@ export default function App() {
 					<Route path="/mon-compte" element={<MyAccount userId={3} />} /> //
 					user id ne restera pas là, c'est en attendant d'avoir un système
 					d'auth
+					<Route path="/participations/partage" element={<ShareParticipation />} />
 					<Route path="/mes-challenges" element={<MyChallenges />} />
 					<Route path="/classement" element={<Ranking />} />
 					<Route path="/contact" element={<Contact />} />

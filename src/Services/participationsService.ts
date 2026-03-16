@@ -1,6 +1,6 @@
-import type { ContactFormData } from "../types/forms";
+import type { ParticipationInputs } from "../types/forms";
 
-export const sendContactMessage = async (dataForm: ContactFormData) => {
+export const sendParticipation = async (dataForm: ParticipationInputs) => {
 
     // API URL
     const API_URL = import.meta.env.VITE_API_URL;
@@ -21,7 +21,7 @@ export const sendContactMessage = async (dataForm: ContactFormData) => {
 
     // Checking the server answer
     if (!response.ok) {
-        console.error("Erreur lors de l'envoi du message dans le formulaire de contact :", data.error);
+        console.error("Erreur lors de l'envoi de la participation", data.error);
         throw new Error(data.error || "Impossible de se connecter au serveur.");
     };
 
