@@ -17,7 +17,7 @@ import MenuBurger from "./components/MenuBurger/MenuBurger";
 import SearchPage from "./Pages/SearchPage/SearchPage";
 import ParticipationsByChallenge from "./Pages/Participations/ParticipationsByChallenge";
 import Auth from "./Pages/Authentication/Auth";
-import { AuthProvider } from "./contexts/AuthContext";
+import { AuthProvider } from "./Context/AuthContext";
 
 export default function App() {
 	return (
