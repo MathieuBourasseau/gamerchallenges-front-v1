@@ -1,28 +1,57 @@
 import { useContext, useState, useEffect } from "react";
-import { AuthContext } from "../contexts/AuthContext";
+import { AuthContext } from "../Context/AuthContext";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 type UserInfo = {
+	id: number;
 	username: string;
-	[key: string]: any; // to get more user infos according to page
+	email: string;
+	avatar: string | null;
+	role: "user" | "admin";
+	favouriteGame?: string | null;
+	twitch?: string | null;
+	youtube?: string | null;
+	discord?: string | null;
+	isBanned?: boolean;
 };
 
 export function useAuth() {
-	const { token, userId, login, logout } = useContext(AuthContext);
+	const { token, login, logout } = useContext(AuthContext);
+
 	const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+	const [loadingUser, setLoadingUser] = useState(true);
 
 	useEffect(() => {
-		if (userId) {
-			// simulation des infos utilisateur
-			setUserInfo({
-				username: "TestUser",
-				avatar: "https://i.pravatar.cc/150?img=7",
-				favouriteGame: "Zelda",
-				twitch: "twitch.tv/test",
-			});
+		async function fetchUser() {
+			try {
+				const response = await fetch(`${API_URL}/me`, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				});
+
+				if (!response.ok) {
+					throw new Error("Failed to fetch user");
+				}
+
+				const data = await response.json();
+				setUserInfo(data);
+			} catch (error) {
+				console.error("Auth error:", error);
+				logout();
+			} finally {
+				setLoadingUser(false);
+			}
+		}
+
+		if (token) {
+			fetchUser();
 		} else {
 			setUserInfo(null);
+			setLoadingUser(false);
 		}
-	}, [userId]);
+	}, [token]);
 
-	return { token, userId, login, logout, userInfo };
+	return { token, login, logout, userInfo, loadingUser };
 }
