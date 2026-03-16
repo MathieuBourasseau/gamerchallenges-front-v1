@@ -33,7 +33,7 @@ export type RegisterFormData = {
   username: string;
   password: string;
   acceptPolicy: boolean;
-  avatar?: File; // optional because the user can choose not to upload an avatar, its already handled in the service, also in the backend...
+  avatar?: File | null; // optional because the user can choose not to upload an avatar, its already handled in the service, also in the backend...
 };
 
 // Merged BaseUserInputs with ContactUserInputs to export only one type

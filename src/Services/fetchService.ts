@@ -1,3 +1,4 @@
+import { useAuth } from "../hooks/useAuth";
 import type { ContactFormData, ParticipationInputs } from "../types/forms";
 
 export const sendContactMessage = async (dataForm: ContactFormData) => {
@@ -29,13 +30,16 @@ export const sendContactMessage = async (dataForm: ContactFormData) => {
     return data;
 }
 
-export const shareParticipation = async (dataForm: ParticipationInputs) => {
+export const shareParticipation = async (dataForm: ParticipationInputs, token: string) => {
 
     // API URL
     const API_URL = import.meta.env.VITE_API_URL;
 
     // Headers data for fetch
-    const headersContent = { "Content-Type": "application/json" }
+    const headersContent = { 
+        "Content-Type": "application/json", 
+        "authorization" : `Bearer ${token}`
+    }
 
     // Body content for fetch
     const bodyContent = JSON.stringify(dataForm);

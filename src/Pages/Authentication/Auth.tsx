@@ -21,7 +21,7 @@ export default function Auth() {
   }, [location.search]);
 
   return (
-    <section className="flex flex-col items-center justify-center mx-auto min-h-screen w-full px-4 sm:px-6 md:px-8 gap-6 sm:gap-8 py-8 sm:py-12">
+    <section className="flex flex-col items-center justify-center mx-auto w-full px-4 sm:px-6 md:px-8 gap-6 sm:gap-8 py-8 sm:py-12">
       {/* Tabs */}
       <div className="flex flex-row w-full gap-2 sm:gap-3 max-w-sm sm:max-w-md">
         <Button

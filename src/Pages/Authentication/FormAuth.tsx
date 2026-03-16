@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 // Services
@@ -9,6 +9,9 @@ import SuccessMessage from "../../ui/SuccessMessage";
 import Input from "../../ui/Input";
 import ErrorSummary from "../../ui/ErrorSummary";
 import Button from "../../ui/Button";
+
+// Auth
+import { AuthContext } from "../../Context/AuthContext";
 
 // Types
 import type {
@@ -23,8 +26,9 @@ type FormAuthProps = {
 
 export default function FormAuth({ mode }: FormAuthProps) {
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
-  // Form state (dynamic depending on login/register)
+  // Form state
   const [formData, setFormData] = useState<LoginFormData | RegisterFormData>(
     mode === "login"
       ? { email: "", password: "" }
@@ -33,23 +37,20 @@ export default function FormAuth({ mode }: FormAuthProps) {
           username: "",
           password: "",
           acceptPolicy: false,
-          avatar: undefined,
+          avatar: null,
         },
   );
 
-  // Avatar preview + filename
   const [selectedFileName, setSelectedFileName] = useState<string>("");
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-  // Error state
   const [errors, setErrors] = useState<
     FormErrors<LoginFormData> | FormErrors<RegisterFormData>
   >({});
 
-  // Success message (register only)
   const [success, setSuccessMessage] = useState<string>("");
 
-  // Reset form when mode changes (login <-> register)
+  // Reset form when mode changes
   useEffect(() => {
     if (mode === "login") {
       setFormData({ email: "", password: "" });
@@ -59,7 +60,7 @@ export default function FormAuth({ mode }: FormAuthProps) {
         username: "",
         password: "",
         acceptPolicy: false,
-        avatar: undefined,
+        avatar: null,
       });
     }
 
@@ -75,7 +76,7 @@ export default function FormAuth({ mode }: FormAuthProps) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle avatar upload + preview
+  // Handle avatar upload
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
@@ -83,11 +84,11 @@ export default function FormAuth({ mode }: FormAuthProps) {
 
     if (file) {
       setSelectedFileName(file.name);
-      setPreviewUrl(URL.createObjectURL(file)); // preview image
+      setPreviewUrl(URL.createObjectURL(file));
     }
   };
 
-  // Handle checkbox (register only)
+  // Handle checkbox
   const handleCheckbox = () => {
     if (mode === "register") {
       setFormData({
@@ -97,7 +98,7 @@ export default function FormAuth({ mode }: FormAuthProps) {
     }
   };
 
-  // Basic validation
+  // Validation
   const validate = () => {
     const newErrors: any = {};
 
@@ -116,7 +117,7 @@ export default function FormAuth({ mode }: FormAuthProps) {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Submit handler (login or register)
+  // Submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -124,12 +125,16 @@ export default function FormAuth({ mode }: FormAuthProps) {
 
     try {
       if (mode === "login") {
-        // Login → store token + redirect
         const data = await loginUser(formData as LoginFormData);
-        localStorage.setItem("token", data.token);
+
+        // 🟩 Correction : on utilise le contexte
+        login({
+          token: data.token,
+          userId: data.user.id,
+        });
+
         navigate("/mon-compte");
       } else {
-        // Register → send form + success message + redirect to login tab
         await registerUser(formData as RegisterFormData);
 
         setSuccessMessage("Inscription réussie !");
@@ -159,21 +164,21 @@ export default function FormAuth({ mode }: FormAuthProps) {
           type="email"
           name="email"
           placeholder="Email"
-          value={formData.email}
+          value={formData.email ?? ""}
           onChange={handleChange}
         />
         {errors.email && (
           <p className="error text-xs sm:text-sm">{errors.email}</p>
         )}
 
-        {/* Username (register only) */}
+        {/* Username */}
         {mode === "register" && (
           <>
             <Input
               type="text"
               name="username"
               placeholder="Pseudo"
-              value={(formData as RegisterFormData).username}
+              value={(formData as RegisterFormData).username ?? ""}
               onChange={handleChange}
             />
             {(errors as FormErrors<RegisterFormData>).username && (
@@ -189,14 +194,14 @@ export default function FormAuth({ mode }: FormAuthProps) {
           type="password"
           name="password"
           placeholder="Mot de passe"
-          value={formData.password}
+          value={formData.password ?? ""}
           onChange={handleChange}
         />
         {errors.password && (
           <p className="error text-xs sm:text-sm">{errors.password}</p>
         )}
 
-        {/* Avatar (register only) */}
+        {/* Avatar */}
         {mode === "register" && (
           <>
             <label
@@ -241,7 +246,7 @@ export default function FormAuth({ mode }: FormAuthProps) {
               <Input
                 type="checkbox"
                 name="acceptPolicy"
-                checked={(formData as RegisterFormData).acceptPolicy}
+                checked={(formData as RegisterFormData).acceptPolicy ?? false}
                 onChange={handleCheckbox}
                 width="w-auto mt-1 sm:mt-0"
               />
@@ -260,7 +265,7 @@ export default function FormAuth({ mode }: FormAuthProps) {
           <p className="error text-xs sm:text-sm">{errors.server}</p>
         )}
 
-        {/* Submit button */}
+        {/* Submit */}
         <Button
           label={mode === "login" ? "Se connecter" : "Valider l'inscription"}
           type="submit"

@@ -7,6 +7,8 @@ import SuccessMessage from "../../ui/SuccessMessage";
 import ErrorSummary from "../../ui/ErrorSummary";
 import { validateParticipationForm } from "../../utils/validation";
 import { shareParticipation } from "../../Services/fetchService";
+import { useAuth } from "../../hooks/useAuth";
+
 
 export default function ShareParticipation() {
 
@@ -18,10 +20,11 @@ export default function ShareParticipation() {
   const [success, setSuccessMessage] = useState<string>("");
   const [errors, setErrors] = useState<FormErrors<ParticipationInputs>>({});
 
-
   // --- NAVIGATION --- 
   const navigate = useNavigate();
 
+  // --- USER DATA --- 
+  const { userInfo, token } = useAuth();
 
   // Update value put in the form
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -41,6 +44,11 @@ export default function ShareParticipation() {
     // Stop the default settings of form
     e.preventDefault();
 
+    if (!token) {
+      setErrors({ server: "Vous devez être connecté pour partager une vidéo." });
+      return
+    }
+
     // Clear errors state with empty object
     setErrors({});
 
@@ -57,7 +65,7 @@ export default function ShareParticipation() {
     // --- FETCH DATA TO BACKEND ---
     try {
 
-      const data = await shareParticipation(formData);
+      const data = await shareParticipation(formData, token);
 
       // Show success message
       setSuccessMessage(data.message);
