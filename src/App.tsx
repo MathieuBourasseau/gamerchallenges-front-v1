@@ -17,12 +17,15 @@ import MenuBurger from "./components/MenuBurger/MenuBurger";
 import SearchPage from "./Pages/SearchPage/SearchPage";
 import ParticipationsByChallenge from "./Pages/Participations/ParticipationsByChallenge";
 import Auth from "./Pages/Authentication/Auth";
-import { AuthProvider } from "./Context/AuthContext";
 import ShareParticipation from "./Pages/Participations/ShareParticipation";
+import { useAuth } from "./hooks/useAuth";
+import Errors from "./Pages/Error/Errors";
 
 export default function App() {
+
+	const { userInfo } = useAuth();
+
 	return (
-		<AuthProvider>
 			<BrowserRouter>
 				<div className="min-h-screen flex flex-col">
 					<Header />
@@ -40,7 +43,9 @@ export default function App() {
 								path="/challenges/:id/participations"
 								element={<ParticipationsByChallenge />}
 							/>
-							<Route path="/participations/partage" element={<ShareParticipation />} />
+							{userInfo && (
+								<Route path="/participations/partage" element={<ShareParticipation />} />
+							)}
 							<Route path="/mon-compte" element={<MyAccount />} />
 							<Route path="/mes-challenges" element={<MyChallenges />} />
 							<Route path="/classement" element={<Ranking />} />
@@ -54,6 +59,5 @@ export default function App() {
 					<Footer />
 				</div>
 			</BrowserRouter>
-		</AuthProvider>
 	);
 }
