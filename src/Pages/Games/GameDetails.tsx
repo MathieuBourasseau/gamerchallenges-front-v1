@@ -86,7 +86,7 @@ const GameDetails = () => {
 							<span className="text-white">{challenge.name}</span>
 
 							<div className="flex items-center gap-2 text-white font-bold">
-								<span>{challenge.votes ?? 0}</span>
+								<span>{challenge.totalVotes ?? 0}</span>
 								<FaHeart className="text-white" />
 							</div>
 						</Link>
