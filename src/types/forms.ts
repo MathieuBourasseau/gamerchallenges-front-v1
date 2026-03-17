@@ -15,6 +15,12 @@ export type LoginUserInputs = {
   password: string;
 };
 
+// Input required to share participation 
+export type ParticipationInputs = {
+  title: string;
+  url: string;
+}
+
 // Type for Login form data more specific
 export type LoginFormData = {
   email: string;

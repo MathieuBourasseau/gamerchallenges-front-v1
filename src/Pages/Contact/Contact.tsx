@@ -6,7 +6,7 @@ import { validateContactForm } from "../../utils/validation";
 import Input from "../../ui/Input";
 import ErrorSummary from "../../ui/ErrorSummary";
 import SuccessMessage from "../../ui/SuccessMessage";
-import { sendContactMessage } from "../../Services/contactService";
+import { sendContactMessage } from "../../Services/fetchService";
 
 export default function Contact() {
   // Form data secured with ContactFormData type

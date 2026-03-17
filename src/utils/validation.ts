@@ -1,4 +1,4 @@
-import type { ContactFormData, FormErrors } from "../types/forms";
+import type { ContactFormData, ParticipationInputs, FormErrors } from "../types/forms";
 
 // Function to check if a field is empty
 const isEmpty = (value: string) => value.trim().length === 0;
@@ -36,3 +36,19 @@ export function validateContactForm(
     return errors;
 
 };
+
+// Function to validate participation from Participation form 
+export function validateParticipationForm(data: ParticipationInputs) : FormErrors<ParticipationInputs>{
+
+    const errors: FormErrors<ParticipationInputs> = {};
+
+    if (isEmpty(data.title)) {
+        errors.title = "Le champ titre est vide."
+    };
+
+    if (isEmpty(data.url)) {
+        errors.url = "L'email est incorrect."
+    };
+
+    return errors;
+}

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import type { Challenge } from "../../types/models"
-import { Link, useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import Image from "../../ui/Image";
 import H1Title from "../../ui/H1Title";
 import { FaHeart } from "react-icons/fa";
 import Button from "../../ui/Button";
 import ReactPlayer from 'react-player'
 import H2 from "../../ui/H2";
+import { useAuth } from "../../hooks/useAuth";
 
 type ApiResponse = Challenge & { error?: string };
 
@@ -18,6 +19,13 @@ export default function ChallengeDetails() {
     // ---- STATES INITIALIZATION ----
     const [challenge, setChallenge] = useState<Challenge | null>(null);
     const [error, setErrors] = useState<string | null>(null);
+
+    // ---- NAVIGATION ----
+    const navigate = useNavigate();
+
+    // ---- USER DATA ----
+    const { userInfo } = useAuth();
+
 
     // ---- SHOW THE CHALLENGE SELECTED ----
     useEffect(() => {
@@ -125,11 +133,32 @@ export default function ChallengeDetails() {
                         <span>{challenge.voteCounted}</span>
                         <FaHeart className="cursor-pointer text-white text-[18px]" />
                     </div>
-                    <Button
-                        label="uploader une vidéo"
-                        type="button"
 
-                    />
+                    {userInfo ? (
+                        <Link
+                            to={`/participations/partage`}
+                            className={`
+                                    text-sm bg-green-medium py-2 px-6 rounded-full cursor-pointer uppercase font-bold w-auto mx-auto border-2 border-green-medium
+                                    hover:bg-white hover:text-green-light hover:border-green-light
+                                    md:text-base
+                                `}
+                        >
+                            Partager une vidéo
+                        </Link>
+
+                    ) : (
+                        <Link
+                            to={`/auth`}
+                            className={`
+                                    text-sm bg-green-medium py-2 px-6 rounded-full cursor-pointer uppercase font-bold w-auto mx-auto border-2 border-green-medium
+                                    hover:bg-white hover:text-green-light hover:border-green-light
+                                    md:text-base
+                                `}
+                        >
+                            Se connecter pour partager une vidéo
+                        </Link>
+                    )}
+
                 </div>
 
                 {/* PARTICIPATIONS */}
@@ -180,6 +209,6 @@ export default function ChallengeDetails() {
                 </div>
             </article>
 
-        </section>
+        </section >
     )
 }
