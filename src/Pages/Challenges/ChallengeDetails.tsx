@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { Challenge } from "../../types/models"
-import { Link, useNavigate, useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import Image from "../../ui/Image";
 import H1Title from "../../ui/H1Title";
 import { FaHeart } from "react-icons/fa";
-import Button from "../../ui/Button";
 import ReactPlayer from 'react-player'
 import H2 from "../../ui/H2";
 import { useAuth } from "../../hooks/useAuth";
-
+import type { ApiErrorResponse } from "../../types/forms";
+import ErrorSummary from "../../ui/ErrorSummary";
 
 type ApiResponse = Challenge & { error?: string };
 
@@ -19,10 +19,7 @@ export default function ChallengeDetails() {
 
     // ---- STATES INITIALIZATION ----
     const [challenge, setChallenge] = useState<Challenge | null>(null);
-    const [error, setErrors] = useState<string | null>(null);
-
-    // ---- NAVIGATION ----
-    const navigate = useNavigate();
+    const [errors, setErrors] = useState<ApiErrorResponse>({});
 
     // ---- USER DATA ----
     const { userInfo } = useAuth();
@@ -36,7 +33,7 @@ export default function ChallengeDetails() {
 
             const API_URL = import.meta.env.VITE_API_URL;
 
-            setErrors(null);
+            setErrors({});
             setChallenge(null);
 
             try {
@@ -47,7 +44,7 @@ export default function ChallengeDetails() {
 
                 // Checking the server answer
                 if (!response.ok) {
-                    throw new Error(data.error || "Impossible d'afficher ce challenge.")
+                    throw data
                 };
 
                 // Get the raw data date from sequelize and transform it in Date object
@@ -61,13 +58,13 @@ export default function ChallengeDetails() {
 
                 setChallenge(data);
 
-            } catch (error) {
+            } catch (err: any) {
 
-                if (error instanceof Error) {
-                    setErrors(error.message);
-                } else {
-                    setErrors("Le serveur ne répond pas. Veuillez réessayer plus tard.");
-                }
+                console.error("Erreur reçue:", err);
+                setErrors({
+                    server: err.error || "Une erreur est survenue.",
+                    statusCode: err.status || 500
+                });
             }
         };
 
@@ -75,141 +72,147 @@ export default function ChallengeDetails() {
 
     }, [id])
 
-    if (!challenge) {
+    if (!challenge && !errors.server) {
         return (
-            <p>Chargement en cours</p>
+            <div className="flex justify-center mt-10">
+                <p className="text-white animate-pulse">Chargement en cours...</p>
+            </div>
         )
     }
-    return (
 
-        <section
-            className="p-2 lg:p-8"
-        >
-            {/* Container */}
-            <article
-                className="flex flex-col gap-6 border-3 border-green-light rounded-xl text-p-mobile items-center p-4
+        return (
+
+            <section
+                className="p-2 lg:p-8"
+            >
+
+                <ErrorSummary errors={errors} />
+
+                {/* Container */}
+                <article
+                    className="flex flex-col gap-6 border-3 border-green-light rounded-xl text-p-mobile items-center p-4
                 md:max-w-[600px] md:mx-auto
                 lg:max-w-[1000px] lg:border-4 lg:rounded-3xl lg:w-[75%]"
 
-            >
-                {/* Titles, date and image */}
-                <div
-                    className="flex flex-col gap-3 items-center"
                 >
-                    <Image
-                        src={challenge.game?.cover || ""}
-                        alt={challenge?.name}
-                    />
-                    <H1Title
-                        size={"h1-mobile"}
-                        flex="flex flex-col"
+                    {/* Titles, date and image */}
+                    <div
+                        className="flex flex-col gap-3 items-center"
                     >
-                        {challenge.name}
-                        <span
-                            className="
+                        <Image
+                            src={challenge?.game?.cover || ""}
+                            alt={challenge?.name}
+                        />
+                        <H1Title
+                            size={"h1-mobile"}
+                            flex="flex flex-col"
+                        >
+                            {challenge?.name}
+                            <span
+                                className="
                                 text-sm font-normal
                                 md:text-p-tablet
                                 lg:text"
-                        >
-                            {challenge.created_at}
-                        </span>
-                    </H1Title>
+                            >
+                                {challenge?.created_at}
+                            </span>
+                        </H1Title>
 
-                </div>
-
-                {/* DESCRIPTION AND LIKES PART */}
-                <div
-                    className="flex flex-col items-center gap-4"
-                >
-                    <p
-                        className="
-                            text-p-mobile
-                            md:text-p-tablet"
-                    >{challenge.description}</p>
-                    <div
-                        className="
-                            flex items-center gap-2
-                            "
-                    >
-                        <span>{challenge.voteCounted}</span>
-                        <FaHeart className="cursor-pointer text-white text-[18px]" />
                     </div>
 
-                    {userInfo ? (
-                        <Link
-                            to={`/participations/partage`}
-                            className={`
+                    {/* DESCRIPTION AND LIKES PART */}
+                    <div
+                        className="flex flex-col items-center gap-4"
+                    >
+                        <p
+                            className="
+                            text-p-mobile
+                            md:text-p-tablet"
+                        >{challenge?.description}</p>
+                        <div
+                            className="
+                            flex items-center gap-2
+                            "
+                        >
+                            <span>{challenge?.voteCounted}</span>
+                            <FaHeart className="cursor-pointer text-white text-[18px]" />
+                        </div>
+
+                        {userInfo ? (
+                            <Link
+                                to={`/participations/partage`}
+                                className={`
                                     text-sm bg-green-medium py-2 px-6 rounded-full cursor-pointer uppercase font-bold w-auto mx-auto border-2 border-green-medium
                                     hover:bg-white hover:text-green-light hover:border-green-light
                                     md:text-base
                                 `}
-                        >
-                            Partager une vidéo
-                        </Link>
+                            >
+                                Partager une vidéo
+                            </Link>
 
-                    ) : (
-                        <Link
-                            to={`/auth`}
-                            className={`
+                        ) : (
+                            <Link
+                                to={`/auth`}
+                                className={`
                                     text-sm bg-green-medium py-2 px-6 rounded-full cursor-pointer uppercase font-bold w-auto mx-auto border-2 border-green-medium
                                     hover:bg-white hover:text-green-light hover:border-green-light
                                     md:text-base
                                 `}
-                        >
-                            Se connecter pour partager une vidéo
-                        </Link>
-                    )}
+                            >
+                                Se connecter pour partager une vidéo
+                            </Link>
+                        )}
 
-                </div>
+                    </div>
 
-                {/* PARTICIPATIONS */}
-                <div
-                    className="
+                    {/* PARTICIPATIONS */}
+                    <div
+                        className="
                         flex flex-col gap-6 items-center w-[90%] max-w-[370px] mx-auto
                         md:grid-cols-2 md:w-[70%] md:max-w-[600px]
                         lg:max-w-[800px]"
-                >
-                    <H2 label="Participations des autres joueurs" />
-                    <div
-                        className="
+                    >
+                        <H2>Participation des autres joueurs</H2>
+                        <div
+                            className="
                             grid grid-cols-1 gap-6 w-full
                             lg:grid-cols-2"
-                    >
-                        {challenge.participations?.slice(0, 4).map((part, index) => (
-                            <div
-                                key={part.id}
-                                className={`
+                        >
+                            {challenge?.participations?.slice(0, 4).map((part, index) => (
+                                <div
+                                    key={part.id}
+                                    className={`
                                     relative w-full border border-green-light rounded-lg overflow-hidden aspect-video
                                     ${index === 1 ? "hidden md:block" : ""} 
                                     ${index === 2 ? "hidden lg:block" : ""} 
                                     ${index === 3 ? "hidden lg:block" : ""}
                                 `}
-                            >
-                                {/* ReactPlayer component used to show video from youtube */}
-                                <ReactPlayer
-                                    src={part.url}
-                                    controls={true}
-                                    width="100%"
-                                    height="100%"
-                                    className="absolute top-0 left-0"
-                                />
-                            </div>
-                        ))}
-                    </div>
-                    <Link
-                        to={`/challenges/${challenge.id}/participations`}
-                        className={`
+                                >
+                                    {/* ReactPlayer component used to show video from youtube */}
+                                    <ReactPlayer
+                                        src={part.url}
+                                        controls={true}
+                                        width="100%"
+                                        height="100%"
+                                        className="absolute top-0 left-0"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                        <Link
+                            to={`/challenges/${challenge?.id}/participations`}
+                            className={`
                             text-sm bg-green-medium py-2 px-6 rounded-full cursor-pointer uppercase font-bold w-auto mx-auto border-2 border-green-medium
                             hover:bg-white hover:text-green-light hover:border-green-light
                             md:text-base
                         `}
-                    >
-                        Voir plus
-                    </Link>
+                        >
+                            Voir plus
+                        </Link>
 
-                </div>
-            </article>
+                    </div>
+                </article>
 
-        </section >
-    )
-}
+            </section >
+        )
+    }
