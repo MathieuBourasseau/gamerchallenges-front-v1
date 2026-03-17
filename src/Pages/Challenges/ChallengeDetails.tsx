@@ -155,8 +155,8 @@ export default function ChallengeDetails() {
 						return {
 							...participation,
 							voteCounted: hasVoted
-								? participation.voteCounted - 1 // remove vote
-								: participation.voteCounted + 1, // add vote
+								? Number(participation.voteCounted) - 1 // remove vote
+								: Number(participation.voteCounted) + 1, // add vote
 						};
 					}),
 				};
