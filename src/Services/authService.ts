@@ -51,7 +51,7 @@ export const registerUser = async (dataForm: RegisterFormData) => {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.error || "Erreur lors de l'inscription.");
+    throw new Error(data || "Erreur lors de l'inscription.");
   }
 
   return data;

@@ -46,4 +46,10 @@ export type ContactFormData = BaseUserInputs & ContactUserInputs;
 export type FormErrors<T> = Partial<Record<keyof T, string>> & {
   isChecked?: string;
   server?: string;
+  statusCode?: number
 };
+
+export type ApiErrorResponse = {
+  status: number;
+  error: string;
+}
