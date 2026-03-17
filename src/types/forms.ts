@@ -50,6 +50,6 @@ export type FormErrors<T> = Partial<Record<keyof T, string>> & {
 };
 
 export type ApiErrorResponse = {
-  status: number;
-  error: string;
+  status?: number;
+  error?: string;
 }

@@ -4,10 +4,11 @@ import { useNavigate } from "react-router-dom";
 import H1Title from "../../ui/H1Title";
 import Pagination from "../../ui/Pagination";
 import ErrorSummary from "../../ui/ErrorSummary";
+import type { ApiErrorResponse } from "../../types/forms";
 
 export default function Challenges() {
   const [challenges, setChallenges] = useState<Challenge[]>([]);
-  const [error, setError] = useState<any>({}); 
+  const [error, setError] = useState<ApiErrorResponse>({}); 
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 8;
 
