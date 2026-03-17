@@ -7,6 +7,7 @@ import { FaHeart } from "react-icons/fa";
 import ReactPlayer from "react-player";
 import H2 from "../../ui/H2";
 import { useAuth } from "../../hooks/useAuth";
+import ErrorSummary from "../../ui/ErrorSummary";
 
 type ApiResponse = Challenge & { error?: string };
 
@@ -17,6 +18,7 @@ export default function ChallengeDetails() {
 	// ---- STATES INITIALIZATION ----
 	const [challenge, setChallenge] = useState<Challenge | null>(null);
 	const [error, setErrors] = useState<string | null>(null);
+	const [voteErrors, setVoteErrors] = useState<{ [key: number]: string }>({}); // check if user wants to vote for him/herself
 
 	// check if user has
 	const [votes, setVotes] = useState<{ [key: number]: boolean }>({});
@@ -29,7 +31,7 @@ export default function ChallengeDetails() {
 	const navigate = useNavigate();
 
 	// ---- USER DATA ----
-	const { userInfo, token } = useAuth();
+	const { userInfo, token, loadingUser } = useAuth();
 
 	// ---- SHOW THE CHALLENGE SELECTED ----
 	useEffect(() => {
@@ -135,7 +137,19 @@ export default function ChallengeDetails() {
 			);
 
 			const data = await response.json();
-			if (!response.ok) throw new Error(data.message);
+
+			// if error (vote for own participation)
+			if (!response.ok) {
+				setVoteErrors((prev) => ({ ...prev, [participationId]: data.message }));
+				throw new Error(data.message);
+			}
+
+			// Reinitialize error if vote success
+			setVoteErrors((prev) => {
+				const next = { ...prev };
+				delete next[participationId];
+				return next;
+			});
 
 			// Update local vote
 			setVotes((prev) => ({
@@ -242,17 +256,37 @@ export default function ChallengeDetails() {
 									</div>
 
 									{/* Vote Button */}
-									<div className="flex justify-center items-center mt-2 gap-2">
-										<span>{participation.voteCounted}</span>
-										<FaHeart
-											onClick={() =>
-												!loadingVote[participation.id] &&
-												handleVote(participation.id)
-											}
-											className={`cursor-pointer ${
-												votes[participation.id] ? "text-red-500" : "text-white"
-											}`}
-										/>
+									<div className="flex flex-col items-center">
+										<div className="flex items-center gap-2 mt-1">
+											<span>{Number(participation.voteCounted) || 0}</span>
+											{loadingUser ? (
+												<FaHeart className="text-gray-400 animate-pulse" />
+											) : userInfo ? (
+												<FaHeart
+													className={`cursor-pointer text-[18px] ${
+														votes[participation.id]
+															? "text-red-500"
+															: "text-white"
+													}`}
+													onClick={() =>
+														!loadingVote[participation.id] &&
+														handleVote(participation.id)
+													}
+												/>
+											) : (
+												<FaHeart
+													className="text-gray-400"
+													title="Connectez-vous pour voter"
+												/>
+											)}
+										</div>
+
+										{/* Error message if vote on own participation */}
+										{voteErrors[participation.id] && (
+											<ErrorSummary
+												errors={{ vote: voteErrors[participation.id] }}
+											/>
+										)}
 									</div>
 								</div>
 							))}

@@ -6,6 +6,7 @@ import ReactPlayer from "react-player";
 import Pagination from "../../ui/Pagination";
 import { FaHeart } from "react-icons/fa";
 import { useAuth } from "../../hooks/useAuth";
+import ErrorSummary from "../../ui/ErrorSummary";
 
 type ApiResponse = Challenge & { error?: string };
 
@@ -23,6 +24,7 @@ export default function ParticipationsByChallenge() {
 	const [loadingVote, setLoadingVote] = useState<{ [key: number]: boolean }>(
 		{},
 	);
+	const [voteErrors, setVoteErrors] = useState<{ [key: number]: string }>({}); // check if user wants to vote for him/herself
 
 	// NAVIGATION
 	const navigate = useNavigate();
@@ -130,7 +132,19 @@ export default function ParticipationsByChallenge() {
 			);
 
 			const data = await response.json();
-			if (!response.ok) throw new Error(data.message);
+
+			// if error (vote for own participation)
+			if (!response.ok) {
+				setVoteErrors((prev) => ({ ...prev, [participationId]: data.message }));
+				throw new Error(data.message);
+			}
+
+			// Reinitialize error if vote success
+			setVoteErrors((prev) => {
+				const next = { ...prev };
+				delete next[participationId];
+				return next;
+			});
 
 			// Toggle vote status
 			setVotes((prev) => ({
@@ -192,20 +206,36 @@ export default function ParticipationsByChallenge() {
 								<p>{participation.title}</p>
 								<p>Posté par : {participation.player?.username}</p>
 
-								{/* --- Bouton vote avec nombre de votes --- */}
-								<div className="flex items-center gap-2 mt-1">
-									<span>{Number(participation.voteCounted) || 0}</span>
-									{loadingUser ? (
-										<FaHeart className="text-gray-400 animate-pulse" />
-									) : userInfo ? (
-										<FaHeart
-											className="cursor-pointer text-white text-[18px]"
-											onClick={() => handleVote(participation.id)}
-										/>
-									) : (
-										<FaHeart
-											className="text-gray-400"
-											title="Connectez-vous pour voter"
+								{/* Vote button */}
+								<div className="flex flex-col items-center">
+									<div className="flex items-center gap-2 mt-1">
+										<span>{Number(participation.voteCounted) || 0}</span>
+										{loadingUser ? (
+											<FaHeart className="text-gray-400 animate-pulse" />
+										) : userInfo ? (
+											<FaHeart
+												className={`cursor-pointer text-[18px] ${
+													votes[participation.id]
+														? "text-red-500"
+														: "text-white"
+												}`}
+												onClick={() =>
+													!loadingVote[participation.id] &&
+													handleVote(participation.id)
+												}
+											/>
+										) : (
+											<FaHeart
+												className="text-gray-400"
+												title="Connectez-vous pour voter"
+											/>
+										)}
+									</div>
+
+									{/* Error message if vote on own participation */}
+									{voteErrors[participation.id] && (
+										<ErrorSummary
+											errors={{ vote: voteErrors[participation.id] }}
 										/>
 									)}
 								</div>
