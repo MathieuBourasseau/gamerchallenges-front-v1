@@ -94,7 +94,7 @@ const GameDetails = () => {
 				</div>
 			</div>
 			<div className="flex justify-center mt-10 w-full">
-				<Link to="/games">
+				<Link to="/jeux">
 					<Button label="Retour" type="button" />
 				</Link>
 			</div>
