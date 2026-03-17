@@ -79,7 +79,7 @@ export default function ChallengeDetails() {
 	//Check vote for each participation
 	useEffect(() => {
 		const checkVotes = async () => {
-			if (!userInfo?.token || !challenge?.participations) return;
+			if (!token || !challenge?.participations) return;
 
 			const API_URL = import.meta.env.VITE_API_URL;
 
