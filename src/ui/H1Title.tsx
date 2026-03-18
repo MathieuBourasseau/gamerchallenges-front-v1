@@ -4,9 +4,9 @@ const H1Title = ({ children, flex }: H1TitleProps) => {
 	return (
 		<div className="w-full max-w-5xl mx-auto mb-6 text-center">
 			<h1 className={`
-				${flex} text-white text-h1-mobile
+				${flex} uppercase text-white text-h1-mobile
 				md:text-h1-tablet
-				lg:text-h1-desktop
+				lg:text-h1-desktop lg:mb-4
 				font-bold mb-2`}>
 				{children}
 			</h1>

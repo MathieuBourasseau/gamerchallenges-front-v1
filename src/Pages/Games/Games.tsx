@@ -66,12 +66,12 @@ const Games = () => {
 				<p className="text-center text-white mt-10 opacity-50">Aucun jeu à afficher pour le moment.</p>
 			) : (
 				<>
-					<div className="grid grid-cols-2 sm:grid-cols-3 gap-5">
+					<div className="grid grid-cols-2 items-start sm:grid-cols-3 gap-5">
 						{games.map((game) => (
 							<Link
 								key={game.id}
 								to={`/jeux/${game.id}`}
-								className="flex flex-col items-center"
+								className="flex flex-col items-center justify-start text-center gap-2"
 							>
 								<Image src={game.cover} alt={game.title} />
 								<H2>{game.title}</H2>
