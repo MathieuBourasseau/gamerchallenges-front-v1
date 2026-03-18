@@ -5,7 +5,6 @@ type BaseTitlesProps = {
 }
 
 type H1Props = {
-    size: "h1-mobile" | "h1-tablet" | "h1-desktop";
     flex?: string;
 }
 

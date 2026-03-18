@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
-import type { Challenge } from "../../types/models";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from 'react'
+import type { Challenge } from "../../types/models"
+import { Link, useParams } from "react-router-dom"
 import Image from "../../ui/Image";
 import H1Title from "../../ui/H1Title";
 import { FaHeart } from "react-icons/fa";
-import ReactPlayer from "react-player";
+import ReactPlayer from 'react-player'
 import H2 from "../../ui/H2";
 import { useAuth } from "../../hooks/useAuth";
+import type { ApiErrorResponse } from "../../types/forms";
 import ErrorSummary from "../../ui/ErrorSummary";
 
 type ApiResponse = Challenge & { error?: string };
