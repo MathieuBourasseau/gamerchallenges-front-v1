@@ -6,11 +6,11 @@ import Input from "../../ui/Input";
 import Button from "../../ui/Button";
 import SuccessMessage from "../../ui/SuccessMessage";
 import H1Title from "../../ui/H1Title";
-// AuthContext provides the JWT token for API requests
 import { AuthContext } from "../../Context/AuthContext";
-// useAuth hook manages user profile data and refresh logic
 import { useAuth } from "../../hooks/useAuth";
 import ChangePasswordModal from "./ChangePasswordModal.tsx";
+import type { ApiErrorResponse } from "../../types/forms";
+import ErrorSummary from "../../ui/ErrorSummary";
 
 type UserForm = {
   username: string;
@@ -42,7 +42,8 @@ export default function MyAccount() {
 
   const [editingField, setEditingField] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState("");
-  const [error, setError] = useState("");
+  // 1. Initialisation de l'erreur au format objet
+  const [error, setError] = useState<Partial<ApiErrorResponse>>({});
   const [isDeleting, setIsDeleting] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -51,7 +52,7 @@ export default function MyAccount() {
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  // Remplir le formulaire quand userInfo arrive
+  // Fill form when userInfo is true
   useEffect(() => {
     if (userInfo) {
       setForm({
@@ -71,7 +72,7 @@ export default function MyAccount() {
     }
   }, [userInfo]);
 
-  // Gestion des champs texte
+  // Form fields
   const handleChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -79,7 +80,7 @@ export default function MyAccount() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Gestion de l'avatar
+  // Avatar
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -92,6 +93,10 @@ export default function MyAccount() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!token) return;
+
+    // Clear errors and messages
+    setError({});
+    setSuccessMessage("");
 
     const formData = new FormData();
     formData.append("username", form.username);
@@ -112,17 +117,27 @@ export default function MyAccount() {
         body: formData,
       });
 
-      if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+      // Throw error data if response fails
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw errorData;
+      }
 
       await refreshUser();
 
-      setSuccessMessage("Profile updated successfully!");
+      setSuccessMessage("Profil mis à jour avec succès !");
       setTimeout(() => setSuccessMessage(""), 3000);
       setEditingField(null);
-    } catch (err) {
+
+    } catch (err: any) {
+
       console.error("Error updating user:", err);
-      setError("Unable to update profile.");
+      setError({
+        statusCode: err.status || 500,
+        server: err.error || "Impossible de mettre à jour le profil."
+      });
     }
+
   };
 
   // DELETE /me
@@ -131,26 +146,33 @@ export default function MyAccount() {
 
     try {
       setIsDeleting(true);
+      setError({}); 
 
       const response = await fetch(`${import.meta.env.VITE_API_URL}/me`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw errorData;
+      }
 
       setSuccessMessage("Votre compte a été supprimé avec succès !");
       setTimeout(() => navigate("/"), 2000);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Erreur lors de la suppression du compte:", err);
-      setError("Impossible de supprimer le compte.");
+      setError({
+        statusCode: err.status || 500,
+        server: err.error || "Impossible de supprimer le compte."
+      });
     } finally {
       setIsDeleting(false);
       setShowConfirmDelete(false);
     }
   };
 
-  // Champ éditable
+  // writting fields form
   const renderField = (
     label: string,
     name: keyof UserForm,
@@ -186,18 +208,19 @@ export default function MyAccount() {
   if (loadingUser) return <p className="text-center mt-10">Chargement...</p>;
   if (!userInfo)
     return <p className="text-center mt-10">Utilisateur introuvable.</p>;
-  if (error) return <p className="text-center mt-10 text-red-500">{error}</p>;
 
   return (
     <div className="flex flex-col items-center px-4 py-10">
+      
       <SuccessMessage success={successMessage} />
+      <ErrorSummary errors={error} />
 
-      {/* MODAL DE CHANGEMENT DE MOT DE PASSE */}
+      {/* PASSWORD MODAL */}
       {showPasswordModal && (
         <ChangePasswordModal onClose={() => setShowPasswordModal(false)} />
       )}
 
-      <div className="w-full max-w-2xl mx-auto border-4 border-[#55CC03] rounded-3xl p-6 md:p-10 bg-[radial-gradient(ellipse_at_center,_rgba(40,80,50,0.8)_0%,_rgba(0,0,0,0.9)_100%)]">
+      <div className="w-full max-w-2xl mx-auto border-4 border-[#55CC03] rounded-3xl p-6 md:p-10 bg-[radial-gradient(ellipse_at_center,_rgba(40,80,50,0.8)_0%,_rgba(0,0,0,0.9)_100%)] mt-4">
         <H1Title>Mon compte — {userInfo.username}</H1Title>
 
         {/* Avatar preview */}

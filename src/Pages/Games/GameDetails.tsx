@@ -4,6 +4,8 @@ import Image from "../../ui/Image";
 import { FaHeart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Button from "../../ui/Button";
+import type { ApiErrorResponse } from "../../types/forms";
+import ErrorSummary from "../../ui/ErrorSummary";
 
 type Game = {
   id: number;
@@ -23,76 +25,96 @@ type Challenge = {
 };
 
 const GameDetails = () => {
-  const { id } = useParams();
-  const [game, setGame] = useState<Game | null>(null);
-  const [error, setError] = useState<string | null>(null);
+	const { id } = useParams();
+	const [game, setGame] = useState<Game | null>(null);
+	const [error, setError] = useState<Partial<ApiErrorResponse>>({});
 
-  const API_URL = import.meta.env.VITE_API_URL;
+	const API_URL = import.meta.env.VITE_API_URL;
 
-  useEffect(() => {
-    const fetchGame = async () => {
-      try {
-        const res = await fetch(`${API_URL}/games/${id}`);
-        if (!res.ok) throw new Error("Erreur lors de la récupération du jeu");
+	useEffect(() => {
+		const fetchGame = async () => {
 
-        const data = await res.json();
-        setGame(data);
-      } catch (err) {
-        console.error(err);
-        setError("Impossible de charger le jeu.");
-      }
-    };
+			// Clear errors
+			setError({});
 
-    if (id) fetchGame();
-  }, [id, API_URL]);
+			try {
 
-  if (error) return <p>{error}</p>;
-  if (!game) return <p>Chargement...</p>;
+				const res = await fetch(`${API_URL}/games/${id}`);
+				const data = await res.json();
 
-  return (
-    <div className="mx-3 md:mx-0 mt-5">
-      <div className="border-2 border-[var(--color-green-light)] rounded-2xl p-8">
-        <div className="flex flex-col md:flex-row gap-6">
-          <Image src={game.cover} alt={game.title} />
+				// Throw error object from back
+				if (!res.ok) throw data;
 
-          <div className="flex flex-col gap-3">
-            <h2 className="text-2xl font-semibold text-white">{game.title}</h2>
+				setGame(data);
 
-            <p className="text-white">{game.description}</p>
+			} catch (err: any) {
 
-            <div className="flex gap-3 text-white font-bold">
-              <span>{new Date(game.release_year).getFullYear()} </span>
-              <span>{game.genre}</span>
+				console.error(err);
+				setError({
+					statusCode: err.status || 500,
+					server: err.error || "Impossible d'afficher le jeu."
+				});
+			}
+		};
+
+		if (id) fetchGame();
+	}, [id, API_URL]);
+
+	if (!game && !error.server) {
+        return (
+            <div className="flex justify-center mt-10">
+                <p className="text-white animate-pulse">Chargement en cours...</p>
             </div>
-          </div>
-        </div>
+        );
+    }
 
-        <div className="my-8 h-[3px] bg-white" />
+	return (
+		<div className="mx-3 md:mx-0 mt-5">
 
-        <div className="flex flex-col gap-6">
-          <h3 className="text-center text-xl font-semibold text-white tracking-wider">
-            CHALLENGES
-          </h3>
+			<ErrorSummary errors={error} />
 
-          {game.challenges.map((challenge) => (
-            <Link
-              to={`/challenges/${challenge.id}`}
-              key={challenge.id}
-              className="flex items-center justify-between
-                       border-2 border-[var(--color-green-light)]
-											 bg-[var(--color-blue-dark)]
-                       rounded-md px-6 py-3"
-						>
-							<span className="text-white">{challenge.name}</span>
+			{game && (
+                <div className="border-2 border-[var(--color-green-light)] rounded-2xl p-8">
+                    <div className="flex flex-col md:flex-row gap-6">
+                        <Image src={game.cover} alt={game.title} />
 
-							<div className="flex items-center gap-2 text-white font-bold">
-								<span>{challenge.totalVotes ?? 0}</span>
-								<FaHeart className="text-white" />
-							</div>
-						</Link>
-					))}
-				</div>
-			</div>
+                        <div className="flex flex-col gap-3">
+                            <h2 className="text-2xl font-semibold text-white">{game.title}</h2>
+
+                            <p className="text-white">{game.description}</p>
+
+                            <div className="flex gap-3 text-white font-bold">
+                                <span>{new Date(game.release_year).getFullYear()} </span>
+                                <span>{game.genre}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="my-8 h-[3px] bg-white" />
+
+                    <div className="flex flex-col gap-6">
+                        <h3 className="text-center text-xl font-semibold text-white tracking-wider">
+                            CHALLENGES
+                        </h3>
+
+                        {game.challenges?.map((challenge) => (
+                            <Link
+                                to={`/challenges/${challenge.id}`}
+                                key={challenge.id}
+                                className="flex items-center justify-between border-2 border-[var(--color-green-light)] bg-[var(--color-blue-dark)] rounded-md px-6 py-3"
+                            >
+                                <span className="text-white">{challenge.name}</span>
+
+                                <div className="flex items-center gap-2 text-white font-bold">
+                                    <span>{challenge.votes ?? 0}</span>
+                                    <FaHeart className="text-white" />
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            )}
+
 			<div className="flex justify-center mt-10 w-full">
 				<Link to="/jeux">
 					<Button label="Retour" type="button" />

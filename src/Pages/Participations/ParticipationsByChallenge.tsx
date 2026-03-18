@@ -8,6 +8,10 @@ import { FaHeart } from "react-icons/fa";
 import { useAuth } from "../../hooks/useAuth";
 import ErrorSummary from "../../ui/ErrorSummary";
 
+// Nouveaux imports pour la gestion des erreurs
+import type { ApiErrorResponse } from "../../types/forms";
+import ErrorSummary from "../../ui/ErrorSummary";
+
 type ApiResponse = Challenge & { error?: string };
 
 export default function ParticipationsByChallenge() {

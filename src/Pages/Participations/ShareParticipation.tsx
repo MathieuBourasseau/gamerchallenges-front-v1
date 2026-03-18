@@ -9,7 +9,6 @@ import { validateParticipationForm } from "../../utils/validation";
 import { shareParticipation } from "../../Services/fetchService";
 import { useAuth } from "../../hooks/useAuth";
 
-
 export default function ShareParticipation() {
 
   // --- STATES INITIALIZATION --- 
@@ -18,13 +17,13 @@ export default function ShareParticipation() {
     url: ""
   });
   const [success, setSuccessMessage] = useState<string>("");
-  const [errors, setErrors] = useState<FormErrors<ParticipationInputs>>({});
+  const [errors, setErrors] = useState<FormErrors<ParticipationInputs> & { server?: string, statusCode?: number }>({});
 
   // --- NAVIGATION --- 
   const navigate = useNavigate();
 
   // --- USER DATA --- 
-  const { userInfo, token } = useAuth();
+  const { token } = useAuth(); 
 
   // Update value put in the form
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -33,24 +32,25 @@ export default function ShareParticipation() {
     const { name, value } = e.target;
 
     // update the form with current value and name 
-    setFormData((formData) => ({
-      ...formData,
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       [name]: value,
     }));
   };
 
   // --- HANDLE FORM SUBMIT ---
-  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     // Stop the default settings of form
     e.preventDefault();
 
     if (!token) {
-      setErrors({ server: "Vous devez être connecté pour partager une vidéo." });
-      return
+      setErrors({ server: "Vous devez être connecté pour partager une vidéo.", statusCode: 401 });
+      return;
     }
 
-    // Clear errors state with empty object
+    // Clear errors and messages
     setErrors({});
+    setSuccessMessage(""); 
 
     // Check if data are valid
     const result = validateParticipationForm(formData);
@@ -70,28 +70,26 @@ export default function ShareParticipation() {
       // Show success message
       setSuccessMessage(data.message);
 
-      // Hide success message after few seconds
-      setTimeout(() => {
-        setSuccessMessage("");
-        navigate("/");
-      }, 3000);
-
-      // Empty form after form submit
+      // Empty form
       setFormData({
         title: "",
         url: "",
       });
 
-      // create error if connection to server is broken
-    } catch (error) {
-      // Checking if the error is from instance Errror
-      if (error instanceof Error) {
-        setErrors({ server: error.message });
-      } else {
-        // If the error does not come from Error Instance
-        setErrors({ server: "Une erreur de serveur est survenue." });
-      }
-      return;
+      // Hide success message after few seconds and redirect
+      setTimeout(() => {
+        setSuccessMessage("");
+        navigate("/");
+      }, 3000);
+
+    } catch (err: any) {
+
+      console.error("Erreur d'envoi de participation :", err);
+      setErrors({
+        statusCode: err.status || 500,
+        server: err.error || "Impossible de partager la vidéo."
+      });
+      
     }
   };
 
@@ -150,7 +148,6 @@ export default function ShareParticipation() {
       />
 
       {/* Success message */}
-
       <SuccessMessage success={success} />
 
       {/* Error messages */}

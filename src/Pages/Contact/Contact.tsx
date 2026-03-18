@@ -86,14 +86,14 @@ export default function Contact() {
       setIsChecked(false);
 
       // create error if connection to server is broken
-    } catch (error) {
-      // Checking if the error is from instance Errror
-      if (error instanceof Error) {
-        setErrors({ server: error.message });
-      } else {
-        // If the error does not come from Error Instance
-        setErrors({ server: "Une erreur de serveur est survenue." });
-      }
+    } catch (err : any) {
+
+      console.error("Erreur lors de l'envoi", err);
+      setErrors({
+        statusCode: err.status,
+        server: err.error
+      })
+      
       return;
     }
   };

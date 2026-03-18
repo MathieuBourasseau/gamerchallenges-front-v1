@@ -2,12 +2,11 @@ import { useState, useContext } from "react";
 import { AuthContext } from "../../Context/AuthContext";
 import Input from "../../ui/Input";
 import Button from "../../ui/Button";
-
-// Toast components
+import type { ApiErrorResponse } from "../../types/forms";
 import ErrorSummary from "../../ui/ErrorSummary";
 import SuccessMessage from "../../ui/SuccessMessage";
 
-export default function ChangePasswordModal({ onClose }) {
+export default function ChangePasswordModal({ onClose }: { onClose: () => void }) {
   // Access the auth token from context
   const { token } = useContext(AuthContext);
 
@@ -17,17 +16,19 @@ export default function ChangePasswordModal({ onClose }) {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   // Feedback messages
-  const [error, setError] = useState(""); // Single error message
-  const [success, setSuccess] = useState(""); // Success toast message
+  const [error, setError] = useState<Partial<ApiErrorResponse>>({});
+  const [success, setSuccess] = useState("");
 
   // Handle form submission
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    
+    setError({});
+    setSuccess("");
 
     // Basic client-side validation
     if (newPassword !== confirmPassword) {
-      setError("Les mots de passe ne correspondent pas.");
+      setError({ server: "Les mots de passe ne correspondent pas." });
       return;
     }
 
@@ -45,15 +46,29 @@ export default function ChangePasswordModal({ onClose }) {
         },
       );
 
-      // If backend returns an error status
-      if (!response.ok) throw new Error("Erreur serveur");
+      const data = await response.json();
+
+      // If backend returns an error status, on "throw" l'objet de données
+      if (!response.ok) {
+        throw data;
+      }
 
       // Show success message and close modal after a short delay
       setSuccess("Mot de passe modifié !");
+      
+      // Clear fields
+      setOldPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+
       setTimeout(() => onClose(), 1500);
-    } catch (err) {
-      // Display generic error message
-      setError("Impossible de modifier le mot de passe.");
+      
+    } catch (err: any) {
+      console.error("Erreur de modification du mot de passe :", err);
+      setError({
+        statusCode: err.status || 500,
+        server: err.error || "Impossible de modifier le mot de passe."
+      });
     }
   };
 
@@ -61,7 +76,8 @@ export default function ChangePasswordModal({ onClose }) {
     <>
       {/* Global toast messages */}
       <SuccessMessage success={success} />
-      <ErrorSummary errors={error ? { general: error } : {}} />
+      
+      <ErrorSummary errors={error} />
 
       {/* Modal overlay */}
       <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-9999">
