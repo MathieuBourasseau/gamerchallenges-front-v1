@@ -23,43 +23,43 @@ import { useAuth } from "./hooks/useAuth";
 import Errors from "./Pages/Error/Errors";
 
 export default function App() {
+  const { userInfo } = useAuth();
 
-	const { userInfo } = useAuth();
-
-	return (
-			<BrowserRouter>
-				<div className="min-h-screen flex flex-col">
-					<Header />
-					<MenuBurger />
-					<main
-						className="flex flex-1 flex-col justify-center"
-					>
-						<Routes>
-							<Route path="/" element={<Home />} />
-							<Route path="/jeux" element={<Games />} />
-							<Route path="/jeux/:id" element={<GameDetails />} />
-							<Route path="/challenges" element={<Challenges />} />
-							<Route path="/challenges/:id" element={<ChallengeDetails />} />
-							<Route
-								path="/challenges/:id/participations"
-								element={<ParticipationsByChallenge />}
-							/>
-							{userInfo && (
-								<Route path="/participations/partage" element={<ShareParticipation />} />
-							)}
-							<Route path="/mon-compte" element={<MyAccount />} />
-							<Route path="/mon-profil" element={<MyProfile />} />
-							<Route path="/mes-challenges" element={<MyChallenges />} />
-							<Route path="/classement" element={<Ranking />} />
-							<Route path="/contact" element={<Contact />} />
-							<Route path="/a-propos" element={<About />} />
-							<Route path="/mentions-legales" element={<Legal />} />
-							<Route path="/recherche" element={<SearchPage />} />
-							<Route path="/auth" element={<Auth />} />
-						</Routes>
-					</main>
-					<Footer />
-				</div>
-			</BrowserRouter>
-	);
+  return (
+    <BrowserRouter>
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <MenuBurger />
+        <main className="flex flex-1 flex-col justify-center">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/jeux" element={<Games />} />
+            <Route path="/jeux/:id" element={<GameDetails />} />
+            <Route path="/challenges" element={<Challenges />} />
+            <Route path="/challenges/:id" element={<ChallengeDetails />} />
+            <Route
+              path="/challenges/:id/participations"
+              element={<ParticipationsByChallenge />}
+            />
+            {userInfo && (
+              <Route
+                path="/participations/partage"
+                element={<ShareParticipation />}
+              />
+            )}
+            <Route path="/mon-compte" element={<MyAccount />} />
+            <Route path="/mon-profil" element={<MyProfile />} />
+            <Route path="/mes-challenges" element={<MyChallenges />} />
+            <Route path="/classement" element={<Ranking />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/a-propos" element={<About />} />
+            <Route path="/mentions-legales" element={<Legal />} />
+            <Route path="/recherche" element={<SearchPage />} />
+            <Route path="/auth" element={<Auth />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </BrowserRouter>
+  );
 }
