@@ -190,7 +190,8 @@ export default function ChallengeDetails() {
 		<section className="p-2 lg:p-8">
 			{/* Container */}
 			<article
-				className="flex flex-col gap-6 border-3 border-green-light rounded-xl text-p-mobile items-center p-4
+				className="
+				flex flex-col gap-6 border-3 border-green-light rounded-xl text-p-mobile items-center p-4
                 md:max-w-[600px] md:mx-auto
                 lg:max-w-[1000px] lg:border-4 lg:rounded-3xl lg:w-[75%]"
 			>

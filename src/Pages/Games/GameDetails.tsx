@@ -6,23 +6,7 @@ import { Link } from "react-router-dom";
 import Button from "../../ui/Button";
 import type { ApiErrorResponse } from "../../types/forms";
 import ErrorSummary from "../../ui/ErrorSummary";
-
-type Game = {
-  id: number;
-  title: string;
-  genre: string;
-  release_year: string;
-  cover: string;
-  description: string;
-  challenges: Challenge[];
-};
-
-type Challenge = {
-  id: number;
-  name: string;
-  description: string;
-  votes: number;
-};
+import type { Game, Challenge } from "../../types/models";
 
 const GameDetails = () => {
 	const { id } = useParams();
@@ -69,12 +53,15 @@ const GameDetails = () => {
     }
 
 	return (
-		<div className="mx-3 md:mx-0 mt-5">
+		<div className="p-2 lg:p-8">
 
 			<ErrorSummary errors={error} />
 
 			{game && (
-                <div className="border-2 border-[var(--color-green-light)] rounded-2xl p-8">
+                <div className="
+                border-2 border-[var(--color-green-light)] rounded-2xl p-8
+                md:max-w-[600px] md:mx-auto
+                lg:max-w-[1000px] lg:border-4 lg:rounded-3xl lg:w-[75%]">
                     <div className="flex flex-col md:flex-row gap-6">
                         <Image src={game.cover} alt={game.title} />
 

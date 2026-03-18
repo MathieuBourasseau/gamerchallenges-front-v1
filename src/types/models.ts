@@ -25,6 +25,7 @@ export type Challenge = {
   creator?: User;
   game?: Game;
   participations?: Participation[];
+  votes?: number;
 };
 
 // Basic type for participations
