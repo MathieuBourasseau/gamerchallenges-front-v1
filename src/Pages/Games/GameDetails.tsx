@@ -81,24 +81,25 @@ const GameDetails = () => {
               className="flex items-center justify-between
                        border-2 border-[var(--color-green-light)]
 											 bg-[var(--color-blue-dark)]
-                       rounded-md px-6 py-3">
-              <span className="text-white">{challenge.name}</span>
+                       rounded-md px-6 py-3"
+						>
+							<span className="text-white">{challenge.name}</span>
 
-              <div className="flex items-center gap-2 text-white font-bold">
-                <span>{challenge.votes ?? 0}</span>
-                <FaHeart className="text-white" />
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
-      <div className="flex justify-center mt-10 w-full">
-        <Link to="/jeux">
-          <Button label="Retour" type="button" />
-        </Link>
-      </div>
-    </div>
-  );
+							<div className="flex items-center gap-2 text-white font-bold">
+								<span>{challenge.totalVotes ?? 0}</span>
+								<FaHeart className="text-white" />
+							</div>
+						</Link>
+					))}
+				</div>
+			</div>
+			<div className="flex justify-center mt-10 w-full">
+				<Link to="/jeux">
+					<Button label="Retour" type="button" />
+				</Link>
+			</div>
+		</div>
+	);
 };
 
 export default GameDetails;

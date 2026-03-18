@@ -18,7 +18,7 @@ import type {
   LoginFormData,
   RegisterFormData,
   FormErrors,
-} from "../../types/forms";
+  ApiErrorResponse} from "../../types/forms";
 
 type FormAuthProps = {
   mode: "login" | "register";
@@ -143,7 +143,12 @@ export default function FormAuth({ mode }: FormAuthProps) {
         }, 2000);
       }
     } catch (err: any) {
-      setErrors({ server: err.message });
+
+      const errorData = err as ApiErrorResponse
+      setErrors({ 
+        server: errorData.error,
+        statusCode: errorData.status,
+      });
     }
   };
 

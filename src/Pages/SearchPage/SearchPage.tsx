@@ -51,7 +51,7 @@ function SearchPage() {
 					setChallenges(filteredChallenges);
 				}
 
-				/* USERS */
+				/* USERS */ 
 				if (category === "Joueurs" || category === "Tous") {
 					const res = await fetch(`${API_URL}/users`);
 					const data = await res.json();
