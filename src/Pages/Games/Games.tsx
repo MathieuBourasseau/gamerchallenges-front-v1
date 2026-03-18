@@ -46,13 +46,13 @@ const Games = () => {
     <div className="px-4 sm:px-6 lg:px-8">
       {" "}
       <H1Title>JEUX</H1Title>
-      <div className="grid grid-cols-2 items-center  sm:grid-cols-3 gap-5">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-5">
         {" "}
         {games.map((game) => (
           <Link
             key={game.id}
             to={`/jeux/${game.id}`}
-            className="flex flex-col items-center text-center">
+            className="flex flex-col items-center text-center gap-2">
             <Image src={game.cover} alt={game.title} />
             <H2>{game.title}</H2>
           </Link>
