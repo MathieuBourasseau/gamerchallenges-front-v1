@@ -14,11 +14,9 @@ import Ranking from "./Pages/Ranking/Ranking";
 import MyAccount from "./Pages/My-Account/My-account";
 import MyProfile from "./Pages/My-Profile/My-Profile";
 import Header from "./components/Header/Header";
-import MenuBurger from "./components/MenuBurger/MenuBurger";
 import SearchPage from "./Pages/SearchPage/SearchPage";
 import ParticipationsByChallenge from "./Pages/Participations/ParticipationsByChallenge";
 import Auth from "./Pages/Authentication/Auth";
-import { AuthProvider } from "./contexts/AuthContext";
 import MenuBurger from "./components/MenuBurger/MenuBurger";
 import ShareParticipation from "./Pages/Participations/ShareParticipation";
 import { useAuth } from "./hooks/useAuth";
@@ -50,6 +48,7 @@ export default function App() {
 								<Route path="/participations/partage" element={<ShareParticipation />} />
 							)}
 							<Route path="/mon-compte" element={<MyAccount />} />
+							<Route path="/mon-profil" element={<MyProfile />} />
 							<Route path="/mes-challenges" element={<MyChallenges />} />
 							<Route path="/classement" element={<Ranking />} />
 							<Route path="/contact" element={<Contact />} />

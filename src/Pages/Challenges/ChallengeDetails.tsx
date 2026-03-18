@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { Challenge } from "../../types/models"
-import { Link, useParams } from "react-router-dom"
+import { Link, useParams, useNavigate } from "react-router-dom"
 import Image from "../../ui/Image";
 import H1Title from "../../ui/H1Title";
 import { FaHeart } from "react-icons/fa";
