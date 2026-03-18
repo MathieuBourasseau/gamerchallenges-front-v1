@@ -16,7 +16,7 @@ export default function Input({
   ) : (
     <input
       type={type} // include type for input
-      checked={checked} // include checked for input
+      {...(type === "checkbox" ? { checked } : {})} // only include checked if it's a checkbox
       {...rest}
       className={`bg-black-dark py-2 sm:py-2.5 md:py-3 px-3 sm:px-4 rounded-full ${width} text-xs sm:text-sm md:text-base`}
     />

@@ -1,313 +1,301 @@
-import { useState, useEffect, ChangeEvent, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
+import type { ChangeEvent } from "react";
 import { FaEdit } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import Input from "../../ui/Input";
 import Button from "../../ui/Button";
 import SuccessMessage from "../../ui/SuccessMessage";
 import H1Title from "../../ui/H1Title";
-import { useAuth } from "../../hooks/useAuth"; // get userInfo from hook useAuth & AuthContext
-
-type User = {
-	id: number;
-	username: string;
-	email: string;
-	avatar?: string;
-	favouriteGame?: string;
-	twitch?: string;
-	youtube?: string;
-	discord?: string;
-};
+// AuthContext provides the JWT token for API requests
+import { AuthContext } from "../../Context/AuthContext";
+// useAuth hook manages user profile data and refresh logic
+import { useAuth } from "../../hooks/useAuth";
+import ChangePasswordModal from "./ChangePasswordModal.tsx";
 
 type UserForm = {
-	username: string;
-	email: string;
-	favouriteGame: string;
-	twitch: string;
-	youtube: string;
-	discord: string;
-	avatar: File | null;
-};
-
-type MyAccountProps = {
-	userId: number;
+  username: string;
+  email: string;
+  favouriteGame: string;
+  twitch: string;
+  youtube: string;
+  discord: string;
+  avatar: File | null;
 };
 
 export default function MyAccount() {
-	const navigate = useNavigate();
-	const [user, setUser] = useState<User | null>(null);
-	const { userId, userInfo } = useAuth(); // logged user info
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState("");
-	const [form, setForm] = useState<UserForm>({
-		username: "",
-		email: "",
-		favouriteGame: "",
-		twitch: "",
-		youtube: "",
-		discord: "",
-		avatar: null,
-	});
-	const [editingField, setEditingField] = useState<string | null>(null);
-	const [successMessage, setSuccessMessage] = useState("");
-	const [isDeleting, setIsDeleting] = useState(false);
-	const [showConfirmDelete, setShowConfirmDelete] = useState(false); // delete confirmation
+  const navigate = useNavigate();
+  // Get token from AuthContext to authenticate API calls
+  const { token } = useContext(AuthContext);
 
-	const fileInputRef = useRef<HTMLInputElement | null>(null);
+  // Get user profile data from useAuth hook (fetches from /me endpoint)
+  const { userInfo, loadingUser, refreshUser } = useAuth();
 
-	useEffect(() => {
-		if (!userId || !userInfo) return;
+  const [form, setForm] = useState<UserForm>({
+    username: "",
+    email: "",
+    favouriteGame: "",
+    twitch: "",
+    youtube: "",
+    discord: "",
+    avatar: null,
+  });
 
-		// Simulation du user connecté
-		setUser({
-			id: userId,
-			username: userInfo.username,
-			email: userInfo.email || "test@mail.com",
-			avatar: userInfo.avatar,
-			favouriteGame: userInfo.favouriteGame,
-			twitch: userInfo.twitch,
-			youtube: userInfo.youtube,
-			discord: userInfo.discord,
-		});
-		setForm({
-			username: userInfo.username,
-			email: userInfo.email || "",
-			favouriteGame: userInfo.favouriteGame || "",
-			twitch: userInfo.twitch,
-			youtube: userInfo.youtube,
-			discord: userInfo.discord,
-			avatar: null,
-		});
-		setLoading(false);
+  const [editingField, setEditingField] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [error, setError] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
 
-		// Version fetch à activer plus tard avec /me
-		/*
-  const fetchUser = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/me`);
-      if (!response.ok) throw new Error(`HTTP error ${response.status}`);
-      const data: User = await response.json();
-      setUser(data);
+  const [avatarName, setAvatarName] = useState("Aucun fichier choisi");
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  // Remplir le formulaire quand userInfo arrive
+  useEffect(() => {
+    if (userInfo) {
       setForm({
-        username: data.username || "",
-        email: data.email || "",
-        favouriteGame: data.favouriteGame || "",
-        twitch: data.twitch || "",
-        youtube: data.youtube || "",
-        discord: data.discord || "",
+        username: userInfo.username || "",
+        email: userInfo.email || "",
+        favouriteGame: userInfo.favouriteGame || "",
+        twitch: userInfo.twitch || "",
+        youtube: userInfo.youtube || "",
+        discord: userInfo.discord || "",
         avatar: null,
       });
-    } catch (error) {
-      console.error("Erreur fetch /me:", error);
-      setError("Impossible de récupérer les informations du compte.");
-    } finally {
-      setLoading(false);
+
+      if (userInfo.avatar) {
+        const parts = userInfo.avatar.split("/");
+        setAvatarName(parts[parts.length - 1]);
+      }
+    }
+  }, [userInfo]);
+
+  // Gestion des champs texte
+  const handleChange = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = event.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Gestion de l'avatar
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setForm((prev) => ({ ...prev, avatar: file }));
+      setAvatarName(file.name);
     }
   };
 
-  fetchUser();
-  */
-	}, [userId, userInfo]);
+  // PATCH /me
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!token) return;
 
-	// Handle input changes
-	const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-		const { name, value } = event.target;
-		setForm((prev) => ({ ...prev, [name]: value }));
-	};
+    const formData = new FormData();
+    formData.append("username", form.username);
+    formData.append("email", form.email);
+    formData.append("favouriteGame", form.favouriteGame);
+    formData.append("twitch", form.twitch);
+    formData.append("youtube", form.youtube);
+    formData.append("discord", form.discord);
 
-	//  Handle file input changes (avatar)
-	const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-		const file = event.target.files?.[0];
-		if (file) setForm((prev) => ({ ...prev, avatar: file }));
-	};
+    if (form.avatar) {
+      formData.append("avatar", form.avatar);
+    }
 
-	// Submit updated user data
-	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-		const formData = new FormData();
-		formData.append("username", form.username);
-		formData.append("email", form.email);
-		formData.append("favouriteGame", form.favouriteGame);
-		formData.append("twitch", form.twitch);
-		formData.append("youtube", form.youtube);
-		formData.append("discord", form.discord);
-		if (form.avatar) formData.append("avatar", form.avatar);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/me`, {
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      });
 
-		try {
-			const response = await fetch(
-				`${import.meta.env.VITE_API_URL}/users/${userId}`, // à modifier en /me quand routes prêtes
-				{
-					method: "PATCH",
-					body: formData,
-				},
-			);
+      if (!response.ok) throw new Error(`HTTP error ${response.status}`);
 
-			if (!response.ok) throw new Error(`HTTP error ${response.status}`);
-			const updatedUser: User = await response.json();
+      await refreshUser();
 
-			setUser(updatedUser);
-			setSuccessMessage("Profil mis à jour avec succès !");
-			setTimeout(() => setSuccessMessage(""), 3000);
-			setEditingField(null);
-		} catch (err) {
-			console.error("Error updating user:", err);
-			setError("Impossible de mettre à jour le profil.");
-		}
-	};
+      setSuccessMessage("Profile updated successfully!");
+      setTimeout(() => setSuccessMessage(""), 3000);
+      setEditingField(null);
+    } catch (err) {
+      console.error("Error updating user:", err);
+      setError("Unable to update profile.");
+    }
+  };
 
-	// Delete user account
-	const handleDeleteAccount = async () => {
-		try {
-			setIsDeleting(true);
-			const response = await fetch(
-				`${import.meta.env.VITE_API_URL}/users/${userId}`, // à modifier en /me quand routes prêtes
-				{
-					method: "DELETE",
-				},
-			);
+  // DELETE /me
+  const handleDeleteAccount = async () => {
+    if (!token) return;
 
-			if (!response.ok) {
-				const errorData = await response.json();
-				throw new Error(errorData.error || `HTTP error ${response.status}`);
-			}
+    try {
+      setIsDeleting(true);
 
-			setSuccessMessage("Votre compte a été supprimé avec succès !");
-			setTimeout(() => {
-				navigate("/"); // redirection to home page after showing confirmation message
-			}, 2000);
-		} catch (err) {
-			console.error("Erreur lors de la suppression du compte:", err);
-			setError("Impossible de supprimer le compte.");
-		} finally {
-			setIsDeleting(false);
-			setShowConfirmDelete(false);
-		}
-	};
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/me`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-	// Helper to render each form field with edit button
-	const renderField = (
-		label: string,
-		name: keyof UserForm,
-		type: string = "text",
-	) => {
-		const isEditing = editingField === name;
-		return (
-			<div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start sm:items-center w-full">
-				<label className="sm:w-40 text-sm">{label}</label>
-				<div className="flex w-full gap-2">
-					<Input
-						type={type}
-						name={name}
-						value={form[name]}
-						onChange={handleChange}
-						width="flex-1"
-						disabled={!isEditing}
-					/>
-					<button
-						type="button"
-						onClick={() => setEditingField(isEditing ? null : name)}
-						className={`p-2 w-12 h-12 rounded-lg flex items-center justify-center
-            ${isEditing ? "bg-green-700" : "bg-[#55CC03]"} 
-            text-white hover:bg-green-800 transition-colors`}
-					>
-						<FaEdit className="text-black" />
-					</button>
-				</div>
-			</div>
-		);
-	};
+      if (!response.ok) throw new Error(`HTTP error ${response.status}`);
 
-	if (loading) return <p className="text-center mt-10">Loading...</p>;
-	if (error) return <p className="text-center mt-10 text-red-500">{error}</p>;
+      setSuccessMessage("Votre compte a été supprimé avec succès !");
+      setTimeout(() => navigate("/"), 2000);
+    } catch (err) {
+      console.error("Erreur lors de la suppression du compte:", err);
+      setError("Impossible de supprimer le compte.");
+    } finally {
+      setIsDeleting(false);
+      setShowConfirmDelete(false);
+    }
+  };
 
-	return (
-		<div className="flex flex-col items-center px-4 py-10">
-			<SuccessMessage success={successMessage} />
+  // Champ éditable
+  const renderField = (
+    label: string,
+    name: keyof UserForm,
+    type: React.HTMLInputTypeAttribute = "text",
+  ) => {
+    const isEditing = editingField === name;
 
-			<div className="w-full max-w-2xl mx-auto border-4 border-[#55CC03] rounded-3xl p-6 md:p-10 bg-[radial-gradient(ellipse_at_center,_rgba(40,80,50,0.8)_0%,_rgba(0,0,0,0.9)_100%)]">
-				<H1Title>Mon compte</H1Title>
+    return (
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start sm:items-center w-full">
+        <label className="sm:w-40 text-sm">{label}</label>
+        <div className="flex w-full gap-2">
+          <Input
+            type={type}
+            name={name}
+            value={form[name] ?? ""}
+            onChange={handleChange}
+            width="flex-1"
+            disabled={!isEditing}
+          />
+          <button
+            type="button"
+            onClick={() => setEditingField(isEditing ? null : name)}
+            className={`p-2 w-12 h-12 rounded-lg flex items-center justify-center
+              ${isEditing ? "bg-green-700" : "bg-[#55CC03]"} 
+              text-white hover:bg-green-800 transition-colors`}>
+            <FaEdit className="text-black" />
+          </button>
+        </div>
+      </div>
+    );
+  };
 
-				<form onSubmit={handleSubmit} className="flex flex-col gap-4">
-					{/* Avatar field */}
-					<div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start sm:items-center w-full">
-						<label className="sm:w-40 text-sm">Avatar</label>
-						<div className="flex w-full gap-2">
-							<Input
-								type="text"
-								value={form.avatar ? form.avatar.name : "Aucun fichier choisi"}
-								readOnly
-								width="flex-1"
-							/>
-							<button
-								type="button"
-								onClick={() => fileInputRef.current?.click()}
-								className="p-2 w-12 h-12 rounded-lg flex items-center justify-center bg-[#55CC03] text-white hover:bg-green-700 transition-colors"
-							>
-								<FaEdit className="text-black" />
-							</button>
-						</div>
-						<input
-							type="file"
-							ref={fileInputRef}
-							onChange={handleFileChange}
-							className="hidden"
-						/>
-					</div>
+  if (loadingUser) return <p className="text-center mt-10">Chargement...</p>;
+  if (!userInfo)
+    return <p className="text-center mt-10">Utilisateur introuvable.</p>;
+  if (error) return <p className="text-center mt-10 text-red-500">{error}</p>;
 
-					{/* Other editable fields */}
-					{renderField("Pseudo", "username")}
-					{renderField("Email", "email", "email")}
-					<Button label="Modifier mon mot de passe" type="button" />
-					{renderField("Jeu préféré", "favouriteGame")}
-					{renderField("Twitch", "twitch")}
-					{renderField("YouTube", "youtube")}
-					{renderField("Discord", "discord")}
+  return (
+    <div className="flex flex-col items-center px-4 py-10">
+      <SuccessMessage success={successMessage} />
 
-					<div className="flex flex-col sm:flex-row gap-4 justify-between mt-6">
-						<Button type="submit" label="Enregistrer mes infos" />
+      {/* MODAL DE CHANGEMENT DE MOT DE PASSE */}
+      {showPasswordModal && (
+        <ChangePasswordModal onClose={() => setShowPasswordModal(false)} />
+      )}
 
-						<Button
-							type="button"
-							label="Supprimer mon compte"
-							bgColor="bg-red-500"
-							borderColor="border-red-500"
-							onClick={() => setShowConfirmDelete(true)}
-						/>
-					</div>
+      <div className="w-full max-w-2xl mx-auto border-4 border-[#55CC03] rounded-3xl p-6 md:p-10 bg-[radial-gradient(ellipse_at_center,_rgba(40,80,50,0.8)_0%,_rgba(0,0,0,0.9)_100%)]">
+        <H1Title>Mon compte — {userInfo.username}</H1Title>
 
-					{/* Delete confirmation panel */}
-					{showConfirmDelete && (
-						<div className="bg-red-100 border border-red-500 p-4 rounded-lg mt-4 flex flex-col gap-2">
-							<p className="text-black">
-								Êtes-vous sûr(e) de vouloir supprimer votre compte ?
-							</p>
-							<div className="flex gap-2">
-								<Button
-									type="button"
-									label="Annuler"
-									onClick={() => setShowConfirmDelete(false)}
-									bgColor="bg-gray-300"
-									borderColor="border-gray-400"
-								/>
-								<Button
-									type="button"
-									label={isDeleting ? "Suppression..." : "Confirmer"}
-									onClick={handleDeleteAccount}
-									bgColor="bg-red-500"
-									borderColor="border-red-500"
-									disabled={isDeleting}
-								/>
-							</div>
-						</div>
-					)}
-				</form>
-			</div>
+        {/* Avatar preview */}
+        {userInfo.avatar && (
+          <div className="flex justify-center mb-6">
+            <img
+              src={userInfo.avatar}
+              alt="Avatar"
+              className="w-32 h-32 rounded-full object-cover border-4 border-[#55CC03]"
+            />
+          </div>
+        )}
 
-			<div className="mt-8 flex justify-center">
-				<Link to="/">
-					<Button label="Retour" type="button" />
-				</Link>
-			</div>
-		</div>
-	);
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          {/* Avatar upload */}
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start sm:items-center w-full">
+            <label className="sm:w-40 text-sm">Avatar</label>
+            <div className="flex w-full gap-2">
+              <Input
+                type="text"
+                value={form.avatar?.name ?? avatarName}
+                readOnly
+                width="flex-1"
+              />
+
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="p-2 w-12 h-12 rounded-lg flex items-center justify-center bg-[#55CC03] text-white hover:bg-green-700 transition-colors">
+                <FaEdit className="text-black" />
+              </button>
+            </div>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              className="hidden"
+            />
+          </div>
+
+          {renderField("Pseudo", "username")}
+          {renderField("Email", "email", "email")}
+
+          <Button
+            label="Modifier mon mot de passe"
+            type="button"
+            onClick={() => setShowPasswordModal(true)}
+          />
+
+          {renderField("Jeu préféré", "favouriteGame")}
+          {renderField("Twitch", "twitch")}
+          {renderField("YouTube", "youtube")}
+          {renderField("Discord", "discord")}
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-between mt-6">
+            <Button type="submit" label="Enregistrer mes infos" />
+
+            <Button
+              type="button"
+              label="Supprimer mon compte"
+              bgColor="bg-red-500"
+              borderColor="border-red-500"
+              onClick={() => setShowConfirmDelete(true)}
+            />
+          </div>
+
+          {showConfirmDelete && (
+            <div className="bg-red-100 border border-red-500 p-4 rounded-lg mt-4 flex flex-col gap-2">
+              <p className="text-black">
+                Êtes-vous sûr(e) de vouloir supprimer votre compte ?
+              </p>
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  label="Annuler"
+                  onClick={() => setShowConfirmDelete(false)}
+                  bgColor="bg-gray-300"
+                  borderColor="border-gray-400"
+                />
+                <Button
+                  type="button"
+                  label={isDeleting ? "Suppression..." : "Confirmer"}
+                  onClick={handleDeleteAccount}
+                  bgColor="bg-red-500"
+                  borderColor="border-red-500"
+                  disabled={isDeleting}
+                />
+              </div>
+            </div>
+          )}
+        </form>
+      </div>
+
+      <div className="mt-8 flex justify-center">
+        <Link to="/">
+          <Button label="Retour" type="button" />
+        </Link>
+      </div>
+    </div>
+  );
 }

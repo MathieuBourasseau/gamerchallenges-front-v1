@@ -17,7 +17,7 @@ export const loginUser = async (dataForm: LoginFormData) => {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.error || "Erreur lors de la connexion.");
+    throw data;
   }
   return data;
 };
@@ -51,7 +51,7 @@ export const registerUser = async (dataForm: RegisterFormData) => {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.error || "Erreur lors de l'inscription.");
+    throw data;
   }
 
   return data;
@@ -71,7 +71,7 @@ export const getMe = async (token: string) => {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.error || "Impossible de récupérer l'utilisateur.");
+    throw data;
   }
 
   return data;
