@@ -5,14 +5,10 @@ import Pagination from "../../ui/Pagination";
 import H1Title from "../../ui/H1Title";
 import H2 from "../../ui/H2";
 import type { ApiErrorResponse } from "../../types/forms";
+import type { Game } from "../../types/models";
 import ErrorSummary from "../../ui/ErrorSummary";
 
 
-type Game = {
-  id: number;
-  title: string;
-  cover: string;
-};
 
 const Games = () => {
 	const [games, setGames] = useState<Game[]>([]);
