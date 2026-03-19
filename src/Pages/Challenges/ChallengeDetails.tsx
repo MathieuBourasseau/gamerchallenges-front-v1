@@ -183,12 +183,12 @@ export default function ChallengeDetails() {
 	};
 
 	if (error.server || error.statusCode) {
-        return (
-            <section className="p-8 flex justify-center">
-                <ErrorSummary errors={error} />
-            </section>
-        );
-    }
+		return (
+			<section className="p-8 flex justify-center">
+				<ErrorSummary errors={error} />
+			</section>
+		);
+	}
 
 	if (!challenge) {
 		return <p>Chargement en cours</p>;
@@ -216,14 +216,21 @@ export default function ChallengeDetails() {
 
 				{/* DESCRIPTION AND LIKES PART */}
 				<div className="flex flex-col items-center gap-4">
-					<p className="text-p-mobile md:text-p-tablet">
-						{challenge.description}
-					</p>
+
+					<span
+						className="flex text-p-mobile items-center justify-center gap-2 md:text-p-tablet lg:text-lg"
+					>
+						{challenge.totalChallengeVotes}
+						<FaHeart className="text-white" />
+					</span>
+
+					<p className="text-p-mobile md:text-p-tablet">{challenge.description}</p>
+
 
 					{userInfo ? (
 						<Link
 							to={`/participations/partage`}
-							className={`text-sm bg-green-medium py-2 px-6 rounded-full cursor-pointer uppercase font-bold w-auto mx-auto border-2 border-green-medium
+							className={`text-sm text-center bg-green-medium py-2 px-6 rounded-full cursor-pointer uppercase font-bold w-auto mx-auto border-2 border-green-medium
                                     hover:bg-white hover:text-green-light hover:border-green-light md:text-base`}
 						>
 							Partager une vidéo
@@ -231,7 +238,7 @@ export default function ChallengeDetails() {
 					) : (
 						<Link
 							to={`/auth`}
-							className={`text-sm bg-green-medium py-2 px-6 rounded-full cursor-pointer uppercase font-bold w-auto mx-auto border-2 border-green-medium
+							className={`text-sm text-center bg-green-medium py-2 px-6 rounded-full cursor-pointer uppercase font-bold w-auto mx-auto border-2 border-green-medium
                                     hover:bg-white hover:text-green-light hover:border-green-light md:text-base`}
 						>
 							Se connecter pour partager une vidéo
