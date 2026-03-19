@@ -182,6 +182,14 @@ export default function ChallengeDetails() {
 		}
 	};
 
+	if (error.server || error.statusCode) {
+        return (
+            <section className="p-8 flex justify-center">
+                <ErrorSummary errors={error} />
+            </section>
+        );
+    }
+
 	if (!challenge) {
 		return <p>Chargement en cours</p>;
 	}
@@ -197,7 +205,7 @@ export default function ChallengeDetails() {
 			>
 				{/* Titles, date and image */}
 				<div className="flex flex-col gap-3 items-center">
-					<Image src={challenge.game?.cover || ""} alt={challenge?.name} />
+					<Image src={challenge.game?.cover} alt={challenge?.name} />
 					<H1Title flex="flex flex-col">
 						{challenge.name}
 						<span className="text-sm font-normal md:text-p-tablet lg:text">

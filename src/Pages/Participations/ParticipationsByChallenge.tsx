@@ -47,7 +47,7 @@ export default function ParticipationsByChallenge() {
 				const data: ApiResponse = await res.json();
 
 				if (!res.ok) {
-					throw data; // On jette directement l'objet pour récupérer le status
+					throw data; 
 				}
 
 				setChallenge(data);

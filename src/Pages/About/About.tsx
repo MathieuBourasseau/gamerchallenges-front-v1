@@ -1,9 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import H1Title from "../../ui/H1Title";
-interface AboutProps {}
-
-function About(props: AboutProps) {
+function About() {
   const navigate = useNavigate();
+
   return (
     <div className="max-w-4xl mx-auto p-6 text-center">
       <H1Title>À PROPOS</H1Title>

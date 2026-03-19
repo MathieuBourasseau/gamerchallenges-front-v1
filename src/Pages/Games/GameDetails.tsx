@@ -6,8 +6,8 @@ import { Link } from "react-router-dom";
 import Button from "../../ui/Button";
 import type { ApiErrorResponse } from "../../types/forms";
 import ErrorSummary from "../../ui/ErrorSummary";
-import type { Game, Challenge } from "../../types/models";
 import H2 from "../../ui/H2";
+import type { Game } from "../../types/models";
 
 const GameDetails = () => {
   const { id } = useParams();

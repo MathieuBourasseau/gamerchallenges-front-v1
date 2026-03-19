@@ -1,10 +1,10 @@
-import type { Participation } from "../../types/participation";
 import { useState, useEffect } from "react";
 import H1Title from "../../ui/H1Title";
 import TitleImage from "../../assets/images/Title.png";
 import backgroundImage from "../../assets/images/draw_team.png";
 import Button from "../../ui/Button";
 import type { ApiErrorResponse } from "../../types/forms";
+import type { Participation } from "../../types/models";
 import ErrorSummary from "../../ui/ErrorSummary";
 import Image from "../../ui/Image";
 
@@ -93,13 +93,13 @@ export default function Home() {
               >
                 <a href={p.url} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center">
                   <Image
-                    src={p.challenge.game.cover}
-                    alt={p.challenge.game.title}
+                    src={p.challenge?.game?.cover}
+                    alt={p.challenge?.game?.title}
                   />
                 </a>
 
                 <p className="text-white font-medium text-center mt-3">
-                  {p.challenge.name}
+                  {p.challenge?.name}
                 </p>
               </article>
             ))}

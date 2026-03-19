@@ -9,18 +9,8 @@ import H1Title from "../../ui/H1Title";
 import { AuthContext } from "../../Context/AuthContext";
 import { useAuth } from "../../hooks/useAuth";
 import ChangePasswordModal from "./ChangePasswordModal.tsx";
-import type { ApiErrorResponse } from "../../types/forms";
+import type { ApiErrorResponse, ProfileFormData } from "../../types/forms";
 import ErrorSummary from "../../ui/ErrorSummary";
-
-type UserForm = {
-  username: string;
-  email: string;
-  favouriteGame: string;
-  twitch: string;
-  youtube: string;
-  discord: string;
-  avatar: File | null;
-};
 
 export default function MyAccount() {
   const navigate = useNavigate();
@@ -30,7 +20,7 @@ export default function MyAccount() {
   // Get user profile data from useAuth hook (fetches from /me endpoint)
   const { userInfo, loadingUser, refreshUser } = useAuth();
 
-  const [form, setForm] = useState<UserForm>({
+  const [form, setForm] = useState<ProfileFormData>({
     username: "",
     email: "",
     favouriteGame: "",
@@ -175,7 +165,7 @@ export default function MyAccount() {
   // writting fields form
   const renderField = (
     label: string,
-    name: keyof UserForm,
+    name: keyof ProfileFormData,
     type: React.HTMLInputTypeAttribute = "text",
   ) => {
     const isEditing = editingField === name;
