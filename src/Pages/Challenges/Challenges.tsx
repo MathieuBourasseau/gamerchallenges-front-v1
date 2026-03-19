@@ -1,4 +1,4 @@
-import type { Challenge } from "../../types/challenge";
+import type { Challenge } from "../../types/models";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import H1Title from "../../ui/H1Title";
@@ -61,8 +61,8 @@ export default function Challenges() {
             onClick={() => handleChallengeClick(challenge.id)}
           >
             <Image
-              src={challenge.game.cover}
-              alt={challenge.game.title}
+              src={challenge.game?.cover}
+              alt={challenge.game?.title}
             />
             <p className="text-white font-medium text-center mt-3">
               {challenge.name}
