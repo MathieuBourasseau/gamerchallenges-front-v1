@@ -3,6 +3,7 @@ import Button from "../../ui/Button";
 import { useNavigate } from "react-router-dom";
 import type { ContactFormData, FormErrors } from "../../types/forms";
 import { validateContactForm } from "../../utils/validation";
+import H1Title from "../../ui/H1Title";
 import Input from "../../ui/Input";
 import ErrorSummary from "../../ui/ErrorSummary";
 import SuccessMessage from "../../ui/SuccessMessage";
@@ -86,14 +87,13 @@ export default function Contact() {
       setIsChecked(false);
 
       // create error if connection to server is broken
-    } catch (err : any) {
-
+    } catch (err: any) {
       console.error("Erreur lors de l'envoi", err);
       setErrors({
         statusCode: err.status,
-        server: err.error
-      })
-      
+        server: err.error,
+      });
+
       return;
     }
   };
@@ -115,14 +115,7 @@ export default function Contact() {
                     lg:w-full lg:max-w-150
                     "
         onSubmit={handleSubmit}>
-        <h1
-          className="
-                    text-h1-mobile italic uppercase font-bold text-white drop-shadow-title-glow text-center
-                    md:text-h1-tablet
-                    lg:text-h1-desktop
-                ">
-          Contactez-nous
-        </h1>
+        <H1Title>Contactez-nous</H1Title>
         <fieldset
           className="w-full
                         lg:max-w-[80%] lg:mx-auto

@@ -1,5 +1,5 @@
-import React, { useState } from "react"
-import type { ParticipationInputs, FormErrors } from "../../types/forms"
+import React, { useState } from "react";
+import type { ParticipationInputs, FormErrors } from "../../types/forms";
 import { useNavigate } from "react-router-dom";
 import Input from "../../ui/Input";
 import Button from "../../ui/Button";
@@ -8,30 +8,33 @@ import ErrorSummary from "../../ui/ErrorSummary";
 import { validateParticipationForm } from "../../utils/validation";
 import { shareParticipation } from "../../Services/fetchService";
 import { useAuth } from "../../hooks/useAuth";
+import H1Title from "../../ui/H1Title";
 
 export default function ShareParticipation() {
-
-  // --- STATES INITIALIZATION --- 
+  // --- STATES INITIALIZATION ---
   const [formData, setFormData] = useState<ParticipationInputs>({
     title: "",
-    url: ""
+    url: "",
   });
   const [success, setSuccessMessage] = useState<string>("");
-  const [errors, setErrors] = useState<FormErrors<ParticipationInputs> & { server?: string, statusCode?: number }>({});
+  const [errors, setErrors] = useState<
+    FormErrors<ParticipationInputs> & { server?: string; statusCode?: number }
+  >({});
 
-  // --- NAVIGATION --- 
+  // --- NAVIGATION ---
   const navigate = useNavigate();
 
-  // --- USER DATA --- 
-  const { token } = useAuth(); 
+  // --- USER DATA ---
+  const { token } = useAuth();
 
   // Update value put in the form
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-
-    // Get name and value from event 
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    // Get name and value from event
     const { name, value } = e.target;
 
-    // update the form with current value and name 
+    // update the form with current value and name
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
@@ -44,13 +47,16 @@ export default function ShareParticipation() {
     e.preventDefault();
 
     if (!token) {
-      setErrors({ server: "Vous devez être connecté pour partager une vidéo.", statusCode: 401 });
+      setErrors({
+        server: "Vous devez être connecté pour partager une vidéo.",
+        statusCode: 401,
+      });
       return;
     }
 
     // Clear errors and messages
     setErrors({});
-    setSuccessMessage(""); 
+    setSuccessMessage("");
 
     // Check if data are valid
     const result = validateParticipationForm(formData);
@@ -64,7 +70,6 @@ export default function ShareParticipation() {
 
     // --- FETCH DATA TO BACKEND ---
     try {
-
       const data = await shareParticipation(formData, token);
 
       // Show success message
@@ -81,15 +86,12 @@ export default function ShareParticipation() {
         setSuccessMessage("");
         navigate("/");
       }, 3000);
-
     } catch (err: any) {
-
       console.error("Erreur d'envoi de participation :", err);
       setErrors({
         statusCode: err.status || 500,
-        server: err.error || "Impossible de partager la vidéo."
+        server: err.error || "Impossible de partager la vidéo.",
       });
-      
     }
   };
 
@@ -102,14 +104,7 @@ export default function ShareParticipation() {
                         lg:w-full lg:max-w-150
                         "
         onSubmit={handleSubmit}>
-        <h1
-          className="
-                        text-h1-mobile italic uppercase font-bold text-white drop-shadow-title-glow text-center
-                        md:text-h1-tablet
-                        lg:text-h1-desktop
-                    ">
-          Partagez votre vidéo
-        </h1>
+        <H1Title>Partagez votre vidéo</H1Title>
         <fieldset
           className="w-full
                             lg:max-w-[80%] lg:mx-auto
@@ -153,5 +148,5 @@ export default function ShareParticipation() {
       {/* Error messages */}
       <ErrorSummary errors={errors} />
     </section>
-  )
+  );
 }

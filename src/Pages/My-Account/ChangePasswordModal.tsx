@@ -5,8 +5,13 @@ import Button from "../../ui/Button";
 import type { ApiErrorResponse } from "../../types/forms";
 import ErrorSummary from "../../ui/ErrorSummary";
 import SuccessMessage from "../../ui/SuccessMessage";
+import H1Title from "../../ui/H1Title";
 
-export default function ChangePasswordModal({ onClose }: { onClose: () => void }) {
+export default function ChangePasswordModal({
+  onClose,
+}: {
+  onClose: () => void;
+}) {
   // Access the auth token from context
   const { token } = useContext(AuthContext);
 
@@ -22,7 +27,7 @@ export default function ChangePasswordModal({ onClose }: { onClose: () => void }
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     setError({});
     setSuccess("");
 
@@ -55,19 +60,18 @@ export default function ChangePasswordModal({ onClose }: { onClose: () => void }
 
       // Show success message and close modal after a short delay
       setSuccess("Mot de passe modifié !");
-      
+
       // Clear fields
       setOldPassword("");
       setNewPassword("");
       setConfirmPassword("");
 
       setTimeout(() => onClose(), 1500);
-      
     } catch (err: any) {
       console.error("Erreur de modification du mot de passe :", err);
       setError({
         statusCode: err.status || 500,
-        server: err.error || "Impossible de modifier le mot de passe."
+        server: err.error || "Impossible de modifier le mot de passe.",
       });
     }
   };
@@ -76,7 +80,7 @@ export default function ChangePasswordModal({ onClose }: { onClose: () => void }
     <>
       {/* Global toast messages */}
       <SuccessMessage success={success} />
-      
+
       <ErrorSummary errors={error} />
 
       {/* Modal overlay */}
@@ -107,14 +111,7 @@ export default function ChangePasswordModal({ onClose }: { onClose: () => void }
           </button>
 
           {/* Modal title */}
-          <h2
-            className="text-2xl font-bold mb-4 drop-shadow"
-            style={{
-              color: "var(--color-green-light)",
-              textShadow: "0 0 10px rgba(85, 204, 3, 0.7)",
-            }}>
-            Modifier mon mot de passe
-          </h2>
+          <H1Title>Modifier mon mot de passe</H1Title>
 
           {/* Password change form */}
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
