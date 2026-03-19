@@ -55,3 +55,7 @@ export type ApiErrorResponse = {
   server?: string;
   statusCode?: number;
 }
+
+export type FormAuthProps = {
+  mode: "login" | "register";
+};

@@ -18,11 +18,9 @@ import type {
   LoginFormData,
   RegisterFormData,
   FormErrors,
-  ApiErrorResponse} from "../../types/forms";
-
-type FormAuthProps = {
-  mode: "login" | "register";
-};
+  ApiErrorResponse,
+  FormAuthProps
+} from "../../types/forms";
 
 export default function FormAuth({ mode }: FormAuthProps) {
   const navigate = useNavigate();
