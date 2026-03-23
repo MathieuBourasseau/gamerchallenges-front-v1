@@ -7,6 +7,7 @@ import Button from "../../ui/Button";
 import type { ApiErrorResponse } from "../../types/forms";
 import ErrorSummary from "../../ui/ErrorSummary";
 import Image from "../../ui/Image";
+import H2 from "../../ui/H2";
 
 type TopChallenge = {
   id: number;
@@ -54,28 +55,53 @@ export default function Home() {
     <>
       <div
         className="
-          flex flex-row items-center justify-center gap-4 mx-auto
-          md:grid md:grid-cols-2 md:gap-6
-        "
+          flex flex-col items-center justify-center gap-4 mx-auto w-full max-w-7xl
+          lg:grid lg:grid-cols-2 lg:items-center lg:gap-8"
       >
-        <img
-          src={TitleImage}
-          alt="Title"
-          className="w-80 md:w-72 lg:w-96 h-auto"
-        />
+        {/* LEFT PART OF HERO */}
+        <div className="flex flex-col items-center text-center px-6">
+          <img
+            src={TitleImage}
+            alt="Title"
+            className="w-80 md:w-72 lg:w-full lg:max-w-md h-auto"
+          />
+          <div className="hidden lg:block">
+            <H1Title>Bienvenue sur Gamer Challenge !</H1Title>
+            <p className="text-p-mobile md:text-p-tablet text-white">
+              La plateforme où tu peux relever de nombreux challenges sur tes jeux
+              vidéos préférés et les partager avec la communauté !
+            </p>
+          </div>
+        </div>
 
-        <img
-          src={backgroundImage}
-          alt="Draw Team"
+        {/* RIGHT PART OF HERO */}
+        <div className="hidden lg:flex justify-center items-center w-full">
+          <img
+            src={backgroundImage}
+            alt="Draw Team"
+            className="
+        hidden md:block
+        w-40 sm:w-56 md:w-72 lg:w-full lg:max-w-xl h-auto
+      "
+          />
+        </div>
+
+        {/* PART ONLY DISPLAYED ON MOBILE */}
+        <div
           className="
-            hidden md:block
-            w-40 sm:w-56 md:w-72 lg:w-96 h-auto
-          "
-        />
+            flex flex-col items-center text-center px-6 gap-2
+            lg:hidden"
+        >
+          <H1Title>Bienvenue sur Gamer Challenge !</H1Title>
+          <p className="max-w-2xl text-p-mobile md:text-p-tablet text-white">
+            La plateforme où tu peux relever de nombreux challenges sur tes jeux
+            vidéos préférés et les partager avec la communauté !
+          </p>
+        </div>
       </div>
 
       <section className="text-center px-6 py-12">
-        <H1Title>Top 3 Challenges</H1Title>
+        <H2>Top 3 challenges</H2>
 
         <div className="max-w-6xl mx-auto mb-6">
           <ErrorSummary errors={error} />
