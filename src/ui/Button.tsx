@@ -4,7 +4,7 @@ type ButtonProps = {
   label: string;
   type: "button" | "submit";
   className?: string;
-  active?: boolean; // permet d'activer un style différent (onglets login/register)
+  active?: boolean; 
   bgColor?: string;
   borderColor?: string;
   rounded?: string;
@@ -12,19 +12,19 @@ type ButtonProps = {
   margin?: string;
   width?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  disabled?: boolean;
 };
 
 export default function Button({
   label,
   type,
   className,
-  active = false, // valeur par défaut
+  active = false, 
   bgColor = "bg-green-medium",
   borderColor = "border-green-medium",
   rounded = "rounded-full",
-  padding = "py-2 px-6", // j'ai réduit le padding horizontal pour centrer le bouton
-  margin = "",
-  width = "w-auto", // largeur auto pour que le bouton s'adapte au texte
+  padding = "py-2 px-6", 
+  width = "w-auto",
   onClick,
 }: ButtonProps) {
   return (

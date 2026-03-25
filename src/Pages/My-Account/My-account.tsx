@@ -14,10 +14,7 @@ import ErrorSummary from "../../ui/ErrorSummary";
 
 export default function MyAccount() {
   const navigate = useNavigate();
-  // Get token from AuthContext to authenticate API calls
   const { token } = useContext(AuthContext);
-
-  // Get user profile data from useAuth hook (fetches from /me endpoint)
   const { userInfo, loadingUser, refreshUser, logout } = useAuth();
 
   const [form, setForm] = useState<ProfileFormData>({
@@ -32,17 +29,14 @@ export default function MyAccount() {
 
   const [editingField, setEditingField] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState("");
-  // 1. Initialisation de l'erreur au format objet
   const [error, setError] = useState<Partial<ApiErrorResponse>>({});
   const [isDeleting, setIsDeleting] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
-
   const [avatarName, setAvatarName] = useState("Aucun fichier choisi");
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  // Fill form when userInfo is true
   useEffect(() => {
     if (userInfo) {
       setForm({
@@ -62,7 +56,6 @@ export default function MyAccount() {
     }
   }, [userInfo]);
 
-  // Form fields
   const handleChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -70,7 +63,6 @@ export default function MyAccount() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Avatar
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -79,12 +71,10 @@ export default function MyAccount() {
     }
   };
 
-  // PATCH /me
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!token) return;
 
-    // Clear errors and messages
     setError({});
     setSuccessMessage("");
 
@@ -107,30 +97,25 @@ export default function MyAccount() {
         body: formData,
       });
 
-      // Throw error data if response fails
       if (!response.ok) {
         const errorData = await response.json();
         throw errorData;
       }
 
       await refreshUser();
-
       setSuccessMessage("Profil mis à jour avec succès !");
       setTimeout(() => setSuccessMessage(""), 3000);
       setEditingField(null);
 
     } catch (err: any) {
-
       console.error("Error updating user:", err);
       setError({
         statusCode: err.status || 500,
         server: err.error || "Impossible de mettre à jour le profil."
       });
     }
-
   };
 
-  // DELETE /me
   const handleDeleteAccount = async () => {
     if (!token) return;
 
@@ -149,7 +134,6 @@ export default function MyAccount() {
       }
 
       logout();
-
       setSuccessMessage("Votre compte a été supprimé avec succès !");
       setTimeout(() => navigate("/"), 2000);
     } catch (err: any) {
@@ -164,23 +148,25 @@ export default function MyAccount() {
     }
   };
 
-  // writting fields form
   const renderField = (
     label: string,
     name: keyof ProfileFormData,
     type: React.HTMLInputTypeAttribute = "text",
   ) => {
     const isEditing = editingField === name;
+    const value = form[name];
 
     return (
       <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start sm:items-center w-full">
         <label className="sm:w-40 text-sm">{label}</label>
         <div className="flex w-full gap-2">
           <Input
-            type="text"
-            value={form.avatar instanceof File ? form.avatar.name : avatarName}
-            readOnly={true}
+            type={type}
+            name={name}
+            value={typeof value === 'string' ? value : ""}
+            onChange={handleChange}
             width="flex-1"
+            disabled={!isEditing}
           />
           <button
             type="button"
@@ -196,16 +182,13 @@ export default function MyAccount() {
   };
 
   if (loadingUser) return <p className="text-center mt-10">Chargement...</p>;
-  if (!userInfo)
-    return <p className="text-center mt-10">Utilisateur introuvable.</p>;
+  if (!userInfo) return <p className="text-center mt-10">Utilisateur introuvable.</p>;
 
   return (
     <div className="flex flex-col items-center px-4 py-10">
-
       <SuccessMessage success={successMessage} />
       <ErrorSummary errors={error} />
 
-      {/* PASSWORD MODAL */}
       {showPasswordModal && (
         <ChangePasswordModal onClose={() => setShowPasswordModal(false)} />
       )}
@@ -213,7 +196,6 @@ export default function MyAccount() {
       <div className="w-full max-w-2xl mx-auto border-4 border-[#55CC03] rounded-3xl p-6 md:p-10 bg-[radial-gradient(ellipse_at_center,_rgba(40,80,50,0.8)_0%,_rgba(0,0,0,0.9)_100%)] mt-4">
         <H1Title>Mon compte — {userInfo.username}</H1Title>
 
-        {/* Avatar preview */}
         {userInfo.avatar && (
           <div className="flex justify-center mb-6">
             <img
@@ -225,17 +207,15 @@ export default function MyAccount() {
         )}
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          {/* Avatar upload */}
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start sm:items-center w-full">
             <label className="sm:w-40 text-sm">Avatar</label>
             <div className="flex w-full gap-2">
               <Input
                 type="text"
-                value={form.avatar?.name ?? avatarName}
-                readOnly
+                value={form.avatar instanceof File ? form.avatar.name : avatarName}
+                readOnly={true}
                 width="flex-1"
               />
-
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}

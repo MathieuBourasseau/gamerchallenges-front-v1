@@ -5,7 +5,7 @@ export default function Input({
   type,
   isTextArea,
   checked,
-  width = "w-full"
+  width = "w-full",
   readOnly,
   ...rest
 }: InputProps) {
