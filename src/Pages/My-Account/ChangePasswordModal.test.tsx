@@ -6,7 +6,7 @@ import { AuthContext } from "../../Context/AuthContext";
 
 /**
  * Helper function to render the component with a mocked AuthContext.
- * This avoids repeating the Provider wrapper in every test.
+ * We now provide all missing properties required by AuthContextType.
  */
 function renderWithAuth(
   ui: React.ReactElement,
@@ -15,28 +15,31 @@ function renderWithAuth(
   return {
     onClose,
     ...render(
-      /**
-       * The component reads the token from AuthContext.
-       * We provide a minimal mock context for testing.
-       */
-      <AuthContext.Provider value={{ token }}>{ui}</AuthContext.Provider>,
+      <AuthContext.Provider 
+        value={{ 
+          token, 
+          userId: "fake-user-id", 
+          login: vi.fn(), 
+          logout: vi.fn(), 
+          loadingAuth: false 
+        }}
+      >
+        {ui}
+      </AuthContext.Provider>,
     ),
   };
 }
 
 describe("ChangePasswordModal", () => {
   beforeEach(() => {
-    // Reset all mock functions before each test
     vi.clearAllMocks();
   });
 
   it("renders the modal correctly", () => {
     renderWithAuth(<ChangePasswordModal onClose={vi.fn()} />);
 
-    // Check title
     expect(screen.getByText("Modifier mon mot de passe")).toBeInTheDocument();
 
-    // Check input fields
     expect(
       screen.getByPlaceholderText("Ancien mot de passe"),
     ).toBeInTheDocument();
@@ -47,7 +50,6 @@ describe("ChangePasswordModal", () => {
       screen.getByPlaceholderText("Confirmer le mot de passe"),
     ).toBeInTheDocument();
 
-    // Check buttons
     expect(screen.getByRole("button", { name: "Annuler" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Valider" })).toBeInTheDocument();
   });
@@ -57,7 +59,6 @@ describe("ChangePasswordModal", () => {
 
     renderWithAuth(<ChangePasswordModal onClose={vi.fn()} />);
 
-    // Fill fields with mismatched passwords
     await user.type(
       screen.getByPlaceholderText("Ancien mot de passe"),
       "oldpass",
@@ -71,10 +72,8 @@ describe("ChangePasswordModal", () => {
       "newpass2",
     );
 
-    // Submit
     await user.click(screen.getByRole("button", { name: "Valider" }));
 
-    // Expect validation error
     expect(
       screen.getByText("Les mots de passe ne correspondent pas."),
     ).toBeInTheDocument();
@@ -82,11 +81,10 @@ describe("ChangePasswordModal", () => {
 
   it("sends the request and closes the modal on success", async () => {
     const user = userEvent.setup();
-    const onClose = vi.fn(); // spy to check if the modal closes
+    const onClose = vi.fn();
 
     renderWithAuth(<ChangePasswordModal onClose={onClose} />);
 
-    // Fill valid fields
     await user.type(
       screen.getByPlaceholderText("Ancien mot de passe"),
       "oldpass",
@@ -100,21 +98,12 @@ describe("ChangePasswordModal", () => {
       "newpass",
     );
 
-    // Submit
     await user.click(screen.getByRole("button", { name: "Valider" }));
 
-    /**
-     * MSW intercepts the request and returns { ok: true }.
-     * The component then displays a success message.
-     */
     await waitFor(() => {
       expect(screen.getByText("Mot de passe modifié !")).toBeInTheDocument();
     });
 
-    /**
-     * The component calls onClose() after a 1500ms timeout.
-     * We wait for it naturally (no fake timers).
-     */
     await waitFor(
       () => {
         expect(onClose).toHaveBeenCalled();
