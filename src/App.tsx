@@ -20,6 +20,7 @@ import MenuBurger from "./components/MenuBurger/MenuBurger";
 import ShareParticipation from "./Pages/Participations/ShareParticipation";
 import { useAuth } from "./hooks/useAuth";
 import Errors from "./Pages/Error/Errors";
+import UserProfile from "./Pages/User-Profile/User-Profile";
 
 export default function App() {
   const { userInfo } = useAuth();
@@ -54,6 +55,7 @@ export default function App() {
             <Route path="/mentions-legales" element={<Legal />} />
             <Route path="/recherche" element={<SearchPage />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/users/:id" element={<UserProfile />} />
           </Routes>
         </main>
         <Footer />

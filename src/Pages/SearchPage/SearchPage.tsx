@@ -166,7 +166,10 @@ function SearchPage() {
                 to={`/users/${user.id}`}
                 className="flex flex-col items-center gap-2 p-4 rounded-lg w-full"
               >
-                <Image src={user.avatar || ""} alt={user.username} />
+                <Image
+                  src={user.avatar || "/images/default-avatar.png"}
+                  alt={user.username}
+                />
                 <div className="w-full truncate text-center">
                   <H2>{user.username}</H2>
                 </div>
