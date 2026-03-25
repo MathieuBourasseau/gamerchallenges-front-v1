@@ -177,12 +177,10 @@ export default function MyAccount() {
         <label className="sm:w-40 text-sm">{label}</label>
         <div className="flex w-full gap-2">
           <Input
-            type={type}
-            name={name}
-            value={form[name] ?? ""}
-            onChange={handleChange}
+            type="text"
+            value={form.avatar instanceof File ? form.avatar.name : avatarName}
+            readOnly={true}
             width="flex-1"
-            disabled={!isEditing}
           />
           <button
             type="button"

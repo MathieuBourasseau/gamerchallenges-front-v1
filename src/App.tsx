@@ -19,7 +19,6 @@ import Auth from "./Pages/Authentication/Auth";
 import MenuBurger from "./components/MenuBurger/MenuBurger";
 import ShareParticipation from "./Pages/Participations/ShareParticipation";
 import { useAuth } from "./hooks/useAuth";
-import Errors from "./Pages/Error/Errors";
 import UserProfile from "./Pages/User-Profile/User-Profile";
 
 export default function App() {
