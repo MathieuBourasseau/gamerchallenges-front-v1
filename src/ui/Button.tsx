@@ -30,7 +30,7 @@ export default function Button({
   return (
     <button
       className={`
-        text-sm ${padding} ${margin} ${rounded} cursor-pointer uppercase font-bold ${width} mx-auto border-2
+        text-sm ${padding} ${rounded} cursor-pointer uppercase font-bold ${width} mx-auto border-2
         md:text-base
         hover:bg-white hover:text-green-light hover:border-green-light
 

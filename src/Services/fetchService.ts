@@ -1,4 +1,3 @@
-import { useAuth } from "../hooks/useAuth";
 import type { ContactFormData, ParticipationInputs } from "../types/forms";
 
 export const sendContactMessage = async (dataForm: ContactFormData) => {
