@@ -46,6 +46,8 @@ Le déploiement de l'interface est étroitement lié à la disponibilité de l'A
 
 *Note : Conformément à la séparation des responsabilités, tous les scripts liés à la gestion de la base de données (création, migration, seeding) sont centralisés sur le dépôt Back-end pour une sécurité et une intégrité optimales.*
 
+**Le repo backend est disponible ici** 👉 https://github.com/MathieuBourasseau/gamerchallenges-back-v1
+
 ---
 
 ## 📂 Structure du Projet
