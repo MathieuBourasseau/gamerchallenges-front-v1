@@ -1,8 +1,4 @@
-import type { ReactNode } from "react";
-
-type H2Props = {
-  children: ReactNode;
-};
+import type { H2Props } from "../types/titles";
 
 export default function H2({ children }: H2Props) {
   return (
