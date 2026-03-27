@@ -11,8 +11,8 @@ function MenuBurger() {
 	const location = useLocation();
 	const navigate = useNavigate();
 
-  const closeMenu = () => setIsOpen(false);
-  const toggleMenu = () => setIsOpen((prev) => !prev);
+	const closeMenu = () => setIsOpen(false);
+	const toggleMenu = () => setIsOpen((prev) => !prev);
 
 	const handleLogout = () => {
 		logout();
@@ -26,7 +26,7 @@ function MenuBurger() {
 
 	return (
 		<>
-			{/* Bouton menu burger */}
+			{/* Button menu burger */}
 			<button
 				onClick={toggleMenu}
 				className="
@@ -38,9 +38,9 @@ function MenuBurger() {
           rounded-lg
           transition
         "
-      >
-        <Icon icon="mdi:menu" className="text-white w-5 h-5 md:w-7 md:h-7" />
-      </button>
+			>
+				<Icon icon="mdi:menu" className="text-white w-5 h-5 md:w-7 md:h-7" />
+			</button>
 
 			{/* Overlay */}
 			{isOpen && (
@@ -49,11 +49,10 @@ function MenuBurger() {
 
 			{/* Menu */}
 			<div
-				className={`fixed top-0 right-0 h-full w-80 bg-black-dark border-4 border-green-light rounded-l-3xl shadow-[0_0_20px_rgba(132,204,22,0.6)] transform transition-transform duration-300 z-50 ${
-					isOpen ? "translate-x-0" : "translate-x-full"
-				}`}
+				className={`fixed top-0 right-0 h-full w-80 bg-black-dark border-4 border-green-light rounded-l-3xl shadow-[0_0_20px_rgba(132,204,22,0.6)] transform transition-transform duration-300 z-50 ${isOpen ? "translate-x-0" : "translate-x-full"
+					}`}
 			>
-				{/* Bouton fermer */}
+				{/* Close menu button */}
 				<div className="flex justify-end p-4">
 					<button
 						onClick={closeMenu}
@@ -63,7 +62,7 @@ function MenuBurger() {
 					</button>
 				</div>
 
-				{/* Si user connecté */}
+				{/* If user is logged */}
 				{userInfo ? (
 					<div className="flex flex-col items-center gap-4 mt-4 px-6">
 						<Link to="/mon-profil" onClick={closeMenu}>
@@ -90,7 +89,7 @@ function MenuBurger() {
 					/>
 				)}
 
-				{/* Liens principaux */}
+				{/* Main links */}
 				<nav className="flex flex-col px-10 text-white text-lg space-y-6 mt-10">
 					<MenuItem label="ACCUEIL" to="/" closeMenu={closeMenu} />
 					<MenuItem label="JEUX" to="/jeux" closeMenu={closeMenu} />

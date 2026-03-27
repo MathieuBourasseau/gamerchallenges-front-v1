@@ -1,19 +1,4 @@
-import React from "react";
-
-type ButtonProps = {
-  label: string;
-  type: "button" | "submit";
-  className?: string;
-  active?: boolean; 
-  bgColor?: string;
-  borderColor?: string;
-  rounded?: string;
-  padding?: string;
-  margin?: string;
-  width?: string;
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
-  disabled?: boolean;
-};
+import type { ButtonProps } from "../types/button";
 
 export default function Button({
   label,
@@ -37,7 +22,7 @@ export default function Button({
         ${
           active
             ? "bg-green-dark text-white border-4 border-green-light" // style actif
-            : `${bgColor} text-white ${borderColor}` // style normal
+            : `${bgColor} text-white ${borderColor}` 
         }
 
         ${className || ""}
