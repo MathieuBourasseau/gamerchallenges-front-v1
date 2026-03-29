@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import H1Title from "../../ui/H1Title";
 import TitleImage from "../../assets/images/Title.png";
 import backgroundImage from "../../assets/images/draw_team.png";
-import Button from "../../ui/Button";
 import type { ApiErrorResponse } from "../../types/forms";
 import ErrorSummary from "../../ui/ErrorSummary";
 import Image from "../../ui/Image";
