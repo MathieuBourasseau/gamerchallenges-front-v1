@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import H1Title from "../../ui/H1Title";
+import H2 from "../../ui/H2";
 
 function Legal() {
   return (
@@ -15,7 +16,7 @@ function Legal() {
         >
           {/* Section : contact and company info */}
           <div>
-            <p className="font-bold text-green-light mb-2">ÉDITEUR & CONTACT</p>
+            <H2>Mentions juridiques</H2>
             <p>
               GamerChallenges — Rue du challenge, Jeuville, France. SIRET : 123
               456 789. Représentant légal : Team GamerChallenges Cambridge.
@@ -26,9 +27,7 @@ function Legal() {
           {/* Section data policy */}
 
           <div className="flex flex-col gap-4">
-            <p className="font-bold text-green-light border-b border-white/10 pb-2">
-              POLITIQUE DE CONFIDENTIALITÉ
-            </p>
+            <H2>Politique de confidentialité</H2>
             <p>
               1. Les données personnelles collectées sur ce site sont traitées
               par : GamerChallenges.
