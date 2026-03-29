@@ -151,11 +151,13 @@ export default function Home() {
         )}
 
         <div className="flex justify-center mt-10">
-          <Button
-            label="Voir plus"
-            type="button"
-            onClick={() => (window.location.href = "/challenges")}
-          />
+          <Link
+            to={`/challenges`}
+            className={`text-sm bg-green-medium py-2 px-6 rounded-full cursor-pointer uppercase font-bold w-auto mx-auto border-2 border-green-medium
+                            hover:bg-white hover:text-green-light hover:border-green-light md:text-base`}
+          >
+            Voir plus
+          </Link>
         </div>
       </section>
     </>
