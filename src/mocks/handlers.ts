@@ -1,6 +1,9 @@
 import { http, HttpResponse } from "msw";
 
+// Handlers lists all endpoints and what responses are expected 
+
 export const handlers = [
+
   // Mock for POST /login
 
   http.post("/login", async () => {

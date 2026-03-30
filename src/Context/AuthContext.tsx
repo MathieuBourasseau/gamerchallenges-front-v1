@@ -1,6 +1,8 @@
 import { createContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
 
+
+// Define what a session looks like 
 interface AuthContextType {
   token: string | null;
   userId: string | null;
@@ -9,6 +11,7 @@ interface AuthContextType {
   loadingAuth: boolean;
 }
 
+// Create the context
 export const AuthContext = createContext<AuthContextType>({
   token: null,
   userId: null,
